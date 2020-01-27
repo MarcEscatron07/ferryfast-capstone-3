@@ -1,0 +1,29 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js",
+    "backend": "nodemon server.js --ignore client",
+    "frontend": "cd client && npm run start",
+    "backend-install": "npm install",
+    "frontend-install": "cd client && npm install",
+    "install-all": "concurrently \"npm run backend-install\" \"npm run frontend-install\"",
+    "dev": "concurrently \"npm run backend\" \"npm run frontend\"",
+    "heroku-postbuild": "cd client && npm install && npm run build"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "apollo-server-express": "^2.9.16",
+    "body-parser": "^1.19.0",
+    "concurrently": "^5.0.2",
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "mongoose": "^5.8.7",
+    "nodemon": "^2.0.2"
+  }
+}

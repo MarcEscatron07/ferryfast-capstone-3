@@ -1,0 +1,26 @@
+db.administrators.insertMany([
+    {
+        username: "marcus",
+        firstname: "Marc",
+        surname: "Escatron",
+        email: "marc.escatron07@gmail.com",
+        password: "supadmin",
+        roleId: ""
+    },
+    {
+        username: "espegez",
+        firstname: "Mariah Espe",
+        surname: "Gesalan",
+        email: "espegez28@gmail.com",
+        password: "admin",
+        roleId: ""
+    },
+    {
+        username: "lanceria",
+        firstname: "Joshua",
+        surname: "Alarva",
+        email: "tu_lanceria@gmail.com",
+        password: "staff",
+        roleId: ""
+    }
+])
