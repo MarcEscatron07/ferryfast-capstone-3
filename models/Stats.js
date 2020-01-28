@@ -1,15 +1,15 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
-const roleSchema = new Schema(
+const statSchema = new Schema(
     {
         name: {
-            type: String, 
+            type: String,
             required: true
         }
-    }, 
+    },
     {
         timestamps: true
     }
 );
 
-module.exports = mongoose.model('Role', roleSchema);
+module.exports = mongoose.model('Stat', statSchema);

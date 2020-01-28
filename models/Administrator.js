@@ -19,6 +19,9 @@ const administratorSchema = new Schema(
         },
         roleId: {
             type: String, required: true
+        },
+        statId: {
+            type: String, required: true
         }
     }, 
     {

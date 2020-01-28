@@ -1,0 +1,11 @@
+db.stats.insertMany([
+    {
+        name: "active"
+    },
+    {
+        name: "deactivated"
+    },
+    {
+        name: "pending"
+    }
+])

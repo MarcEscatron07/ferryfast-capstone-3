@@ -1,12 +1,19 @@
 const { ApolloServer, gql } = require('apollo-server-express');
 
 const Role = require('../models/Role');
+const Stat = require('../models/Stats');
 const Administrator = require('../models/Administrator');
 
 const typeDefs = gql`
     type RoleType {
         id: ID
         name: String
+        administrators: [AdministratorType]
+    }
+    type StatType {
+        id: ID
+        name: String
+        administrators: [AdministratorType]
     }
     type AdministratorType {
         id: ID
@@ -15,12 +22,21 @@ const typeDefs = gql`
         surname: String
         email: String
         password: String
-        roleId: String        
+        roleId: String
+        statId: String
+        role: RoleType
+        stat: StatType
     }
 
     type Query {
-        getRoles: [RoleType]
-        getAdministrators: [AdministratorType]
+        getRoles(id: String): [RoleType]
+        getRole(id: String): RoleType
+
+        getStats(id: String): [StatType]
+        getStat(id: String): StatType
+
+        getAdministrators(id: String): [AdministratorType]
+        getAdministrator(id: String): AdministratorType
     }
 
     type Mutation {
@@ -29,13 +45,26 @@ const typeDefs = gql`
         ): RoleType
         
         updateRole(
-            id: ID!
+            id: ID
             name: String
         ): RoleType
 
         deleteRole(
-            id: ID!
+            id: ID
         ): RoleType
+
+        createStat(
+            name: String
+        ): StatType
+        
+        updateStat(
+            id: ID
+            name: String
+        ): StatType
+
+        deleteStat(
+            id: ID
+        ): StatType
 
         createAdministrator(
             username: String
@@ -44,31 +73,69 @@ const typeDefs = gql`
             email: String
             password: String
             roleId: String
+            statId: String
         ): AdministratorType
 
         updateAdministrator(
-            id: ID!
+            id: ID
             username: String
             firstname: String
             surname: String
             email: String
             password: String
             roleId: String
+            statId: String
         ): AdministratorType
 
         deleteAdministrator(
-            id: ID!
+            id: ID
         ): AdministratorType
     }
 `;
 
 const resolvers = {
     Query: {
-        getRoles: () => {
-            return Role.find({});
+        getRoles: (_,args) => {
+            if(!args.id)
+                return Role.find({});
+            return Role.find({_id:args.id});
         },
-        getAdministrators: () => {
-            return Administrator.find({});
+        getRole: (_,args) => {
+            return Role.findById(args.id);
+        },
+        getStats: (_,args) => {
+            if(!args.id)
+                return Stat.find({});
+            return Stat.find({_id:args.id});
+        },
+        getStat: (_,args) => {
+            return Stat.findById(args.id);
+        },
+        getAdministrators: (_,args) => {
+            if(!args.id)
+                return Administrator.find({});
+            return Administrator.find({_id:args.id});
+        },
+        getAdministrator: (_,args) => {
+            return Administrator.findById(args.id);
+        }
+    },
+    RoleType: {
+        administrators: (parent,args) => {
+            return Administrator.find({roleId: parent.id});
+        }
+    },
+    StatType: {
+        administrators: (parent,args) => {
+            return Administrator.find({statId: parent.id});
+        }
+    },
+    AdministratorType: {
+        role: (parent,args) => {
+            return Role.findOne({_id: parent.roleId});
+        },
+        stat: (parent,args) => {
+            return Stat.findOne({_id: parent.statId})
         }
     },
     Mutation: {
@@ -80,13 +147,29 @@ const resolvers = {
         },
         updateRole: (_,args) => {
             let updateRoleId = {_id:args.id}
-            let udpateRoleData = {
+            let updateRoleData = {
                 name: args.name
             }
-            return Role.findOneAndUpdate(updateRoleId, udpateRoleData);
+            return Role.findOneAndUpdate(updateRoleId, updateRoleData);
         },
         deleteRole: (_,args) => {
-            return Role.findOneAndDelete({_id:args.id})
+            return Role.findOneAndDelete({_id:args.id});
+        },
+        createStat: (_,args) => {
+            let newStat = Stat({
+                name: args.name
+            })
+            return newStat.save();
+        },
+        updateStat: (_,args) => {
+            let updateStatId = {_id:args.id}
+            let updateStatData = {
+                name: args.name
+            }
+            return Stat.findOneAndUpdate(updateStatId, updateStatData);
+        },
+        deleteStat: (_,args) => {
+            return Stat.findOneAndDelete({_id:args.id});
         },
         createAdministrator: (_,args) => {
             let newAdministrator = Administrator({
@@ -95,7 +178,8 @@ const resolvers = {
                 surname: args.surname,
                 email: args.email,
                 password: args.password,
-                roleId: args.roleId
+                roleId: args.roleId,
+                statId: args.statId
             })
             return newAdministrator.save();
         },
@@ -107,7 +191,8 @@ const resolvers = {
                 surname: args.surname,
                 email: args.email,
                 password: args.password,
-                roleId: args.roleId
+                roleId: args.roleId,
+                statId: args.statId
             }
             return Administrator.findOneAndUpdate(updateAdministratorId, updateAdministratorData);
         },
