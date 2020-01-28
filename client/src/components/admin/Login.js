@@ -67,11 +67,8 @@ const AdminLogin = () => {
     return(
         <Container className="p-4 rounded shadow" maxWidth="sm" style={{marginTop: "15vh", border: "3px solid #d7d7d7"}}>
             <Typography align="center" noWrap variant="h3">
-                REMS
-            </Typography>
-            <Typography align="center" noWrap variant="subtitle2">
-            (REACT Event Management System)
-            </Typography>            
+                REMSOFT
+            </Typography>      
             <hr/>
             <FormControl>
                 <FormGroup className="my-2">
