@@ -1,11 +1,14 @@
 db.roles.insertMany([
     {
+    	uniqueId: 1,
         name: "Superadmin"
     },
     {
+    	uniqueId: 2,
         name: "Admin"
     },
     {
+    	uniqueId: 3,
         name: "Staff"
     }
 ])

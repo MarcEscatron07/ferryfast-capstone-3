@@ -7,11 +7,13 @@ const Administrator = require('../models/Administrator');
 const typeDefs = gql`
     type RoleType {
         id: ID
+        uniqueId: Int
         name: String
         administrators: [AdministratorType]
     }
     type StatType {
         id: ID
+        uniqueId: Int
         name: String
         administrators: [AdministratorType]
     }
@@ -41,11 +43,13 @@ const typeDefs = gql`
 
     type Mutation {
         createRole(
+            uniqueId: Int
             name: String
         ): RoleType
         
         updateRole(
             id: ID
+            uniqueId: Int
             name: String
         ): RoleType
 
@@ -54,11 +58,13 @@ const typeDefs = gql`
         ): RoleType
 
         createStat(
+            uniqueId: Int
             name: String
         ): StatType
         
         updateStat(
             id: ID
+            uniqueId: Int
             name: String
         ): StatType
 
@@ -141,6 +147,7 @@ const resolvers = {
     Mutation: {
         createRole: (_,args) => {
             let newRole = Role({
+                uniqueId: args.uniqueId,
                 name: args.name
             })
             return newRole.save();
@@ -148,6 +155,7 @@ const resolvers = {
         updateRole: (_,args) => {
             let updateRoleId = {_id:args.id}
             let updateRoleData = {
+                uniqueId: args.uniqueId,
                 name: args.name
             }
             return Role.findOneAndUpdate(updateRoleId, updateRoleData);
@@ -157,6 +165,7 @@ const resolvers = {
         },
         createStat: (_,args) => {
             let newStat = Stat({
+                uniqueId: args.uniqueId,
                 name: args.name
             })
             return newStat.save();
@@ -164,6 +173,7 @@ const resolvers = {
         updateStat: (_,args) => {
             let updateStatId = {_id:args.id}
             let updateStatData = {
+                uniqueId: args.uniqueId,
                 name: args.name
             }
             return Stat.findOneAndUpdate(updateStatId, updateStatData);

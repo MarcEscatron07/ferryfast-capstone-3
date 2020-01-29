@@ -1,11 +1,14 @@
 db.stats.insertMany([
     {
+    	uniqueId: 1,
         name: "active"
     },
     {
+    	uniqueId: 2,
         name: "deactivated"
     },
     {
+    	uniqueId: 3,
         name: "pending"
     }
 ])

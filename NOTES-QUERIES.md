@@ -6,6 +6,7 @@
   #     username
   #   }
   # }
+  
   # getStats {
   #   id
   #   name
@@ -13,6 +14,7 @@
   #     username
   #   }
   # }
+  
   # getAdministrators {
   #   username
   #   firstname
@@ -32,43 +34,53 @@
 
 # mutation {
   # createRole(
+  #   uniqueId: 1,
   #   name: "Staff"
   # ) {
   #   id
   #   name
   # }
+  
   # updateRole(
   #   id: "5e3029d6eff8f40ea2b302ba"
+  #   uniqueId: 2,
   #   name: "Temp"
   # ){
   #   id
   #   name
   # }
+  
   # deleteRole(
   #   id: "5e3029d6eff8f40ea2b302ba"
   # ){
   #   id
   #   name
   # }
+  
   # createStat(
-  #   name: "new Stat"
+  #   uniqueId: 1,
+  #   name: "active"
   # ){
   #   id
   #   name
   # }
+  
   # updateStat(
   #   id:"5e302a9deff8f40ea2b302bb"
-  #   name: "Temp"
+  #   uniqueId: 2,
+  #   name: "temp"
   # ){
   #   id
   #   name
   # }
+  
   # deleteStat(
   #   id:"5e302a9deff8f40ea2b302bb"
   # ){
   #   id
   #   name
   # }
+  
   # createAdministrator(
   #   username: "espegez",
   #   firstname: "Mariah Espe"
@@ -79,8 +91,9 @@
   #   statId: ""
   # ){
   #   id
-  # 	username
+  #   username
   # }
+  
   # updateAdministrator(
   #   id: "5e302372341789a849470159",
   #   username: "exardiah",
@@ -94,6 +107,7 @@
   #   id
   #   username
   # }
+  
   # deleteAdministrator(id:"5e302372341789a849470159"){
   #   id
   #   username
