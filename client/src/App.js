@@ -11,8 +11,7 @@ import AdminRegister from './components/admin/Register';
 
 import Client from './components_main/Client';
 
-// const ATLAS_URI = require('./config/connection').mongoURI;
-const uriValue = "/graphql";
+const uriValue = '/graphql';
 const clientConnection = new ApolloClient({
   uri: uriValue
 })
