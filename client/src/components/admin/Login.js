@@ -1,6 +1,5 @@
 import React from 'react';
 import { Link, useHistory } from 'react-router-dom';
-import axios from 'axios';
 
 import Container from '@material-ui/core/Container';
 import FormControl from '@material-ui/core/FormControl';
@@ -14,7 +13,12 @@ import PersonAddIcon from '@material-ui/icons/PersonAdd';
 
 import { Toast } from './Toast';
 
-const AdminLogin = () => {
+import { graphql } from 'react-apollo';
+import { flowRight as compose } from 'lodash';
+import { getAdministratorsQuery } from '../../client-queries/queries';
+
+const AdminLogin = (props) => {
+    let data = props.data;
     let history = useHistory();
 
     const ToastComponent = (iconProp, titleProp) => {
@@ -31,14 +35,15 @@ const AdminLogin = () => {
     }
 
     const adminLoginHandler = () => {
-        axios.get('/administrators')
-        .then((res) => {
+        if(data.loading === false && data.error === undefined){
+            let dataArray = data.getAdministrators;
+
             let matchCounter = 0;
             let username = document.querySelector('#login_username').value.trim();
             let password = document.querySelector('#login_password').value.trim();
 
-            for(let x = 0; x < res.data.length; x++){
-                if(username === res.data[x].username && password === res.data[x].password){           
+            for(let x = 0; x < dataArray.length; x++){
+                if(username === dataArray[x].username && password === dataArray[x].password){           
                     matchCounter = 0;
                     history.push('/admin/home');
                     break;
@@ -50,8 +55,11 @@ const AdminLogin = () => {
             if(matchCounter > 0){
                 ToastComponent('warning', 'Account not found!');
             }
-        })
-        .catch((err) => ToastComponent('error', err));
+        }
+
+        if(data.error !== undefined) {
+            ToastComponent('error', 'Failed to load data');
+        }
     }
 
     const adminRegisterHandler = () => {
@@ -121,4 +129,6 @@ const AdminLogin = () => {
     );
 }
 
-export default AdminLogin;
+export default compose(
+    graphql(getAdministratorsQuery)
+)(AdminLogin);

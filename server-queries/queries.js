@@ -128,20 +128,20 @@ const resolvers = {
     },
     RoleType: {
         administrators: (parent,args) => {
-            return Administrator.find({roleId: parent.id});
+            return Administrator.find({roleId: parent.uniqueId});
         }
     },
     StatType: {
         administrators: (parent,args) => {
-            return Administrator.find({statId: parent.id});
+            return Administrator.find({statId: parent.uniqueId});
         }
     },
     AdministratorType: {
         role: (parent,args) => {
-            return Role.findOne({_id: parent.roleId});
+            return Role.findOne({uniqueId: parent.roleId});
         },
         stat: (parent,args) => {
-            return Stat.findOne({_id: parent.statId})
+            return Stat.findOne({uniqueId: parent.statId})
         }
     },
     Mutation: {

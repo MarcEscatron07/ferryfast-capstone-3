@@ -26,10 +26,6 @@ function runRolesSeeder() {
 		new Role({
 			uniqueId: 2,
 			name: "Admin"
-		}),
-		new Role({
-			uniqueId: 3,
-			name: "Staff"
 		})
 	]
 	

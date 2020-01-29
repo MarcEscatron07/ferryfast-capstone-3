@@ -1,5 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+import { ApolloProvider } from 'react-apollo';
+import ApolloClient from 'apollo-boost';
 
 import './App.css';
 
@@ -9,17 +11,25 @@ import AdminRegister from './components/admin/Register';
 
 import Client from './components_main/Client';
 
+// const ATLAS_URI = require('./config/connection').mongoURI;
+const uriValue = "/graphql";
+const clientConnection = new ApolloClient({
+  uri: uriValue
+})
+
 function App() {
   return (
     <>
-      <Router>
-        <Switch>
-          <Route path="/" exact component={Client}/>        
-          <Route path="/admin" exact component={Admin}/>
-          <Route path="/admin/home" component={AdminHome}/>
-          <Route path="/admin/register" component={AdminRegister}/>
-        </Switch>
-      </Router>
+      <ApolloProvider client={clientConnection}>
+        <Router>
+          <Switch>
+            <Route path="/" exact component={Client}/>        
+            <Route path="/admin" exact component={Admin}/>
+            <Route path="/admin/home" component={AdminHome}/>
+            <Route path="/admin/register" component={AdminRegister}/>
+          </Switch>
+        </Router>
+      </ApolloProvider>
     </>
   );
 }

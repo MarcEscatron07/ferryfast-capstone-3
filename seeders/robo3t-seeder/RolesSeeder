@@ -6,9 +6,5 @@ db.roles.insertMany([
     {
     	uniqueId: 2,
         name: "Admin"
-    },
-    {
-    	uniqueId: 3,
-        name: "Staff"
     }
 ])

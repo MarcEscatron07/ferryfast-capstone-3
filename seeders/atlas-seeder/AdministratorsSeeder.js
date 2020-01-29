@@ -36,16 +36,7 @@ function runAdministratorsSeeder(){
             password: "admin",
             roleId: 2,
             statId: 1
-        }),
-        new Administrator({
-            username: "lanceria",
-            firstname: "Joshua",
-            surname: "Alarva",
-            email: "tu_lanceria@gmail.com",
-            password: "staff",
-            roleId: 3,
-            statId: 1
-        }),
+        })
     ]
 
     var count = 0;

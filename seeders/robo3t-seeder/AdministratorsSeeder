@@ -16,14 +16,5 @@ db.administrators.insertMany([
         password: "admin",
         roleId: 2,
         statId: 1
-    },
-    {
-        username: "lanceria",
-        firstname: "Joshua",
-        surname: "Alarva",
-        email: "tu_lanceria@gmail.com",
-        password: "staff",
-        roleId: 3,
-        statId: 1
     }
 ])

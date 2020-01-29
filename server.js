@@ -6,7 +6,7 @@ const path = require('path'); // required for use in production mode
 
 const app = express();
 
-const server = require('./apollo-graphql/queries');
+const server = require('./server-queries/queries');
 server.applyMiddleware({app});
 
 app.use(cors());

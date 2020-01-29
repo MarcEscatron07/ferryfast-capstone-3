@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import axios from 'axios';
 
 import Container from '@material-ui/core/Container';
 import TextField from '@material-ui/core/TextField';
@@ -13,7 +12,13 @@ import Send from '@material-ui/icons/Send';
 import Swal from 'sweetalert2';
 import { Toast } from './Toast';
 
-const AdminRegister = () => {
+import { graphql } from 'react-apollo';
+import { flowRight as compose } from 'lodash';
+import { getAdministratorsQuery } from '../../client-queries/queries';
+import { createAdministratorMutation } from '../../client-queries/mutations';
+
+const AdminRegister = (props) => {
+    let data = props.data;
     let history = useHistory();
 
     const [username,setUserName] = useState('');
@@ -59,19 +64,20 @@ const AdminRegister = () => {
     const submitRegistrationHandler = (e) => {        
         e.preventDefault();        
         if(password === cfmpassword){
-            axios.get('/administrators')
-            .then((res) => {
+            if(data.loading === false && data.error === undefined){
+                let dataArray = data.getAdministrators;
+
                 let matchCounter = 0;
                 let usernameCounter = 0;
                 let emailCounter = 0;
 
-                res.data.forEach((rs) => {
-                    if(rs.username === username){
+                dataArray.forEach((dtArr) => {
+                    if(dtArr.username === username){
                         ++usernameCounter;
                         ++matchCounter;
                     }          
     
-                    if(rs.email === email){
+                    if(dtArr.email === email){
                         ++emailCounter;
                         ++matchCounter;        
                     }              
@@ -85,39 +91,42 @@ const AdminRegister = () => {
                     ToastComponent('warning', 'Email already taken!');         
                 } else {                   
                     if(matchCounter === 0){       
-                        const config = {
-                            headers: {
-                                'Content-Type': 'application/json'
-                            }
-                        }                        
-                        const newAccount = JSON.stringify({
+                        let newAdministrator = {
                             username: username,
                             firstname: firstname,
                             surname: surname,
                             email: email,
                             password: password,
-                            roleId: "5e2c5033ae5995e7a53d5066" //ObjectId of 'Staff' in Roles collection
-                        });          
-                        axios.post('/administrators',newAccount,config)                        
-                        .then((res) => {                           
-                            if(res.status === 200){                
-                                Swal.fire({                                    
-                                    icon: 'success',
-                                    title: 'You have successfully registered!',
-                                    text: 'Redirecting to login page...',
-                                    showConfirmButton: false,
-                                    timer: 2200,
-                                    onAfterClose: () => {                                        
-                                        history.push('/admin');
-                                    }
-                                });   
-                            }
+                            roleId: 2,
+                            statId: 3
+                        }
+
+                        props.createAdministrator({
+                            variables: newAdministrator,
+                            refetchQueries: [{query: getAdministratorsQuery}]
                         })
-                        .catch((err) => ToastComponent('error', err));
+                        .then((res) => {
+                            Swal.fire({                                    
+                                icon: 'success',
+                                title: 'Account registration submitted!',
+                                text: 'Redirecting to login page...',
+                                showConfirmButton: false,
+                                timer: 2500,
+                                onAfterClose: () => {                                        
+                                    history.push('/admin');
+                                }
+                            });  
+                        })
+                        .catch((err) => {
+                            ToastComponent('error', 'Unable to register!');
+                        });                                       
                     }
                 }
-            })
-            .catch((err) => ToastComponent('error', err));                
+            }
+
+            if(data.error !== undefined) {
+                ToastComponent('error', 'Failed to load data');
+            }           
         } else {
             ToastComponent('warning', 'Passwords do not match!');      
         }
@@ -236,4 +245,7 @@ const AdminRegister = () => {
     );
 }
 
-export default AdminRegister;
+export default compose(
+    graphql(getAdministratorsQuery),
+    graphql(createAdministratorMutation, {name: "createAdministrator"})
+)(AdminRegister);
