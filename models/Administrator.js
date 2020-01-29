@@ -18,10 +18,10 @@ const administratorSchema = new Schema(
             type: String, required: true
         },
         roleId: {
-            type: String, required: true
+            type: Number, required: true
         },
         statId: {
-            type: String, required: true
+            type: Number, required: true
         }
     }, 
     {

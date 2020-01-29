@@ -5,8 +5,8 @@ db.administrators.insertMany([
         surname: "Escatron",
         email: "marc.escatron07@gmail.com",
         password: "supadmin",
-        roleId: "",
-        statId: ""
+        roleId: 1,
+        statId: 1
     },
     {
         username: "espegez",
@@ -14,8 +14,8 @@ db.administrators.insertMany([
         surname: "Gesalan",
         email: "espegez28@gmail.com",
         password: "admin",
-        roleId: "",
-        statId: ""
+        roleId: 2,
+        statId: 1
     },
     {
         username: "lanceria",
@@ -23,7 +23,7 @@ db.administrators.insertMany([
         surname: "Alarva",
         email: "tu_lanceria@gmail.com",
         password: "staff",
-        roleId: "",
-        statId: ""
+        roleId: 3,
+        statId: 1
     }
 ])

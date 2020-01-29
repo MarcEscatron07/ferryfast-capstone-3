@@ -1,7 +1,7 @@
 const { ApolloServer, gql } = require('apollo-server-express');
 
 const Role = require('../models/Role');
-const Stat = require('../models/Stats');
+const Stat = require('../models/Stat');
 const Administrator = require('../models/Administrator');
 
 const typeDefs = gql`
@@ -24,8 +24,8 @@ const typeDefs = gql`
         surname: String
         email: String
         password: String
-        roleId: String
-        statId: String
+        roleId: Int
+        statId: Int
         role: RoleType
         stat: StatType
     }
@@ -78,8 +78,8 @@ const typeDefs = gql`
             surname: String
             email: String
             password: String
-            roleId: String
-            statId: String
+            roleId: Int
+            statId: Int
         ): AdministratorType
 
         updateAdministrator(
@@ -89,8 +89,8 @@ const typeDefs = gql`
             surname: String
             email: String
             password: String
-            roleId: String
-            statId: String
+            roleId: Int
+            statId: Int
         ): AdministratorType
 
         deleteAdministrator(
