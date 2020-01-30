@@ -2,7 +2,15 @@ import React from 'react';
 import { Route, useHistory } from 'react-router-dom';
 
 import DashboardPage from './menu_pages/DashboardPage';
+import BookingsPage from './menu_pages/BookingsPage';
+import PassengersPage from './menu_pages/PassengersPage';
 import RoutesPage from './menu_pages/RoutesPage';
+import SchedulesPage from './menu_pages/SchedulesPage';
+import SeatsPage from './menu_pages/SeatsPage';
+import AccommodationsPage from './menu_pages/AccommodationsPage';
+
+import AdministratorsPage from './menu_pages/AdministratorsPage';
+import MailsPage from './menu_pages/MailsPage';
 
 import clsx from 'clsx';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
@@ -276,8 +284,15 @@ const AdminDrawer = () => {
       <main className={classes.content}>
         <div className={classes.toolbar} />
         {/* insert components to be mounted here */}
-        <Route exact path="/admin/home" component={DashboardPage}/>
+        <Route path="/admin/home" exact component={DashboardPage}/>
+        <Route path="/admin/home/bookings" component={BookingsPage}/>
+        <Route path="/admin/home/passengers" component={PassengersPage}/>
         <Route path="/admin/home/routes" component={RoutesPage}/>
+        <Route path="/admin/home/schedules" component={SchedulesPage}/>
+        <Route path="/admin/home/seats" component={SeatsPage}/>
+        <Route path="/admin/home/accommodations" component={AccommodationsPage}/>
+        <Route path="/admin/home/administrators" component={AdministratorsPage}/>
+        <Route path="/admin/home/mails" component={MailsPage}/>
       </main>
     </div>
   );
