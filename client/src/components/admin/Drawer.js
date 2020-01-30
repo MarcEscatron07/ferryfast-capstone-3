@@ -21,6 +21,7 @@ import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 
+import DashboardIcon from '@material-ui/icons/Dashboard';
 import LibraryBooks from '@material-ui/icons/LibraryBooks';
 import PersonIcon from '@material-ui/icons/Person';
 import ExploreIcon from '@material-ui/icons/Explore';
@@ -31,6 +32,8 @@ import AirlineSeatReclineNormalIcon from '@material-ui/icons/AirlineSeatReclineN
 import SupervisorAccountIcon from '@material-ui/icons/SupervisorAccount';
 import MailIcon from '@material-ui/icons/Mail';
 
+import DashboardPage from './menu_pages/DashboardPage';
+import RoutesPage from './menu_pages/RoutesPage';
 
 const drawerWidth = 240;
 
@@ -96,8 +99,9 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const AdminDrawer = () => {
-  const generalMenus = ['Bookings', 'Passengers', 'Routes', 'Schedules', 'Seats', 'Accommodations'];
+  const generalMenus = ['Dashboard', 'Bookings', 'Passengers', 'Routes', 'Schedules', 'Seats', 'Accommodations'];
   const generalIcons = [
+    <DashboardIcon/>,
     <LibraryBooks/>,
     <PersonIcon/>,
     <ExploreIcon/>,
@@ -238,6 +242,8 @@ const AdminDrawer = () => {
       <main className={classes.content}>
         <div className={classes.toolbar} />
         {/* insert components to be mounted here */}
+        
+        <DashboardPage/>
       </main>
     </div>
   );
