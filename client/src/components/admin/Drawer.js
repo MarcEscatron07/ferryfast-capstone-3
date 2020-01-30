@@ -22,7 +22,7 @@ import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 
 import LibraryBooks from '@material-ui/icons/LibraryBooks';
-import GroupIcon from '@material-ui/icons/Group';
+import PersonIcon from '@material-ui/icons/Person';
 import ExploreIcon from '@material-ui/icons/Explore';
 import ScheduleIcon from '@material-ui/icons/Schedule';
 import NoteIcon from '@material-ui/icons/Note';
@@ -96,14 +96,14 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const AdminDrawer = () => {
-  const generalMenus = ['Bookings', 'Passengers', 'Routes', 'Schedules', 'Accommodations', 'Seats'];
+  const generalMenus = ['Bookings', 'Passengers', 'Routes', 'Schedules', 'Seats', 'Accommodations'];
   const generalIcons = [
     <LibraryBooks/>,
-    <GroupIcon/>,
+    <PersonIcon/>,
     <ExploreIcon/>,
     <ScheduleIcon/>,
-    <NoteIcon/>,
-    <AirlineSeatReclineNormalIcon/>
+    <AirlineSeatReclineNormalIcon/>,
+    <NoteIcon/>
   ];
 
   const systemMenus = ['Administrators', 'Mails']; 
@@ -237,7 +237,7 @@ const AdminDrawer = () => {
       </Drawer>
       <main className={classes.content}>
         <div className={classes.toolbar} />
-        {/* insert content container here */}
+        {/* insert components to be mounted here */}
       </main>
     </div>
   );
