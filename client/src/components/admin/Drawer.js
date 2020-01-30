@@ -91,7 +91,7 @@ const AdminDrawer = () => {
   const theme = useTheme();
   const [auth, setAuth] = React.useState(true);
   const [anchorEl, setAnchorEl] = React.useState(null);
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = React.useState(true);
   const openOptions = Boolean(anchorEl);
 
   const handleDrawerOpen = () => {
@@ -135,9 +135,11 @@ const AdminDrawer = () => {
           >
             <MenuIcon />
           </IconButton>
-          <Typography variant="h6" noWrap>
-            REMS
-          </Typography>
+          {!open && (
+            <Typography variant="h6" noWrap>
+              REMS
+            </Typography>
+          )}
           {auth && (
             <div className="ml-auto">
               <IconButton
@@ -185,13 +187,16 @@ const AdminDrawer = () => {
         }}
       >
         <div className={classes.toolbar}>
+          <Typography variant="h6" align="center" style={{width: "100%"}} noWrap>
+              REMS
+            </Typography>
           <IconButton onClick={handleDrawerClose}>
             {theme.direction === 'rtl' ? <ChevronRightIcon /> : <ChevronLeftIcon />}
           </IconButton>
         </div>
         <Divider />
         <List>
-          {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
+          {['Bookings', 'Passengers', 'Routes', 'Schedules', 'Accommodations', 'Seats'].map((text, index) => (
             <ListItem button key={text}>
               <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
               <ListItemText primary={text} />
@@ -200,7 +205,7 @@ const AdminDrawer = () => {
         </List>
         <Divider />
         <List>
-          {['All mail', 'Trash', 'Spam'].map((text, index) => (
+          {['Administrators', 'Mails'].map((text, index) => (
             <ListItem button key={text}>
               <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
               <ListItemText primary={text} />
