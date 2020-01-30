@@ -30,6 +30,10 @@ function runStatsSeeder(){
 		new Stat({
 			uniqueId: 3,
 			name: "pending"
+		}),
+		new Stat({
+			uniqueId: 4,
+			name: "booked"
 		})
 	]
 	

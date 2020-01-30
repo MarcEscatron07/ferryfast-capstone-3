@@ -10,5 +10,9 @@ db.stats.insertMany([
     {
     	uniqueId: 3,
         name: "pending"
+    },
+    {
+    	uniqueId: 4,
+        name: "booked"
     }
 ])

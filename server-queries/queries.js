@@ -112,7 +112,7 @@ const typeDefs = gql`
             name: String
             originId: String
         ): OriginType
-        udpateOrigin(
+        updateOrigin(
             id: ID
             name: String
             originId: String
@@ -121,6 +121,18 @@ const typeDefs = gql`
             id: ID
         ): OriginType
 
+        createDestination(
+            name: String
+            originId: String
+        ): DestinationType
+        updateDestination(
+            id: ID
+            name: String
+            originId: String
+        ): DestinationType
+        deleteDestination(
+            id: ID
+        ): DestinationType
     }
 `;
 
@@ -170,31 +182,31 @@ const resolvers = {
     },
 
     RoleType: {
-        administrators: (parent,args) => {
+        administrators: (parent,_) => {
             return Administrator.find({roleId:parent.uniqueId});
         }
     },
     StatType: {
-        administrators: (parent,args) => {
+        administrators: (parent,_) => {
             return Administrator.find({statId:parent.uniqueId});
         }
     },
     AdministratorType: {
-        role: (parent,args) => {
+        role: (parent,_) => {
             return Role.findOne({uniqueId:parent.roleId});
         },
-        stat: (parent,args) => {
+        stat: (parent,_) => {
             return Stat.findOne({uniqueId:parent.statId});
         }
     },
 
     OriginType: {
-        destinations: (parent,args) => {
+        destinations: (parent,_) => {
             return Destination.find({originId:parent.id});
         }
     },
     DestinationType: {
-        origin: (parent,args) => {
+        origin: (parent,_) => {
             return Origin.findOne({_id:parent.originId});
         }
     },

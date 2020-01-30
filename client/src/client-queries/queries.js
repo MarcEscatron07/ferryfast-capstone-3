@@ -6,6 +6,7 @@ const getRolesQuery = gql`
             id
             name
             administrators {
+                id
                 username
                 firstname
                 surname
@@ -17,13 +18,13 @@ const getRolesQuery = gql`
         }
     }
 `;
-
 const getRoleQuery = gql`
     query($id: String!){
         getRole(id: $id){
             id
             name
             administrators {
+                id
                 username
                 firstname
                 surname
@@ -35,13 +36,13 @@ const getRoleQuery = gql`
         }
     }
 `;
-
 const getStatsQuery = gql`
     {
         getStats {
             id
             name
             administrators {
+                id
                 username
                 firstname
                 surname
@@ -53,13 +54,13 @@ const getStatsQuery = gql`
         }
     }
 `;
-
 const getStatQuery = gql`
     query($id: String!){
         getStat(id: $id){
             id
             name
             administrators {
+                id
                 username
                 firstname
                 surname
@@ -71,7 +72,6 @@ const getStatQuery = gql`
         }
     }
 `;
-
 const getAdministratorsQuery = gql`
     {
         getAdministrators {
@@ -84,15 +84,16 @@ const getAdministratorsQuery = gql`
             roleId
             statId
             role {
+                id
                 name
             }
             stat {
+                id
                 name
             }
         }
     }
 `;
-
 const getAdministratorQuery = gql`
     query($id: String!){
         getAdministrator(id: $id){
@@ -105,9 +106,67 @@ const getAdministratorQuery = gql`
             roleId
             statId
             role {
+                id
                 name
             }
             stat {
+                id
+                name
+            }
+        }
+    }
+`;
+
+const getOriginsQuery = gql`
+    {
+        getOrigins {
+            id
+            name
+            destinations {
+                id
+                name
+                originId
+            }
+        }
+    }
+`;
+
+const getOriginQuery = gql`
+    query($id: String!){
+        getOriginQuery(id: $id){
+            id
+            name
+            destinations {
+                id
+                name
+                originId
+            }
+        }
+    }
+`;
+
+const getDestinationsQuery = gql`
+    {
+        getDestinations {
+            id
+            name
+            originId
+            origin {
+                id
+                name
+            }
+        }
+    }
+`;
+
+const getDestinationQuery = gql`
+    query($id: String!){
+        getDestination(id: $id){
+            id
+            name
+            originId
+            origin {
+                id
                 name
             }
         }
@@ -120,5 +179,9 @@ export {
     getStatsQuery,
     getStatQuery,
     getAdministratorsQuery,
-    getAdministratorQuery 
+    getAdministratorQuery,
+    getOriginsQuery,
+    getOriginQuery,
+    getDestinationsQuery,
+    getDestinationQuery
 }
