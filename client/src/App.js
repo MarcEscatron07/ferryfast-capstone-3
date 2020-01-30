@@ -36,19 +36,20 @@ const theme = createMuiTheme({
 
 function App() {
   return (
-    <>
-      <MuiThemeProvider theme = { theme }>
-        <ApolloProvider client={clientConnection}>
-          <Router>
-            <Switch>
-              <Route path="/" exact component={Client}/>        
+    <>      
+      <ApolloProvider client={clientConnection}>
+        <Router>
+          <Switch>
+            <Route path="/" exact component={Client}/>
+
+            <MuiThemeProvider theme = {theme}>   
               <Route path="/admin" exact component={Admin}/>
               <Route path="/admin/home" component={AdminHome}/>
               <Route path="/admin/register" component={AdminRegister}/>
-            </Switch>
-          </Router>
-        </ApolloProvider>
-      </MuiThemeProvider>
+            </MuiThemeProvider>
+          </Switch>
+        </Router>
+      </ApolloProvider>      
     </>
   );
 }
