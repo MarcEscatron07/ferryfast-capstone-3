@@ -208,12 +208,12 @@ const AdminDrawer = () => {
           }),
         }}
       >
-        <div className={classes.toolbar}>
+        <div className={classes.toolbar} style={{backgroundColor: "#531a72", color: "#fff"}}>
           <Typography variant="h6" align="center" style={{width: "100%"}} noWrap>
               REMS
             </Typography>
           <IconButton onClick={handleDrawerClose}>
-            {theme.direction === 'rtl' ? <ChevronRightIcon /> : <ChevronLeftIcon />}
+            {theme.direction === 'rtl' ? <ChevronRightIcon color="secondary"/> : <ChevronLeftIcon color="secondary"/>}
           </IconButton>
         </div>
         <Divider />
