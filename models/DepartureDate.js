@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const departureDateSchema = new Schema(
     {
-        departure_datetime: {
+        departDateTime: {
             type: Date,
             required: true
         }
