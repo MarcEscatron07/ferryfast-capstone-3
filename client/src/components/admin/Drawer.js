@@ -104,7 +104,7 @@ const AdminDrawer = () => {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [open, setOpen] = React.useState(true);
   const openOptions = Boolean(anchorEl);
-  
+
   let history = useHistory();
   const classes = useStyles();
   const theme = useTheme();
@@ -197,7 +197,7 @@ const AdminDrawer = () => {
           </IconButton>
           {!open && (
             <Typography variant="h6" noWrap>
-              REMS
+              REMSOFT
             </Typography>
           )}
           {auth && (
@@ -248,7 +248,7 @@ const AdminDrawer = () => {
       >
         <div className={classes.toolbar} style={{backgroundColor: "#531a72", color: "#fff"}}>
           <Typography variant="h6" align="center" style={{width: "100%"}} noWrap>
-              REMS
+              REMSOFT
             </Typography>
           <IconButton onClick={handleDrawerClose}>
             {theme.direction === 'rtl' ? <ChevronRightIcon color="secondary"/> : <ChevronLeftIcon color="secondary"/>}

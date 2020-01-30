@@ -59,7 +59,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 function RoutesPage() {
-    const [state, setState] = React.useState({
+    const [origins, setOrigins] = React.useState({
         columns: [
             { title: 'Name', field: 'name' },
             { title: 'Surname', field: 'surname' },
@@ -80,7 +80,29 @@ function RoutesPage() {
             },
         ],
     });
-    
+
+    const [destinations, setDestinations] = React.useState({
+        columns: [
+            { title: 'Name', field: 'name' },
+            { title: 'Surname', field: 'surname' },
+            { title: 'Birth Year', field: 'birthYear', type: 'numeric' },
+            {
+            title: 'Birth Place',
+            field: 'birthCity',
+            lookup: { 34: 'İstanbul', 63: 'Şanlıurfa' },
+            },
+        ],
+        data: [
+            { name: 'Mehmet', surname: 'Baran', birthYear: 1987, birthCity: 63 },
+            {
+            name: 'Zerya Betül',
+            surname: 'Baran',
+            birthYear: 2017,
+            birthCity: 34,
+            },
+        ],
+    });
+
     let history = useHistory();
     const classes = useStyles();
 
@@ -103,51 +125,98 @@ function RoutesPage() {
                     Routes
                 </Typography>
             </Breadcrumbs>
-            <Container>
-                <MaterialTable
-                    icons={tableIcons}
-                    title="Routes"
-                    columns={state.columns}
-                    data={state.data}
-                    editable={{
-                        onRowAdd: newData =>
-                        new Promise(resolve => {
-                            setTimeout(() => {
-                            resolve();
-                            setState(prevState => {
-                                const data = [...prevState.data];
-                                data.push(newData);
-                                return { ...prevState, data };
-                            });
-                            }, 600);
-                        }),
-                        onRowUpdate: (newData, oldData) =>
-                        new Promise(resolve => {
-                            setTimeout(() => {
-                            resolve();
-                            if (oldData) {
-                                setState(prevState => {
-                                const data = [...prevState.data];
-                                data[data.indexOf(oldData)] = newData;
-                                return { ...prevState, data };
+            <div className="container-fluid p-0">
+                <Container className="mb-4">
+                    <MaterialTable
+                        icons={tableIcons}
+                        title="Origins"
+                        columns={origins.columns}
+                        data={origins.data}
+                        editable={{
+                            onRowAdd: newData =>
+                            new Promise(resolve => {
+                                setTimeout(() => {
+                                resolve();
+                                setOrigins(prevState => {
+                                    const data = [...prevState.data];
+                                    data.push(newData);
+                                    return { ...prevState, data };
                                 });
-                            }
-                            }, 600);
-                        }),
-                        onRowDelete: oldData =>
-                        new Promise(resolve => {
-                            setTimeout(() => {
-                            resolve();
-                            setState(prevState => {
-                                const data = [...prevState.data];
-                                data.splice(data.indexOf(oldData), 1);
-                                return { ...prevState, data };
-                            });
-                            }, 600);
-                        }),
-                    }}
-                />
-            </Container>
+                                }, 600);
+                            }),
+                            onRowUpdate: (newData, oldData) =>
+                            new Promise(resolve => {
+                                setTimeout(() => {
+                                resolve();
+                                if (oldData) {
+                                    setOrigins(prevState => {
+                                    const data = [...prevState.data];
+                                    data[data.indexOf(oldData)] = newData;
+                                    return { ...prevState, data };
+                                    });
+                                }
+                                }, 600);
+                            }),
+                            onRowDelete: oldData =>
+                            new Promise(resolve => {
+                                setTimeout(() => {
+                                resolve();
+                                setOrigins(prevState => {
+                                    const data = [...prevState.data];
+                                    data.splice(data.indexOf(oldData), 1);
+                                    return { ...prevState, data };
+                                });
+                                }, 600);
+                            }),
+                        }}
+                    />
+                </Container>
+                <Container className="mb-4">
+                    <MaterialTable
+                        icons={tableIcons}
+                        title="Destinations"
+                        columns={destinations.columns}
+                        data={destinations.data}
+                        editable={{
+                            onRowAdd: newData =>
+                            new Promise(resolve => {
+                                setTimeout(() => {
+                                resolve();
+                                setDestinations(prevState => {
+                                    const data = [...prevState.data];
+                                    data.push(newData);
+                                    return { ...prevState, data };
+                                });
+                                }, 600);
+                            }),
+                            onRowUpdate: (newData, oldData) =>
+                            new Promise(resolve => {
+                                setTimeout(() => {
+                                resolve();
+                                if (oldData) {
+                                    setDestinations(prevState => {
+                                    const data = [...prevState.data];
+                                    data[data.indexOf(oldData)] = newData;
+                                    return { ...prevState, data };
+                                    });
+                                }
+                                }, 600);
+                            }),
+                            onRowDelete: oldData =>
+                            new Promise(resolve => {
+                                setTimeout(() => {
+                                resolve();
+                                setDestinations(prevState => {
+                                    const data = [...prevState.data];
+                                    data.splice(data.indexOf(oldData), 1);
+                                    return { ...prevState, data };
+                                });
+                                }, 600);
+                            }),
+                        }}
+                    />
+                </Container>
+            </div>            
         </>
     );
 }
