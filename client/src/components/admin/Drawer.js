@@ -19,9 +19,18 @@ import Menu from '@material-ui/core/Menu';
 import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
-import InboxIcon from '@material-ui/icons/MoveToInbox';
-import MailIcon from '@material-ui/icons/Mail';
 import AccountCircle from '@material-ui/icons/AccountCircle';
+
+import LibraryBooks from '@material-ui/icons/LibraryBooks';
+import GroupIcon from '@material-ui/icons/Group';
+import ExploreIcon from '@material-ui/icons/Explore';
+import ScheduleIcon from '@material-ui/icons/Schedule';
+import NoteIcon from '@material-ui/icons/Note';
+import AirlineSeatReclineNormalIcon from '@material-ui/icons/AirlineSeatReclineNormal';
+
+import SupervisorAccountIcon from '@material-ui/icons/SupervisorAccount';
+import MailIcon from '@material-ui/icons/Mail';
+
 
 const drawerWidth = 240;
 
@@ -87,6 +96,19 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const AdminDrawer = () => {
+  const generalMenus = ['Bookings', 'Passengers', 'Routes', 'Schedules', 'Accommodations', 'Seats'];
+  const generalIcons = [
+    <LibraryBooks/>,
+    <GroupIcon/>,
+    <ExploreIcon/>,
+    <ScheduleIcon/>,
+    <NoteIcon/>,
+    <AirlineSeatReclineNormalIcon/>
+  ];
+
+  const systemMenus = ['Administrators', 'Mails']; 
+  const systemIcons = [<SupervisorAccountIcon/>,<MailIcon/>]
+  
   const classes = useStyles();
   const theme = useTheme();
   const [auth, setAuth] = React.useState(true);
@@ -102,7 +124,7 @@ const AdminDrawer = () => {
     setOpen(false);
   };
 
-  const handleChange = event => {
+  const handleChange = event => { //used when Auth will be applied
     setAuth(event.target.checked);
   };
 
@@ -196,18 +218,18 @@ const AdminDrawer = () => {
         </div>
         <Divider />
         <List>
-          {['Bookings', 'Passengers', 'Routes', 'Schedules', 'Accommodations', 'Seats'].map((text, index) => (
-            <ListItem button key={text}>
-              <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
+          {generalMenus.map((text, index) => (
+            <ListItem button key={text} id={text}>
+              <ListItemIcon>{generalIcons[index]}</ListItemIcon>
               <ListItemText primary={text} />
             </ListItem>
           ))}
         </List>
         <Divider />
         <List>
-          {['Administrators', 'Mails'].map((text, index) => (
-            <ListItem button key={text}>
-              <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
+          {systemMenus.map((text, index) => (
+            <ListItem button key={text} id={text}>
+              <ListItemIcon>{systemIcons[index]}</ListItemIcon>
               <ListItemText primary={text} />
             </ListItem>
           ))}
