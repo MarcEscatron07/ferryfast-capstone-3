@@ -1,4 +1,5 @@
 import React, { forwardRef } from 'react'
+import { useHistory } from 'react-router-dom';
 
 import Container from '@material-ui/core/Container';
 
@@ -79,31 +80,28 @@ function RoutesPage() {
             },
         ],
     });
-
+    
+    let history = useHistory();
     const classes = useStyles();
 
     const handleBreadCrumbClick = (e) => {
         e.preventDefault();
+
+        if(e.target.id === 'home'){
+            history.push('/admin/home');
+        }
     }
 
     return (
         <>
-            <Breadcrumbs aria-label="breadcrumb">
-                <Link color="inherit" href="/" onClick={handleBreadCrumbClick} className={classes.link}>
+            <Breadcrumbs aria-label="breadcrumb" className="mb-3">
+                <Link id="home" color="inherit" href="/" onClick={handleBreadCrumbClick} className={classes.link}>
                     <HomeIcon className={classes.icon} />
                     Home
-                </Link>
-                <Link
-                    color="inherit"
-                    href="/getting-started/installation/"
-                    onClick={handleBreadCrumbClick}
-                    className={classes.link}
-                >      
-                    {/* Core */}
-                </Link>
-                {/* <Typography color="textPrimary" className={classes.link}>            
-                    Breadcrumb
-                </Typography> */}
+                </Link>   
+                <Typography color="textPrimary" className={classes.link}>            
+                    Routes
+                </Typography>
             </Breadcrumbs>
             <Container>
                 <MaterialTable

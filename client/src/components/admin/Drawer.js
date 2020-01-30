@@ -1,4 +1,8 @@
 import React from 'react';
+import { Route, useHistory } from 'react-router-dom';
+
+import DashboardPage from './menu_pages/DashboardPage';
+import RoutesPage from './menu_pages/RoutesPage';
 
 import clsx from 'clsx';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
@@ -31,9 +35,6 @@ import AirlineSeatReclineNormalIcon from '@material-ui/icons/AirlineSeatReclineN
 
 import SupervisorAccountIcon from '@material-ui/icons/SupervisorAccount';
 import MailIcon from '@material-ui/icons/Mail';
-
-import DashboardPage from './menu_pages/DashboardPage';
-import RoutesPage from './menu_pages/RoutesPage';
 
 const drawerWidth = 240;
 
@@ -99,7 +100,25 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const AdminDrawer = () => {
-  const generalMenus = ['Dashboard', 'Bookings', 'Passengers', 'Routes', 'Schedules', 'Seats', 'Accommodations'];
+  const [auth, setAuth] = React.useState(true);
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const [open, setOpen] = React.useState(true);
+  const openOptions = Boolean(anchorEl);
+  
+  let history = useHistory();
+  const classes = useStyles();
+  const theme = useTheme();
+
+  const generalMenus = [
+    'Dashboard', 
+    'Bookings', 
+    'Passengers', 
+    'Routes', 
+    'Schedules', 
+    'Seats', 
+    'Accommodations'
+  ];
+
   const generalIcons = [
     <DashboardIcon/>,
     <LibraryBooks/>,
@@ -112,13 +131,6 @@ const AdminDrawer = () => {
 
   const systemMenus = ['Administrators', 'Mails']; 
   const systemIcons = [<SupervisorAccountIcon/>,<MailIcon/>]
-  
-  const classes = useStyles();
-  const theme = useTheme();
-  const [auth, setAuth] = React.useState(true);
-  const [anchorEl, setAnchorEl] = React.useState(null);
-  const [open, setOpen] = React.useState(true);
-  const openOptions = Boolean(anchorEl);
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -139,6 +151,28 @@ const AdminDrawer = () => {
   const handleClose = () => {
     setAnchorEl(null);
   };
+
+  const drawerMenuHandler = (e) => {    
+    if(e.target.id === generalMenus[0]){
+      history.push('/admin/home');
+    } else if(e.target.id === generalMenus[1]){
+      history.push('/admin/home/bookings');
+    } else if(e.target.id === generalMenus[2]){
+      history.push('/admin/home/passengers');
+    } else if(e.target.id === generalMenus[3]){
+      history.push('/admin/home/routes');
+    } else if(e.target.id === generalMenus[4]){
+      history.push('/admin/home/schedules');
+    } else if(e.target.id === generalMenus[5]){
+      history.push('/admin/home/seats');
+    } else if(e.target.id === generalMenus[6]){
+      history.push('/admin/home/accommodations');
+    } else if(e.target.id === systemMenus[0]){
+      history.push('/admin/home/administrators');
+    } else if(e.target.id === systemMenus[1]){
+      history.push('/admin/home/mails');
+    }
+  }
 
   return (
     <div className={classes.root}>
@@ -223,7 +257,7 @@ const AdminDrawer = () => {
         <Divider />
         <List>
           {generalMenus.map((text, index) => (
-            <ListItem button key={text} id={text}>
+            <ListItem button key={text} id={text} onClick={drawerMenuHandler}>
               <ListItemIcon>{generalIcons[index]}</ListItemIcon>
               <ListItemText primary={text} />
             </ListItem>
@@ -232,7 +266,7 @@ const AdminDrawer = () => {
         <Divider />
         <List>
           {systemMenus.map((text, index) => (
-            <ListItem button key={text} id={text}>
+            <ListItem button key={text} id={text} onClick={drawerMenuHandler}>
               <ListItemIcon>{systemIcons[index]}</ListItemIcon>
               <ListItemText primary={text} />
             </ListItem>
@@ -242,8 +276,8 @@ const AdminDrawer = () => {
       <main className={classes.content}>
         <div className={classes.toolbar} />
         {/* insert components to be mounted here */}
-        
-        <DashboardPage/>
+        <Route exact path="/admin/home" component={DashboardPage}/>
+        <Route path="/admin/home/routes" component={RoutesPage}/>
       </main>
     </div>
   );

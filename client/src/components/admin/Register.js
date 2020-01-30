@@ -18,15 +18,15 @@ import { getAdministratorsQuery } from '../../client-queries/queries';
 import { createAdministratorMutation } from '../../client-queries/mutations';
 
 const AdminRegister = (props) => {
-    let data = props.data;
-    let history = useHistory();
-
     const [username,setUserName] = useState('');
     const [firstname,setFirstName] = useState('');
     const [surname,setSurName] = useState('');
     const [email,setEmail] = useState('');
     const [password,setPassword] = useState('');
     const [cfmpassword,setCfmPassword] = useState('');
+    
+    let data = props.data;
+    let history = useHistory();
 
     const ToastComponent = (iconProp, titleProp) => {
         Toast.fire({
