@@ -3,10 +3,10 @@ module.exports = {
 }
 
 function runRolesSeeder() {
-	const Role = require('../../models/Role');
+	const Role = require('../models/Role');
 	const mongoose = require('mongoose');
 	
-	const ATLAS_URI = require('../../config/connection').mongoURI;
+	const ATLAS_URI = require('../config/connection').mongoURI;
 	const uri = ATLAS_URI || 'mongodb://localhost:27017/capstone3_db';
 	// const uri = 'mongodb://localhost:27017/capstone3_db';
 	mongoose.connect(uri, {
@@ -15,7 +15,10 @@ function runRolesSeeder() {
 		useCreateIndex: true,
 		useFindAndModify: false
 	})
-	.then(() => console.log('RolesSeeder connected'))
+	.then(() => {
+		console.log('RolesSeeder connected')
+		mongoose.connection.db.dropCollection('roles');
+	})
 	.catch((err) => console.log(err));
 	
 	let roles = [

@@ -12,7 +12,7 @@
     "frontend-install": "cd client && npm install",
     "install-all": "concurrently \"npm run backend-install\" \"npm run frontend-install\"",
     "dev": "concurrently \"npm run backend\" \"npm run frontend\"",
-    "seed": "cd seeders/atlas-seeder && node MainSeeder.js",
+    "seed": "cd seeders && node MainSeeder.js",
     "heroku-postbuild": "cd client && npm install && npm run build"
   },
   "keywords": [],

@@ -1,12 +1,12 @@
 exports.module = {
-    administratorSeeder: runAdministratorsSeeder()
+    administratorsSeeder: runAdministratorsSeeder()
 }
 
 function runAdministratorsSeeder(){
-    const Administrator = require('../../models/Administrator')
+    const Administrator = require('../models/Administrator')
     const mongoose = require('mongoose');
 
-    const ATLAS_URI = require('../../config/connection').mongoURI;
+    const ATLAS_URI = require('../config/connection').mongoURI;
 	const uri = ATLAS_URI || 'mongodb://localhost:27017/capstone3_db';
 	// const uri = 'mongodb://localhost:27017/capstone3_db';
 	mongoose.connect(uri, {
@@ -15,7 +15,10 @@ function runAdministratorsSeeder(){
 		useCreateIndex: true,
 		useFindAndModify: false
 	})
-	.then(() => console.log('AdministratorsSeeder connected'))
+	.then(() => {
+        console.log('AdministratorsSeeder connected')
+        mongoose.connection.db.dropCollection('administrators');
+    })
     .catch((err) => console.log(err));
     
     let administrators = [
@@ -51,7 +54,6 @@ function runAdministratorsSeeder(){
 
     const disconnect = () => {
 		console.log("AdministratorsSeeder finished seeding!")
-		mongoose.disconnect();
-		process.exit();
+		mongoose.disconnect();		
 	}
 }

@@ -3,10 +3,10 @@ module.exports = {
 }
 
 function runStatsSeeder(){
-	const Stat = require('../../models/Stat');
+	const Stat = require('../models/Stat');
 	const mongoose = require('mongoose');
 	
-	const ATLAS_URI = require('../../config/connection').mongoURI;
+	const ATLAS_URI = require('../config/connection').mongoURI;
 	const uri = ATLAS_URI || 'mongodb://localhost:27017/capstone3_db';
 	// const uri = 'mongodb://localhost:27017/capstone3_db';
 	mongoose.connect(uri, {
@@ -15,8 +15,11 @@ function runStatsSeeder(){
 		useCreateIndex: true,
 		useFindAndModify: false
 	})
-	.then(() => console.log('StatsSeeder connected'))
-	.catch((err) => console.log(err));
+	.then(() => {
+		console.log('StatsSeeder connected')
+		mongoose.connection.db.dropCollection('stats');
+	})
+	.catch((err) => console.log(err));	
 	
 	let stats = [
 		new Stat({
