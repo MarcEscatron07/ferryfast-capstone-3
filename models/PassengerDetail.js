@@ -26,6 +26,10 @@ const passengerDetailSchema = new Schema(
         contactDetailId: {
             type: String,
             required: true
+        },
+        bookingId: {
+            type: String,
+            required: true
         }
     },
     {

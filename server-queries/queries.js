@@ -30,6 +30,7 @@ const typeDefs = gql`
         uniqueId: Int
         name: String
         administrators: [AdministratorType]
+        bookings: [BookingType]
     }
     type AdministratorType {
         id: ID
@@ -58,20 +59,25 @@ const typeDefs = gql`
     type DepartureDateType {
         id: ID
         departDateTime: DateTime
+        arrivalDate: ArrivalDateType
     }
     type ArrivalDateType {
         id: ID
         arriveDateTime: DateTime
+        departureDate: DepartureDateType
+        bookings: [BookingType]
     }
     type AccommodationType {
         id: ID
         name: String
         price: Float
+        bookings: [BookingType]
     }
     type SeatType {
         id: ID
         row: Int
         column: String
+        passengerDetail: PassengerDetailType
     }
     type ContactDetailType {
         id: ID
@@ -79,6 +85,7 @@ const typeDefs = gql`
         phone: String
         email: String
         address: String
+        passengerDetails: [PassengerDetailType]
     }
     type PassengerDetailType {
         id: ID
@@ -89,6 +96,10 @@ const typeDefs = gql`
         gender: String
         seatId: String
         ContactDetailId: String
+        bookingId: String
+        seat: SeatType
+        contactDetail: ContactDetailType
+        booking: BookingType
     }
     type BookingType {
         id: ID
@@ -100,6 +111,10 @@ const typeDefs = gql`
         statId: String
         passengerQuantity: Int
         totalPayment: Float
+        arrivalDate: ArrivalDateType
+        accommodation: AccommodationType
+        passengerDetails: [PassengerDetailType]
+        stat: StatType
     }
 
     type Query {
@@ -280,6 +295,7 @@ const typeDefs = gql`
             gender: String
             seatId: String
             ContactDetailId: String
+            bookingId: String
         ): PassengerDetailType
         updatePassengerDetail(
             id: ID
@@ -290,6 +306,7 @@ const typeDefs = gql`
             gender: String
             seatId: String
             ContactDetailId: String
+            bookingId: String
         ): PassengerDetailType
         deletePassengerDetail(
             id: ID
@@ -445,6 +462,9 @@ const resolvers = {
     StatType: {
         administrators: (parent,_) => {
             return Administrator.find({statId:parent.uniqueId});
+        },
+        bookings: (parent,_) => {
+            return Booking.find({statId:parent.uniqueId});
         }
     },
     AdministratorType: {
@@ -674,7 +694,8 @@ const resolvers = {
                 age: args.age,
                 gender: args.gender,
                 seatId: args.seatId,
-                contactDetailId: args.contactDetailId
+                contactDetailId: args.contactDetailId,
+                bookingId: args.bookingId
             })
             return newPassengerDetail.save();
         },
@@ -687,7 +708,8 @@ const resolvers = {
                 age: args.age,
                 gender: args.gender,
                 seatId: args.seatId,
-                contactDetailId: args.contactDetailId
+                contactDetailId: args.contactDetailId,
+                bookingId: args.bookingId
             }
             return PassengerDetail.findOneAndUpdate(updatePassengerDetailId, updatePassengerDetailData);
         },
