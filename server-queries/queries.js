@@ -1,13 +1,24 @@
 const { ApolloServer, gql } = require('apollo-server-express');
 
+const { GraphQLScalarType } = require('graphql');
+
 const Role = require('../models/Role');
 const Stat = require('../models/Stat');
 const Administrator = require('../models/Administrator');
 
 const Origin = require('../models/Origin');
 const Destination = require('../models/Destination');
+const DepartureDate = require('../models/DepartureDate');
+const ArrivalDate = require('../models/ArrivalDate');
+const Accommodation = require('../models/Accommodation');
+const Seat = require('../models/Seat');
+const ContactDetail = require('../models/ContactDetail');
+const PassengerDetail = require('../models/PassengerDetail');
+const Booking = require('../models/Booking');
 
 const typeDefs = gql`
+    scalar DateTime
+
     type RoleType {
         id: ID
         uniqueId: Int
@@ -44,6 +55,52 @@ const typeDefs = gql`
         originId: String
         origin: OriginType
     }
+    type DepartureDateType {
+        id: ID
+        departDateTime: DateTime
+    }
+    type ArrivalDateType {
+        id: ID
+        arriveDateTime: DateTime
+    }
+    type AccommodationType {
+        id: ID
+        name: String
+        price: Float
+    }
+    type SeatType {
+        id: ID
+        column: String
+        number: Int
+    }
+    type ContactDetailType {
+        id: ID
+        fullname: String
+        phone: String
+        email: String
+        address: String
+    }
+    type PassengerDetailType {
+        id: ID
+        firstname: String
+        middleinitial: String
+        lastname: String
+        age: Int
+        gender: String
+        seatId: String
+        ContactDetailId: String
+    }
+    type BookingType {
+        id: ID
+        bookingNumber: String
+        date: DateTime
+        accommodationId: String
+        arrivalDateId: String
+        passengerDetailId: String
+        statId: String
+        passengerQuantity: Int
+        totalPayment: Float
+    }
 
     type Query {
         getRoles(id: String): [RoleType]
@@ -57,6 +114,20 @@ const typeDefs = gql`
         getOrigin(id: String): OriginType
         getDestinations(id: String): [DestinationType]
         getDestination(id: String): DestinationType
+        getDepartureDates(id: String): [DepartureDateType]
+        getDepartureDate(id: String): DepartureDateType
+        getArrivalDates(id: String): [ArrivalDateType]
+        getArrivalDate(id: String): ArrivalDateType
+        getAccommodations(id: String): [AccommodationType]
+        getAccommodation(id: String): AccommodationType
+        getSeats(id: String): [SeatType]
+        getSeat(id: String): SeatType
+        getContactDetails(id: String): [ContactDetailType]
+        getContactDetail(id: String): ContactDetailType
+        getPassengerDetails(id: String): [PassengerDetailType]
+        getPassengerDetail(id: String): PassengerDetailType
+        getBookings(id: String): [BookingType]
+        getBooking(id: String): BookingType
     }
     type Mutation {
         createRole(
@@ -137,6 +208,20 @@ const typeDefs = gql`
 `;
 
 const resolvers = {
+    DateTime: new GraphQLScalarType({
+        name: 'DateTime',
+        description: 'A date and time, represented as an ISO-8601 string',
+        serialize(value) {
+          return value.toISOString();
+        },
+        parseValue(value) {
+          return new Date(value);
+        },        
+        parseLiteral(ast) {
+          return new Date(ast.value);
+        },
+    }),
+
     Query: {
         getRoles: (_,args) => {
             if(!args.id)
@@ -178,6 +263,62 @@ const resolvers = {
         },
         getDestination: (_,args) => {
             return Destination.findById(args.id);
+        },
+        getDepartureDates: (_,args) => {
+            if(!args.id)
+                return DepartureDate.find({});
+            return DepartureDate.find({_id:args.id});
+        },
+        getDepartureDate: (_,args) => {
+            return DepartureDate.findById(args.id);
+        },
+        getArrivalDates: (_,args) => {
+            if(!args.id)
+                return ArrivalDate.find({});
+            return ArrivalDate.find({_id:args.id});
+        },
+        getArrivalDate: (_,args) => {
+            return ArrivalDate.findById(args.id);
+        },
+        getAccommodations: (_,args) => {
+            if(!args.id)
+                return Accommodation.find({});
+            return Accommodation.find({_id:args.id});
+        },
+        getAccommodation: (_,args) => {
+            return Accommodation.findById(args.id);
+        },
+        getSeats: (_,args) => {
+            if(!args.id)
+                return Seat.find({});
+            return Seat.find({_id:args.id})
+        },
+        getSeat: (_,args) => {
+            return Seat.findById(args.id);
+        },
+        getContactDetails: (_,args) => {
+            if(!args.id)
+                return ContactDetail.find({});
+            return ContactDetail.find({_id:args.id});
+        },
+        getContactDetail: (_,args) => {
+            return ContactDetail.findById(args.id);
+        },
+        getPassengerDetails: (_,args) => {
+            if(!args.id)
+                return PassengerDetail.find({});
+            return PassengerDetail.find({_id:args.id});
+        },
+        getPassengerDetail: (_,args) => {
+            return PassengerDetail.findById(args.id);
+        },
+        getBookings: (_,args) => {
+            if(!args.id)
+                return Booking.find({});
+            return Booking.find({_id:args.id});
+        },
+        getBooking: (_,args) => {
+            return Booking.findById(args.id);
         }
     },
 
