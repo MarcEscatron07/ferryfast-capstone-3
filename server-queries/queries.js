@@ -204,6 +204,121 @@ const typeDefs = gql`
         deleteDestination(
             id: ID
         ): DestinationType
+
+        createDepartureDate(
+            departDateTime: DateTime
+        ): DepartureDateType
+        updateDepartureDate(
+            id: ID
+            departDateTime: DateTime
+        ): DepartureDateType
+        deleteDepartureDate(
+            id: ID
+        ): DepartureDateType
+
+        createArrivalDate(
+            arriveDateTime: DateTime
+            departureDateId: String
+        ): ArrivalDateType
+        updateArrivalDate(
+            id: ID
+            arriveDateTime: DateTime
+            departureDateId: String
+        ): ArrivalDateType
+        deleteArrivalDate(
+            id: ID
+        ): ArrivalDateType
+
+        createAccommodation(
+            name: String
+            price: Float
+        ): AccommodationType
+        updateAccommodation(
+            id: ID
+            name: String
+            price: Float
+        ): AccommodationType
+        deleteAccommodation(
+            id: ID
+        ): AccommodationType
+
+        createSeat(
+            column: String
+            number: Int
+        ): SeatType
+        updateSeat(
+            id: ID
+            column: String
+            number: Int
+        ): SeatType
+        deleteSeat(
+            id: ID
+        ): SeatType
+
+        createContactDetail(
+            fullname: String
+            phone: String
+            email: String
+            address: String
+        ): ContactDetailType
+        updateContactDetail(
+            id: ID
+            fullname: String
+            phone: String
+            email: String
+            address: String
+        ): ContactDetailType
+        deleteContactDetail(
+            id: ID
+        ): ContactDetailType
+
+        createPassengerDetail(
+            firstname: String
+            middleinitial: String
+            lastname: String
+            age: Int
+            gender: String
+            seatId: String
+            ContactDetailId: String
+        ): PassengerDetailType
+        updatePassengerDetail(
+            id: ID
+            firstname: String
+            middleinitial: String
+            lastname: String
+            age: Int
+            gender: String
+            seatId: String
+            ContactDetailId: String
+        ): PassengerDetailType
+        deletePassengerDetail(
+            id: ID
+        ): PassengerDetailType
+
+        createBooking(
+            bookingNumber: String
+            date: DateTime
+            accommodationId: String
+            arrivalDateId: String
+            passengerDetailId: String
+            statId: String
+            passengerQuantity: number
+            totalPayment: Float
+        ): BookingType
+        updateBooking(
+            id: ID
+            bookingNumber: String
+            date: DateTime
+            accommodationId: String
+            arrivalDateId: String
+            passengerDetailId: String
+            statId: String
+            passengerQuantity: number
+            totalPayment: Float
+        ): BookingType
+        deleteBooking(
+            id: ID
+        ): BookingType
     }
 `;
 
