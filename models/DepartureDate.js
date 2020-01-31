@@ -5,6 +5,10 @@ const departureDateSchema = new Schema(
         departDateTime: {
             type: Date,
             required: true
+        },
+        destinationId: {
+            type: String,
+            require: true
         }
     },
     {

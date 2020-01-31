@@ -55,15 +55,19 @@ const typeDefs = gql`
         name: String
         originId: String
         origin: OriginType
+        departureDates: [DepartureDateType]
     }
     type DepartureDateType {
         id: ID
         departDateTime: DateTime
+        destinationId: String
+        destination: DestinationType
         arrivalDate: ArrivalDateType
     }
     type ArrivalDateType {
         id: ID
         arriveDateTime: DateTime
+        departureDateId: String
         departureDate: DepartureDateType
         bookings: [BookingType]
     }
@@ -111,8 +115,8 @@ const typeDefs = gql`
         statId: String
         passengerQuantity: Int
         totalPayment: Float
-        arrivalDate: ArrivalDateType
         accommodation: AccommodationType
+        arrivalDate: ArrivalDateType
         passengerDetails: [PassengerDetailType]
         stat: StatType
     }
@@ -222,10 +226,12 @@ const typeDefs = gql`
 
         createDepartureDate(
             departDateTime: DateTime
+            destinationId: String
         ): DepartureDateType
         updateDepartureDate(
             id: ID
             departDateTime: DateTime
+            destinationId: String
         ): DepartureDateType
         deleteDepartureDate(
             id: ID
@@ -484,6 +490,65 @@ const resolvers = {
     DestinationType: {
         origin: (parent,_) => {
             return Origin.findOne({_id:parent.originId});
+        },
+        departureDates: (parent,_) => {
+            return DepartureDate.find({destinationId:parent.id});
+        }
+    },
+    DepartureDateType: {
+        destination: (parent,_) => {
+            return Destination.findOne({_id:parent.destinationId});
+        },
+        arrivalDate: (parent,_) => {
+            return ArrivalDate.findOne({departureDateId:parent.id});
+        }
+    },
+    ArrivalDateType: {
+        departureDate: (parent,_) => {
+            return DepartureDate.findOne({_id:parent.departureDateId});
+        },
+        bookings: (parent,_) => {
+            return Booking.find({arrivalDateId:parent.id});
+        }
+    },
+    AccommodationType: {
+        bookings: (parent,_) => {
+            return Booking.find({accommodationId:parent.id});
+        }
+    },
+    SeatType: {
+        passengerDetail: (parent,_) => {
+            return PassengerDetail.findOne({seatId:parent.id});
+        }
+    },
+    ContactDetailType: {
+        passengerDetails: (parent,_) => {
+            return PassengerDetail.find({contactDetailId:parent.id});
+        }
+    },
+    PassengerDetailType: {
+        seat: (parent,_) => {
+            return Seat.findOne({_id:parent.seatId});
+        },
+        contactDetail: (parent,_) => {
+            return ContactDetail.findOne({_id:parent.contactDetailId});
+        },
+        booking: (parent,_) => {
+            return Booking.findOne({_id:parent.bookingId});
+        }
+    },
+    BookingType: {
+        arrivalDate: (parent,_) => {
+            return ArrivalDateType.findOne({_id:parent.arrivalDateId});
+        },
+        accommodation: (parent,_) => {
+            return Accommodation.findOne({_id:parent.accommodationId});
+        },
+        passengerDetails: (parent,_) => {
+            return PassengerDetail.find({bookingId:parent.id});
+        },
+        stat: (parent,_) => {
+            return Stat.findOne({_id:parent.statId});
         }
     },
 
@@ -591,14 +656,16 @@ const resolvers = {
 
         createDepartureDate: (_,args) => {
             let newDepartureDate = DepartureDate({
-                departDateTime: args.departDateTime
+                departDateTime: args.departDateTime,
+                destinationId: args.destinationId
             })
             return newDepartureDate.save();
         },
         updateDepartureDate: (_,args) => {
             let updateDepartureDateId = {_id:args.id}
             let updateDepartureDateData = {
-                departDateTime: args.departDateTime
+                departDateTime: args.departDateTime,
+                destinationId: args.destinationId
             }
             return DepartureDate.findOneAndUpdate(updateDepartureDateId, updateDepartureDateData);
         },
