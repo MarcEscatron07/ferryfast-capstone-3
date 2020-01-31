@@ -70,8 +70,8 @@ const typeDefs = gql`
     }
     type SeatType {
         id: ID
+        row: Int
         column: String
-        number: Int
     }
     type ContactDetailType {
         id: ID
@@ -243,13 +243,13 @@ const typeDefs = gql`
         ): AccommodationType
 
         createSeat(
+            row: Int
             column: String
-            number: Int
         ): SeatType
         updateSeat(
             id: ID
+            row: Int
             column: String
-            number: Int
         ): SeatType
         deleteSeat(
             id: ID
@@ -302,7 +302,7 @@ const typeDefs = gql`
             arrivalDateId: String
             passengerDetailId: String
             statId: String
-            passengerQuantity: number
+            passengerQuantity: Int
             totalPayment: Float
         ): BookingType
         updateBooking(
@@ -313,7 +313,7 @@ const typeDefs = gql`
             arrivalDateId: String
             passengerDetailId: String
             statId: String
-            passengerQuantity: number
+            passengerQuantity: Int
             totalPayment: Float
         ): BookingType
         deleteBooking(
@@ -567,6 +567,163 @@ const resolvers = {
         },
         deleteDestination: (_,args) => {
             return Destination.findOneAndDelete({_id:args.id});
+        },
+
+        createDepartureDate: (_,args) => {
+            let newDepartureDate = DepartureDate({
+                departDateTime: args.departDateTime
+            })
+            return newDepartureDate.save();
+        },
+        updateDepartureDate: (_,args) => {
+            let updateDepartureDateId = {_id:args.id}
+            let updateDepartureDateData = {
+                departDateTime: args.departDateTime
+            }
+            return DepartureDate.findOneAndUpdate(updateDepartureDateId, updateDepartureDateData);
+        },
+        deleteDepartureDate: (_,args) => {
+            return DepartureDate.findOneAndDelete({_id:args.id});
+        },
+
+        createArrivalDate: (_,args) => {
+            let newArrivalDate = ArrivalDate({
+                arriveDateTime: args.arriveDateTime,
+                departureDateId: args.departureDateId
+            })
+            return newArrivalDate.save();
+        },
+        updateArrivalDate: (_,args) => {
+            let updateArrivalDateId = {_id:args.id}
+            let updateArrivalDateData = {
+                arriveDateTime: args.arriveDateTime,
+                departureDateId: args.departureDateId
+            }
+            return ArrivalDate.findOneAndUpdate(updateArrivalDateId, updateArrivalDateData);
+        },
+        deleteArrivalDate: (_,args) => {
+            return ArrivalDate.findOneAndDelete({_id:args.id});
+        },
+        
+        createAccommodation: (_,args) => {
+            let newAccommodation = Accommodation({
+                name: args.name,
+                price: args.price
+            })
+            return newAccommodation.save();
+        },
+        updateAccommodation: (_,args) => {
+            let updateAccommodationId = {_id:args.id}
+            let updateAccommodationData = {
+                name: args.name,
+                price: args.price
+            }
+            return Accommodation.findOneAndUpdate(updateAccommodationId, updateAccommodationData);
+        },
+        deleteAccommodation: (_,args) => {
+            return Accommodation.findOneAndDelete({_id:args.id});
+        },
+
+        createSeat: (_,args) => {
+            let newSeat = Seat({
+                row: args.row,
+                column: args.column
+            })
+            return newSeat.save();
+        },
+        updateSeat: (_,args) => {
+            let updateSeatId = {_id:args.id}
+            let updateSeatData = {
+                row: args.row,
+                column: args.column
+            }
+            return Seat.findOneAndUpdate(updateSeatId, updateSeatData);
+        },
+        deleteSeat: (_,args) => {
+            return Seat.findOneAndDelete({_id:args.id});
+        },
+
+        createContactDetail: (_,args) => {
+            let newContactDetail = ContactDetail({
+                fullname: args.fullname,
+                phone: args.phone,
+                email: args.email,
+                address: args.address
+            })
+            return newContactDetail.save();
+        },
+        updateContactDetail: (_,args) => {
+            let updateContactDetailId = {_id:args.id}
+            let updateContactDetailData = {
+                fullname: args.fullname,
+                phone: args.phone,
+                email: args.email,
+                address: args.address
+            }
+            return ContactDetail.findOneAndUpdate(updateContactDetailId, updateContactDetailData);
+        },
+        deleteContactDetail: (_,args) => {
+            return ContactDetail.findOneAndDelete({_id:args.id});
+        },
+
+        createPassengerDetail: (_,args) => {
+            let newPassengerDetail = PassengerDetail({
+                firstname: args.firstname,
+                middleinitial: args.middleinitial,
+                lastname: args.lastname,
+                age: args.age,
+                gender: args.gender,
+                seatId: args.seatId,
+                contactDetailId: args.contactDetailId
+            })
+            return newPassengerDetail.save();
+        },
+        updatePassengerDetail: (_,args) => {
+            let updatePassengerDetailId = {_id:args.id}
+            let updatePassengerDetailData = {
+                firstname: args.firstname,
+                middleinitial: args.middleinitial,
+                lastname: args.lastname,
+                age: args.age,
+                gender: args.gender,
+                seatId: args.seatId,
+                contactDetailId: args.contactDetailId
+            }
+            return PassengerDetail.findOneAndUpdate(updatePassengerDetailId, updatePassengerDetailData);
+        },
+        deletePassengerDetail: (_,args) => {
+            return PassengerDetail.findOneAndDelete({_id:args.id});
+        },
+
+        createBooking: (_,args) => {
+            let newBooking = Booking({
+                bookingNumber: args.bookingNumber,
+                date: args.date,
+                accommodationId: args.accommodationId,
+                arrivalDateId: args.arrivalDateId,
+                passengerDetailId: args.passengerDetailId,
+                statId: args.statId,
+                passengerQuantity: args.passengerQuantity,
+                totalPayment: args.totalPayment
+            })
+            return newBooking.save();
+        },
+        updateBooking: (_,args) => {
+            let updateBookingId = {_id:args.id}
+            let updateBookingData = {
+                bookingNumber: args.bookingNumber,
+                date: args.date,
+                accommodationId: args.accommodationId,
+                arrivalDateId: args.arrivalDateId,
+                passengerDetailId: args.passengerDetailId,
+                statId: args.statId,
+                passengerQuantity: args.passengerQuantity,
+                totalPayment: args.totalPayment
+            }
+            return Booking.findOneAndUpdate(updateBookingId, updateBookingData);
+        },
+        deleteBooking: (_,args) => {
+            return Booking.findOneAndDelete({_id:args.id});
         }
     }
 }
