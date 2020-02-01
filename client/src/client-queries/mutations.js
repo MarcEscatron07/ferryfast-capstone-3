@@ -1,69 +1,5 @@
 import { gql } from 'apollo-boost';
 
-const createRoleMutation = gql`
-    mutation($name: String!){
-        createRole(
-            name: $name
-        ){
-            id
-        }
-    }
-`;
-const updateRoleMutation = gql`
-    mutation(
-        $id: ID!
-        $uniqueId: Int
-        $name: String
-    ){
-        updateRole(
-            id: $id
-            uniqueId: $uniqueId
-            name: $name
-        ){
-            id
-        }
-    }
-`;
-const deleteRoleMutation = gql`
-    mutation($id: ID!){
-        deleteRole(id: $id){
-            id
-        }
-    }
-`;
-
-const createStatMutation = gql`
-    mutation($name: String!){
-        createStat(
-            name: $name
-        ){
-            id
-        }
-    }
-`;
-const updateStatMutation = gql`
-    mutation(
-        $id: ID!
-        $uniqueId: Int
-        $name: String
-    ){
-        updateStat(
-            id: $id
-            uniqueId: $uniqueId
-            name: $name
-        ){
-            id
-        }
-    }
-`;
-const deleteStatMutation = gql`
-    mutation($id: ID!){
-        deleteStat(id: $id){
-            id
-        }
-    }
-`;
-
 const createAdministratorMutation = gql`
     mutation(
         $username: String!
@@ -90,13 +26,13 @@ const createAdministratorMutation = gql`
 const updateAdministratorMutation = gql`
     mutation(
         $id: ID!
-        $username: String
-        $firstname: String
-        $surname: String
-        $password: String
-        $email: String
-        $roleId: Int
-        $statId: Int
+        $username: String!
+        $firstname: String!
+        $surname: String!
+        $password: String!
+        $email: String!
+        $roleId: Int!
+        $statId: Int!
     ){
         updateAdministrator(
             id: $id
@@ -134,7 +70,7 @@ const createOriginMutation = gql`
 const updateOriginMutation = gql`
     mutation(
         $id: ID!
-        $name: String
+        $name: String!
     ){
         updateOrigin(
             id: $id
@@ -168,8 +104,8 @@ const createDestinationMutation = gql`
 const updateDestinationMutation = gql`
     mutation(
         $id: ID!
-        $name: String
-        $originId: String
+        $name: String!
+        $originId: String!
     ){
         updateDestination(
             id: $id
@@ -189,12 +125,6 @@ const deleteDestinationMutation = gql`
 `;
 
 export { 
-    createRoleMutation,
-    updateRoleMutation,
-    deleteRoleMutation,
-    createStatMutation,
-    updateStatMutation,
-    deleteStatMutation,
     createAdministratorMutation,
     updateAdministratorMutation,
     deleteAdministratorMutation,
