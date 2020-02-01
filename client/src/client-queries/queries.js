@@ -117,7 +117,7 @@ const getAdministratorQuery = gql`
     }
 `;
 
-const getOriginsQuery = gql`
+const getRoutesQuery = gql`
     {
         getOrigins {
             id
@@ -126,6 +126,16 @@ const getOriginsQuery = gql`
                 id
                 name
                 originId
+            }
+        }
+
+        getDestinations {
+            id
+            name
+            originId
+            origin {
+                id
+                name
             }
         }
     }
@@ -140,20 +150,6 @@ const getOriginQuery = gql`
                 id
                 name
                 originId
-            }
-        }
-    }
-`;
-
-const getDestinationsQuery = gql`
-    {
-        getDestinations {
-            id
-            name
-            originId
-            origin {
-                id
-                name
             }
         }
     }
@@ -180,8 +176,7 @@ export {
     getStatQuery,
     getAdministratorsQuery,
     getAdministratorQuery,
-    getOriginsQuery,
+    getRoutesQuery,
     getOriginQuery,
-    getDestinationsQuery,
     getDestinationQuery
 }

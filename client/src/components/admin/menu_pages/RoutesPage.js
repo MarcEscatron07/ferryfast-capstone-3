@@ -1,5 +1,21 @@
-import React, { forwardRef } from 'react'
+import React, { forwardRef,useEffect } from 'react'
 import { useHistory } from 'react-router-dom';
+
+import Swal from 'sweetalert2';
+import { Toast } from '../Toast';
+
+import { graphql } from 'react-apollo';
+import { flowRight as compose } from 'lodash';
+
+import { getRoutesQuery, getOriginQuery } from '../../../client-queries/queries';
+import { 
+    createOriginMutation, 
+    updateOriginMutation, 
+    deleteOriginMutation ,
+    createDestinationMutation,
+    updateDestinationMutation,
+    deleteDestinationMutation
+} from '../../../client-queries/mutations';
 
 import { makeStyles } from '@material-ui/core/styles';
 import Breadcrumbs from '@material-ui/core/Breadcrumbs';
@@ -56,53 +72,70 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-function RoutesPage() {
+function RoutesPage(props) {
     const [origins, setOrigins] = React.useState({
         columns: [
             { title: 'Name', field: 'name' },
-            { title: 'Surname', field: 'surname' },
-            { title: 'Birth Year', field: 'birthYear', type: 'numeric' },
-            {
-            title: 'Birth Place',
-            field: 'birthCity',
-            lookup: { 34: 'İstanbul', 63: 'Şanlıurfa' },
-            },
         ],
-        data: [
-            { name: 'Mehmet', surname: 'Baran', birthYear: 1987, birthCity: 63 },
-            {
-            name: 'Zerya Betül',
-            surname: 'Baran',
-            birthYear: 2017,
-            birthCity: 34,
-            },
-        ],
+        data: []
     });
 
     const [destinations, setDestinations] = React.useState({
         columns: [
             { title: 'Name', field: 'name' },
-            { title: 'Surname', field: 'surname' },
-            { title: 'Birth Year', field: 'birthYear', type: 'numeric' },
-            {
-            title: 'Birth Place',
-            field: 'birthCity',
-            lookup: { 34: 'İstanbul', 63: 'Şanlıurfa' },
-            },
+            { title: 'Assigned Origin', field: 'origin' }        
         ],
-        data: [
-            { name: 'Mehmet', surname: 'Baran', birthYear: 1987, birthCity: 63 },
-            {
-            name: 'Zerya Betül',
-            surname: 'Baran',
-            birthYear: 2017,
-            birthCity: 34,
-            },
-        ],
+        data: []
     });
+
+    const ToastComponent = (iconProp, titleProp) => {
+        Toast.fire({
+            icon: iconProp,
+            title: titleProp,
+            showClass: {
+                popup: 'animated fadeInDown faster'
+            },
+            hideClass: {
+                popup: 'animated fadeOutUp faster'
+            }
+        });
+    }
 
     let history = useHistory();
     const classes = useStyles();
+    let dataObject = props.data;
+
+    useEffect(() => {        
+        if(dataObject.loading === false && dataObject.error === undefined) {   
+            let originsArray = dataObject.getOrigins;
+            let destinationsArray = dataObject.getDestinations;
+            
+            originsArray.forEach(oArr => {
+                setOrigins(prevState => {
+                    const data = [...prevState.data];
+                    data.push({
+                        name: oArr.name
+                    });
+                    return { ...prevState, data };
+                });
+            });
+
+            destinationsArray.forEach(dArr => {
+                setDestinations(prevState => {
+                    const data = [...prevState.data];
+                    data.push({
+                        name: dArr.name,
+                        origin: dArr.origin.name
+                    });
+                    return { ...prevState, data };
+                });
+            })
+        }
+
+        if(dataObject.error !== undefined){
+            ToastComponent('error', 'Failed to load data');
+        }
+    },[dataObject])
 
     const handleBreadCrumbClick = (e) => {
         e.preventDefault();
@@ -138,25 +171,26 @@ function RoutesPage() {
                             onRowAdd: newData =>
                             new Promise(resolve => {
                                 setTimeout(() => {
-                                resolve();
-                                setOrigins(prevState => {
-                                    const data = [...prevState.data];
-                                    data.push(newData);
-                                    return { ...prevState, data };
-                                });
+                                    resolve();
+                                    alert('You clicked add')
+                                    // setOrigins(prevState => {
+                                    //     const data = [...prevState.data];
+                                    //     data.push(newData);
+                                    //     return { ...prevState, data };
+                                    // });
                                 }, 600);
                             }),
                             onRowUpdate: (newData, oldData) =>
                             new Promise(resolve => {
                                 setTimeout(() => {
-                                resolve();
-                                if (oldData) {
-                                    setOrigins(prevState => {
-                                    const data = [...prevState.data];
-                                    data[data.indexOf(oldData)] = newData;
-                                    return { ...prevState, data };
-                                    });
-                                }
+                                    resolve();
+                                    if (oldData) {
+                                        setOrigins(prevState => {
+                                            const data = [...prevState.data];
+                                            data[data.indexOf(oldData)] = newData;
+                                            return { ...prevState, data };
+                                        });
+                                    }
                                 }, 600);
                             }),
                             onRowDelete: oldData =>
@@ -186,12 +220,12 @@ function RoutesPage() {
                             onRowAdd: newData =>
                             new Promise(resolve => {
                                 setTimeout(() => {
-                                resolve();
-                                setDestinations(prevState => {
-                                    const data = [...prevState.data];
-                                    data.push(newData);
-                                    return { ...prevState, data };
-                                });
+                                    resolve();
+                                    setDestinations(prevState => {
+                                        const data = [...prevState.data];
+                                        data.push(newData);
+                                        return { ...prevState, data };
+                                    });
                                 }, 600);
                             }),
                             onRowUpdate: (newData, oldData) =>
@@ -227,4 +261,13 @@ function RoutesPage() {
     );
 }
 
-export default RoutesPage;
+export default compose(
+    graphql(getRoutesQuery)
+    // graphql(getDestinationsQuery, {name: 'getDestinationsQuery'}),
+    // graphql(createOriginMutation, {name: 'createOrigin'}),
+    // graphql(updateOriginMutation, {name: 'updateOrigin'}),
+    // graphql(deleteOriginMutation, {name: 'deleteOrigin'}),
+    // graphql(createDestinationMutation, {name: 'createDestination'}),
+    // graphql(updateDestinationMutation, {name: 'updateDestination'}),
+    // graphql(deleteDestinationMutation, {name: 'deleteDestination'}),
+)(RoutesPage);
