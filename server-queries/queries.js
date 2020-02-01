@@ -332,7 +332,7 @@ const typeDefs = gql`
 
         createBooking(
             bookingNumber: String
-            date: Date
+            bookingDate: Date
             originId: String
             destinationId: String
             dateId: String
@@ -346,7 +346,7 @@ const typeDefs = gql`
         updateBooking(
             id: ID
             bookingNumber: String
-            date: Date
+            bookingDate: Date
             originId: String
             destinationId: String
             dateId: String
@@ -828,7 +828,7 @@ const resolvers = {
         createBooking: (_,args) => {
             let newBooking = Booking({
                 bookingNumber: args.bookingNumber,
-                date: args.date,
+                bookingDate: args.bookingDate,
                 originId: args.originId,
                 destinationId: args.destinationId,
                 dateId: args.dateId,
@@ -845,7 +845,7 @@ const resolvers = {
             let updateBookingId = {_id:args.id}
             let updateBookingData = {
                 bookingNumber: args.bookingNumber,
-                date: args.date,
+                bookingDate: args.bookingDate,
                 originId: args.originId,
                 destinationId: args.destinationId,
                 dateId: args.dateId,

@@ -6,7 +6,7 @@ const bookingSchema = new Schema(
             type: String,
             required: true
         },
-        date: {
+        bookingDate: {
             type: Date,
             required: true
         },        
