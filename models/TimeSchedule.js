@@ -1,12 +1,16 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
-const arrivalDateSchema = new Schema(
+const timeScheduleSchema = new Schema(
     {
-        arriveDateTime: {
+        departureTime: {
             type: Date,
             required: true
         },
-        departureDateId: {
+        arrivalTime: {
+            type: Date,
+            required: true
+        },
+        dateId: {
             type: String,
             required: true
         }
@@ -16,4 +20,4 @@ const arrivalDateSchema = new Schema(
     }
 );
 
-module.exports = mongoose.model('ArrivalDate', arrivalDateSchema);
+module.exports = mongoose.model('TimeSchedule', timeScheduleSchema);

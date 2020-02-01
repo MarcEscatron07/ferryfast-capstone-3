@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
-const passengerDetailSchema = new Schema(
+const passengerSchema = new Schema(
     {
         firstname: {
             type: String,
@@ -37,4 +37,4 @@ const passengerDetailSchema = new Schema(
     }
 );
 
-module.exports = mongoose.model('PassengerDetail', passengerDetailSchema);
+module.exports = mongoose.model('Passenger', passengerSchema);

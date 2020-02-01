@@ -8,16 +8,16 @@ const Administrator = require('../models/Administrator');
 
 const Origin = require('../models/Origin');
 const Destination = require('../models/Destination');
-const DepartureDate = require('../models/DepartureDate');
-const ArrivalDate = require('../models/ArrivalDate');
+const DateSchedule = require('../models/DateSchedule');
+const TimeSchedule = require('../models/TimeSchedule');
 const Accommodation = require('../models/Accommodation');
 const Seat = require('../models/Seat');
-const ContactDetail = require('../models/ContactDetail');
-const PassengerDetail = require('../models/PassengerDetail');
+const Contact = require('../models/Contact');
+const Passenger = require('../models/Passenger');
 const Booking = require('../models/Booking');
 
 const typeDefs = gql`
-    scalar DateTime
+    scalar Date
 
     type RoleType {
         id: ID
@@ -49,26 +49,30 @@ const typeDefs = gql`
         id: ID
         name: String
         destinations: [DestinationType]
+        bookings: [BookingType]
     }
     type DestinationType {
         id: ID
         name: String
         originId: String
         origin: OriginType
-        departureDates: [DepartureDateType]
+        dateSchedules: [DateScheduleType]
+        bookings: [BookingType]
     }
-    type DepartureDateType {
+    type DateScheduleType {
         id: ID
-        departDateTime: DateTime
+        date: Date
         destinationId: String
         destination: DestinationType
-        arrivalDate: ArrivalDateType
+        timeSchedules: [TimeScheduleType]
+        bookings: [BookingType]
     }
-    type ArrivalDateType {
+    type TimeScheduleType {
         id: ID
-        arriveDateTime: DateTime
-        departureDateId: String
-        departureDate: DepartureDateType
+        departureTime: Date
+        arrivalTime: Date
+        dateId: String
+        dateSchedule: DateScheduleType
         bookings: [BookingType]
     }
     type AccommodationType {
@@ -81,17 +85,17 @@ const typeDefs = gql`
         id: ID
         row: Int
         column: String
-        passengerDetail: PassengerDetailType
+        passenger: PassengerType
     }
-    type ContactDetailType {
+    type ContactType {
         id: ID
         fullname: String
         phone: String
         email: String
         address: String
-        passengerDetails: [PassengerDetailType]
+        passengers: [PassengerType]
     }
-    type PassengerDetailType {
+    type PassengerType {
         id: ID
         firstname: String
         middleinitial: String
@@ -99,25 +103,31 @@ const typeDefs = gql`
         age: Int
         gender: String
         seatId: String
-        ContactDetailId: String
+        contactId: String
         bookingId: String
         seat: SeatType
-        contactDetail: ContactDetailType
+        contact: ContactType
         booking: BookingType
     }
     type BookingType {
         id: ID
         bookingNumber: String
-        date: DateTime
-        accommodationId: String
-        arrivalDateId: String
-        passengerDetailId: String
+        bookingDate: Date
+        originId: String
+        destinationId: String
+        dateId: String
+        timeId: String
+        accommodationId: String        
+        passengerId: String
         statId: String
         passengerQuantity: Int
         totalPayment: Float
-        accommodation: AccommodationType
-        arrivalDate: ArrivalDateType
-        passengerDetails: [PassengerDetailType]
+        origin: OriginType
+        destination: DestinationType
+        dateSchedule: DateScheduleType
+        timeSchedule: TimeScheduleType
+        accommodation: AccommodationType        
+        passengers: [PassengerType]
         stat: StatType
     }
 
@@ -133,18 +143,18 @@ const typeDefs = gql`
         getOrigin(id: String): OriginType
         getDestinations(id: String): [DestinationType]
         getDestination(id: String): DestinationType
-        getDepartureDates(id: String): [DepartureDateType]
-        getDepartureDate(id: String): DepartureDateType
-        getArrivalDates(id: String): [ArrivalDateType]
-        getArrivalDate(id: String): ArrivalDateType
+        getDateSchedules(id: String): [DateScheduleType]
+        getDateSchedule(id: String): DateScheduleType
+        getTimeSchedules(id: String): [TimeScheduleType]
+        getTimeSchedule(id: String): TimeScheduleType
         getAccommodations(id: String): [AccommodationType]
         getAccommodation(id: String): AccommodationType
         getSeats(id: String): [SeatType]
         getSeat(id: String): SeatType
-        getContactDetails(id: String): [ContactDetailType]
-        getContactDetail(id: String): ContactDetailType
-        getPassengerDetails(id: String): [PassengerDetailType]
-        getPassengerDetail(id: String): PassengerDetailType
+        getContacts(id: String): [ContactType]
+        getContact(id: String): ContactType
+        getPassengers(id: String): [PassengerType]
+        getPassenger(id: String): PassengerType
         getBookings(id: String): [BookingType]
         getBooking(id: String): BookingType
     }
@@ -224,31 +234,33 @@ const typeDefs = gql`
             id: ID
         ): DestinationType
 
-        createDepartureDate(
-            departDateTime: DateTime
+        createDateSchedule(
+            date: Date
             destinationId: String
-        ): DepartureDateType
-        updateDepartureDate(
+        ): DateScheduleType
+        updateDateSchedule(
             id: ID
-            departDateTime: DateTime
+            date: Date
             destinationId: String
-        ): DepartureDateType
-        deleteDepartureDate(
+        ): DateScheduleType
+        deleteDateSchedule(
             id: ID
-        ): DepartureDateType
+        ): DateScheduleType
 
-        createArrivalDate(
-            arriveDateTime: DateTime
-            departureDateId: String
-        ): ArrivalDateType
-        updateArrivalDate(
+        createTimeSchedule(
+            departureTime: Date
+            arrivalTime: Date
+            dateId: String
+        ): TimeScheduleType
+        updateTimeSchedule(
             id: ID
-            arriveDateTime: DateTime
-            departureDateId: String
-        ): ArrivalDateType
-        deleteArrivalDate(
+            departureTime: Date
+            arrivalTime: Date
+            dateId: String
+        ): TimeScheduleType
+        deleteTimeSchedule(
             id: ID
-        ): ArrivalDateType
+        ): TimeScheduleType
 
         createAccommodation(
             name: String
@@ -276,34 +288,34 @@ const typeDefs = gql`
             id: ID
         ): SeatType
 
-        createContactDetail(
+        createContact(
             fullname: String
             phone: String
             email: String
             address: String
-        ): ContactDetailType
-        updateContactDetail(
+        ): ContactType
+        updateContact(
             id: ID
             fullname: String
             phone: String
             email: String
             address: String
-        ): ContactDetailType
-        deleteContactDetail(
+        ): ContactType
+        deleteContact(
             id: ID
-        ): ContactDetailType
+        ): ContactType
 
-        createPassengerDetail(
+        createPassenger(
             firstname: String
             middleinitial: String
             lastname: String
             age: Int
             gender: String
             seatId: String
-            ContactDetailId: String
+            contactId: String
             bookingId: String
-        ): PassengerDetailType
-        updatePassengerDetail(
+        ): PassengerType
+        updatePassenger(
             id: ID
             firstname: String
             middleinitial: String
@@ -311,19 +323,22 @@ const typeDefs = gql`
             age: Int
             gender: String
             seatId: String
-            ContactDetailId: String
+            contactId: String
             bookingId: String
-        ): PassengerDetailType
-        deletePassengerDetail(
+        ): PassengerType
+        deletePassenger(
             id: ID
-        ): PassengerDetailType
+        ): PassengerType
 
         createBooking(
             bookingNumber: String
-            date: DateTime
-            accommodationId: String
-            arrivalDateId: String
-            passengerDetailId: String
+            date: Date
+            originId: String
+            destinationId: String
+            dateId: String
+            timeId: String
+            accommodationId: String            
+            passengerId: String
             statId: String
             passengerQuantity: Int
             totalPayment: Float
@@ -331,10 +346,13 @@ const typeDefs = gql`
         updateBooking(
             id: ID
             bookingNumber: String
-            date: DateTime
-            accommodationId: String
-            arrivalDateId: String
-            passengerDetailId: String
+            date: Date
+            originId: String
+            destinationId: String
+            dateId: String
+            timeId: String
+            accommodationId: String            
+            passengerId: String
             statId: String
             passengerQuantity: Int
             totalPayment: Float
@@ -346,18 +364,21 @@ const typeDefs = gql`
 `;
 
 const resolvers = {
-    DateTime: new GraphQLScalarType({
-        name: 'DateTime',
-        description: 'A date and time, represented as an ISO-8601 string',
-        serialize(value) {
-          return value.toISOString();
-        },
+    Date: new GraphQLScalarType({
+        name: 'Date',
+        description: 'Date custom scalar type',
         parseValue(value) {
-          return new Date(value);
-        },        
-        parseLiteral(ast) {
-          return new Date(ast.value);
+            return new Date(value); // value from the client
         },
+        serialize(value) {
+            return value.getTime(); // value sent to the client
+        },
+        parseLiteral(ast) {
+            if (ast.kind === Kind.INT) {
+                return new Date(ast.value) // ast value is always in string format
+            }
+            return null;
+        }
     }),
 
     Query: {
@@ -402,21 +423,21 @@ const resolvers = {
         getDestination: (_,args) => {
             return Destination.findById(args.id);
         },
-        getDepartureDates: (_,args) => {
+        getDateSchedules: (_,args) => {
             if(!args.id)
-                return DepartureDate.find({});
-            return DepartureDate.find({_id:args.id});
+                return DateSchedule.find({});
+            return DateSchedule.find({_id:args.id});
         },
-        getDepartureDate: (_,args) => {
-            return DepartureDate.findById(args.id);
+        getDateSchedule: (_,args) => {
+            return DateSchedule.findById(args.id);
         },
-        getArrivalDates: (_,args) => {
+        getTimeSchedules: (_,args) => {
             if(!args.id)
-                return ArrivalDate.find({});
-            return ArrivalDate.find({_id:args.id});
+                return TimeSchedule.find({});
+            return TimeSchedule.find({_id:args.id});
         },
-        getArrivalDate: (_,args) => {
-            return ArrivalDate.findById(args.id);
+        getTimeSchedule: (_,args) => {
+            return TimeSchedule.findById(args.id);
         },
         getAccommodations: (_,args) => {
             if(!args.id)
@@ -434,21 +455,21 @@ const resolvers = {
         getSeat: (_,args) => {
             return Seat.findById(args.id);
         },
-        getContactDetails: (_,args) => {
+        getContacts: (_,args) => {
             if(!args.id)
-                return ContactDetail.find({});
-            return ContactDetail.find({_id:args.id});
+                return Contact.find({});
+            return Contact.find({_id:args.id});
         },
-        getContactDetail: (_,args) => {
-            return ContactDetail.findById(args.id);
+        getContact: (_,args) => {
+            return Contact.findById(args.id);
         },
-        getPassengerDetails: (_,args) => {
+        getPassengers: (_,args) => {
             if(!args.id)
-                return PassengerDetail.find({});
-            return PassengerDetail.find({_id:args.id});
+                return Passenger.find({});
+            return Passenger.find({_id:args.id});
         },
-        getPassengerDetail: (_,args) => {
-            return PassengerDetail.findById(args.id);
+        getPassenger: (_,args) => {
+            return Passenger.findById(args.id);
         },
         getBookings: (_,args) => {
             if(!args.id)
@@ -485,30 +506,39 @@ const resolvers = {
     OriginType: {
         destinations: (parent,_) => {
             return Destination.find({originId:parent.id});
+        },
+        bookings: (parent,_) => {
+            return Booking.find({originId:parent.id});
         }
     },
     DestinationType: {
         origin: (parent,_) => {
             return Origin.findOne({_id:parent.originId});
         },
-        departureDates: (parent,_) => {
-            return DepartureDate.find({destinationId:parent.id});
+        dateSchedules: (parent,_) => {
+            return DateSchedule.find({destinationId:parent.id});
+        },
+        bookings: (parent,_) => {
+            return Booking.find({destinationId:parent.id});
         }
     },
-    DepartureDateType: {
+    DateScheduleType: {
         destination: (parent,_) => {
             return Destination.findOne({_id:parent.destinationId});
         },
-        arrivalDate: (parent,_) => {
-            return ArrivalDate.findOne({departureDateId:parent.id});
-        }
-    },
-    ArrivalDateType: {
-        departureDate: (parent,_) => {
-            return DepartureDate.findOne({_id:parent.departureDateId});
+        timeSchedule: (parent,_) => {
+            return TimeSchedule.findOne({DateScheduleId:parent.id});
         },
         bookings: (parent,_) => {
-            return Booking.find({arrivalDateId:parent.id});
+            return Booking.find({dateId:parent.id});
+        }
+    },
+    TimeScheduleType: {
+        DateSchedule: (parent,_) => {
+            return DateSchedule.findOne({_id:parent.DateScheduleId});
+        },
+        bookings: (parent,_) => {
+            return Booking.find({timeId:parent.id});
         }
     },
     AccommodationType: {
@@ -517,35 +547,44 @@ const resolvers = {
         }
     },
     SeatType: {
-        passengerDetail: (parent,_) => {
-            return PassengerDetail.findOne({seatId:parent.id});
+        passenger: (parent,_) => {
+            return Passenger.findOne({seatId:parent.id});
         }
     },
-    ContactDetailType: {
-        passengerDetails: (parent,_) => {
-            return PassengerDetail.find({contactDetailId:parent.id});
+    ContactType: {
+        passengers: (parent,_) => {
+            return Passenger.find({contactId:parent.id});
         }
     },
-    PassengerDetailType: {
+    PassengerType: {
         seat: (parent,_) => {
             return Seat.findOne({_id:parent.seatId});
         },
-        contactDetail: (parent,_) => {
-            return ContactDetail.findOne({_id:parent.contactDetailId});
+        contact: (parent,_) => {
+            return Contact.findOne({_id:parent.contactId});
         },
         booking: (parent,_) => {
             return Booking.findOne({_id:parent.bookingId});
         }
     },
     BookingType: {
-        arrivalDate: (parent,_) => {
-            return ArrivalDateType.findOne({_id:parent.arrivalDateId});
+        origin: (parent,_) => {
+            return Origin.findOne({_id:parent.originId});
+        },
+        destination: (parent,_) => {
+            return Destination.findOne({_id:parent.destinationId});
+        },
+        dateSchedule: (parent,_) => {
+            return DateSchedule.findOne({_id:parent.dateId});
+        },
+        timeSchedule: (parent,_) => {
+            return TimeSchedule.findOne({_id:parent.timeId});
         },
         accommodation: (parent,_) => {
             return Accommodation.findOne({_id:parent.accommodationId});
         },
-        passengerDetails: (parent,_) => {
-            return PassengerDetail.find({bookingId:parent.id});
+        passengers: (parent,_) => {
+            return Passenger.find({bookingId:parent.id});
         },
         stat: (parent,_) => {
             return Stat.findOne({_id:parent.statId});
@@ -654,42 +693,44 @@ const resolvers = {
             return Destination.findOneAndDelete({_id:args.id});
         },
 
-        createDepartureDate: (_,args) => {
-            let newDepartureDate = DepartureDate({
-                departDateTime: args.departDateTime,
+        createDateSchedule: (_,args) => {
+            let newDateSchedule = DateSchedule({
+                date: args.date,
                 destinationId: args.destinationId
             })
-            return newDepartureDate.save();
+            return newDateSchedule.save();
         },
-        updateDepartureDate: (_,args) => {
-            let updateDepartureDateId = {_id:args.id}
-            let updateDepartureDateData = {
-                departDateTime: args.departDateTime,
+        updateDateSchedule: (_,args) => {
+            let updateDateScheduleId = {_id:args.id}
+            let updateDateScheduleData = {
+                date: args.date,
                 destinationId: args.destinationId
             }
-            return DepartureDate.findOneAndUpdate(updateDepartureDateId, updateDepartureDateData);
+            return DateSchedule.findOneAndUpdate(updateDateScheduleId, updateDateScheduleData);
         },
-        deleteDepartureDate: (_,args) => {
-            return DepartureDate.findOneAndDelete({_id:args.id});
+        deleteDateSchedule: (_,args) => {
+            return DateSchedule.findOneAndDelete({_id:args.id});
         },
 
-        createArrivalDate: (_,args) => {
-            let newArrivalDate = ArrivalDate({
-                arriveDateTime: args.arriveDateTime,
-                departureDateId: args.departureDateId
+        createTimeSchedule: (_,args) => {
+            let newTimeSchedule = TimeSchedule({
+                departureTime: args.departureTime,
+                arrivalTime: args.arrivalTime,
+                dateId: args.dateId
             })
-            return newArrivalDate.save();
+            return newTimeSchedule.save();
         },
-        updateArrivalDate: (_,args) => {
-            let updateArrivalDateId = {_id:args.id}
-            let updateArrivalDateData = {
-                arriveDateTime: args.arriveDateTime,
-                departureDateId: args.departureDateId
+        updateTimeSchedule: (_,args) => {
+            let updateTimeScheduleId = {_id:args.id}
+            let updateTimeScheduleData = {
+                departureTime: args.departureTime,
+                arrivalTime: args.arrivalTime,
+                dateId: args.dateId
             }
-            return ArrivalDate.findOneAndUpdate(updateArrivalDateId, updateArrivalDateData);
+            return TimeSchedule.findOneAndUpdate(updateTimeScheduleId, updateTimeScheduleData);
         },
-        deleteArrivalDate: (_,args) => {
-            return ArrivalDate.findOneAndDelete({_id:args.id});
+        deleteTimeSchedule: (_,args) => {
+            return TimeSchedule.findOneAndDelete({_id:args.id});
         },
         
         createAccommodation: (_,args) => {
@@ -730,67 +771,70 @@ const resolvers = {
             return Seat.findOneAndDelete({_id:args.id});
         },
 
-        createContactDetail: (_,args) => {
-            let newContactDetail = ContactDetail({
+        createContact: (_,args) => {
+            let newContact = Contact({
                 fullname: args.fullname,
                 phone: args.phone,
                 email: args.email,
                 address: args.address
             })
-            return newContactDetail.save();
+            return newContact.save();
         },
-        updateContactDetail: (_,args) => {
-            let updateContactDetailId = {_id:args.id}
-            let updateContactDetailData = {
+        updateContact: (_,args) => {
+            let updateContactId = {_id:args.id}
+            let updateContactData = {
                 fullname: args.fullname,
                 phone: args.phone,
                 email: args.email,
                 address: args.address
             }
-            return ContactDetail.findOneAndUpdate(updateContactDetailId, updateContactDetailData);
+            return Contact.findOneAndUpdate(updateContactId, updateContactData);
         },
-        deleteContactDetail: (_,args) => {
-            return ContactDetail.findOneAndDelete({_id:args.id});
+        deleteContact: (_,args) => {
+            return Contact.findOneAndDelete({_id:args.id});
         },
 
-        createPassengerDetail: (_,args) => {
-            let newPassengerDetail = PassengerDetail({
+        createPassenger: (_,args) => {
+            let newPassenger = Passenger({
                 firstname: args.firstname,
                 middleinitial: args.middleinitial,
                 lastname: args.lastname,
                 age: args.age,
                 gender: args.gender,
                 seatId: args.seatId,
-                contactDetailId: args.contactDetailId,
+                contactId: args.contactId,
                 bookingId: args.bookingId
             })
-            return newPassengerDetail.save();
+            return newPassenger.save();
         },
-        updatePassengerDetail: (_,args) => {
-            let updatePassengerDetailId = {_id:args.id}
-            let updatePassengerDetailData = {
+        updatePassenger: (_,args) => {
+            let updatePassengerId = {_id:args.id}
+            let updatePassengerData = {
                 firstname: args.firstname,
                 middleinitial: args.middleinitial,
                 lastname: args.lastname,
                 age: args.age,
                 gender: args.gender,
                 seatId: args.seatId,
-                contactDetailId: args.contactDetailId,
+                contactId: args.contactId,
                 bookingId: args.bookingId
             }
-            return PassengerDetail.findOneAndUpdate(updatePassengerDetailId, updatePassengerDetailData);
+            return Passenger.findOneAndUpdate(updatePassengerId, updatePassengerData);
         },
-        deletePassengerDetail: (_,args) => {
-            return PassengerDetail.findOneAndDelete({_id:args.id});
+        deletePassenger: (_,args) => {
+            return Passenger.findOneAndDelete({_id:args.id});
         },
 
         createBooking: (_,args) => {
             let newBooking = Booking({
                 bookingNumber: args.bookingNumber,
                 date: args.date,
-                accommodationId: args.accommodationId,
-                arrivalDateId: args.arrivalDateId,
-                passengerDetailId: args.passengerDetailId,
+                originId: args.originId,
+                destinationId: args.destinationId,
+                dateId: args.dateId,
+                timeId: args.timeId,
+                accommodationId: args.accommodationId,                
+                passengerId: args.passengerId,
                 statId: args.statId,
                 passengerQuantity: args.passengerQuantity,
                 totalPayment: args.totalPayment
@@ -802,9 +846,12 @@ const resolvers = {
             let updateBookingData = {
                 bookingNumber: args.bookingNumber,
                 date: args.date,
-                accommodationId: args.accommodationId,
-                arrivalDateId: args.arrivalDateId,
-                passengerDetailId: args.passengerDetailId,
+                originId: args.originId,
+                destinationId: args.destinationId,
+                dateId: args.dateId,
+                timeId: args.timeId,
+                accommodationId: args.accommodationId,                
+                passengerId: args.passengerId,
                 statId: args.statId,
                 passengerQuantity: args.passengerQuantity,
                 totalPayment: args.totalPayment

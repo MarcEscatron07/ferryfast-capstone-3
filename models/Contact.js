@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
-const contactDetailSchema = new Schema(
+const contactSchema = new Schema(
     {
         fullname: {
             type: String,
@@ -24,4 +24,4 @@ const contactDetailSchema = new Schema(
     }
 );
 
-module.exports = mongoose.model('ContactDetail', contactDetailSchema);
+module.exports = mongoose.model('Contact', contactSchema);
