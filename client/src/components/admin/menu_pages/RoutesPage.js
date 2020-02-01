@@ -1,8 +1,6 @@
 import React, { forwardRef } from 'react'
 import { useHistory } from 'react-router-dom';
 
-import Container from '@material-ui/core/Container';
-
 import { makeStyles } from '@material-ui/core/styles';
 import Breadcrumbs from '@material-ui/core/Breadcrumbs';
 import Link from '@material-ui/core/Link';
@@ -126,10 +124,14 @@ function RoutesPage() {
                 </Typography>
             </Breadcrumbs>
             <div className="container-fluid p-0">
-                <Container className="mb-4">
+            <div className="row">
+                <div className="col-6">
+                    <Typography className="mb-2" variant="h6" component="h1">
+                        Origins
+                    </Typography>
                     <MaterialTable
                         icons={tableIcons}
-                        title="Origins"
+                        title=""
                         columns={origins.columns}
                         data={origins.data}
                         editable={{
@@ -170,11 +172,14 @@ function RoutesPage() {
                             }),
                         }}
                     />
-                </Container>
-                <Container className="mb-4">
+                </div>
+                <div className="col-6">
+                    <Typography className="mb-2" variant="h6" component="h1">
+                        Destinations
+                    </Typography>
                     <MaterialTable
                         icons={tableIcons}
-                        title="Destinations"
+                        title=""
                         columns={destinations.columns}
                         data={destinations.data}
                         editable={{
@@ -215,7 +220,8 @@ function RoutesPage() {
                             }),
                         }}
                     />
-                </Container>
+                </div>
+            </div>                
             </div>            
         </>
     );
