@@ -526,16 +526,16 @@ const resolvers = {
         destination: (parent,_) => {
             return Destination.findOne({_id:parent.destinationId});
         },
-        timeSchedule: (parent,_) => {
-            return TimeSchedule.findOne({DateScheduleId:parent.id});
+        timeSchedules: (parent,_) => {
+            return TimeSchedule.find({dateId:parent.id});
         },
         bookings: (parent,_) => {
             return Booking.find({dateId:parent.id});
         }
     },
     TimeScheduleType: {
-        DateSchedule: (parent,_) => {
-            return DateSchedule.findOne({_id:parent.DateScheduleId});
+        dateSchedule: (parent,_) => {
+            return DateSchedule.findOne({_id:parent.dateId});
         },
         bookings: (parent,_) => {
             return Booking.find({timeId:parent.id});
