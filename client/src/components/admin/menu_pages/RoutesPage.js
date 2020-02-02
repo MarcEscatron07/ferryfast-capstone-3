@@ -259,12 +259,34 @@ function RoutesPage(props) {
                                 onRowDelete: oldData =>
                                 new Promise(resolve => {
                                     setTimeout(() => {
-                                    resolve();
-                                    setOrigins(prevState => {
-                                        const data = [...prevState.data];
-                                        data.splice(data.indexOf(oldData), 1);
-                                        return { ...prevState, data };
-                                    });
+                                        resolve();
+                                        let deleteDestinationData = {
+                                            id: oldData.id
+                                        }
+                                        props.deleteOrigin({
+                                            variables: deleteDestinationData,
+                                            refetchQueries: [{query: getRoutesQuery}]
+                                        })
+                                        .then((res) => {
+                                            Swal.fire({
+                                                icon: "info",
+                                                timer: 2200,
+                                                title: "Origin deleted!"
+                                            })
+
+                                            setOrigins(prevState => {
+                                                const data = [...prevState.data];
+                                                data.splice(data.indexOf(oldData), 1);
+                                                return { ...prevState, data };
+                                            });                                     
+                                        })
+                                        .catch((err) => {
+                                            Swal.fire({
+                                                icon: "error",
+                                                timer: 2200,
+                                                title: "Unable to delete origin!"
+                                            })
+                                        })
                                     }, 600);
                                 }),
                             }}
@@ -365,12 +387,34 @@ function RoutesPage(props) {
                                 onRowDelete: oldData =>
                                 new Promise(resolve => {
                                     setTimeout(() => {
-                                    resolve();
-                                    setDestinations(prevState => {
-                                        const data = [...prevState.data];
-                                        data.splice(data.indexOf(oldData), 1);
-                                        return { ...prevState, data };
-                                    });
+                                        resolve();
+                                        let deleteDestinationData = {
+                                            id: oldData.id
+                                        }
+                                        props.deleteDestination({
+                                            variables: deleteDestinationData,
+                                            refetchQueries: [{query: getRoutesQuery}]
+                                        })
+                                        .then((res) => {
+                                            Swal.fire({
+                                                icon: "info",
+                                                timer: 2200,
+                                                title: "Destination deleted!"
+                                            })
+
+                                            setDestinations(prevState => {
+                                                const data = [...prevState.data];
+                                                data.splice(data.indexOf(oldData), 1);
+                                                return { ...prevState, data };
+                                            });                                   
+                                        })
+                                        .catch((err) => {
+                                            Swal.fire({
+                                                icon: "error",
+                                                timer: 2200,
+                                                title: "Unable to delete destination!"
+                                            })
+                                        })                                    
                                     }, 600);
                                 }),
                             }}
