@@ -17,6 +17,19 @@ import { flowRight as compose } from 'lodash';
 import { getAdministratorsQuery } from '../../client-queries/queries';
 import { createAdministratorMutation } from '../../client-queries/mutations';
 
+const ToastComponent = (iconProp, titleProp) => {
+    Toast.fire({
+        icon: iconProp,
+        title: titleProp,
+        showClass: {
+            popup: 'animated fadeInDown faster'
+        },
+        hideClass: {
+            popup: 'animated fadeOutUp faster'
+        }
+    });
+}
+
 const AdminRegister = (props) => {
     const [username,setUserName] = useState('');
     const [firstname,setFirstName] = useState('');
@@ -27,19 +40,6 @@ const AdminRegister = (props) => {
     
     let data = props.data;
     let history = useHistory();
-
-    const ToastComponent = (iconProp, titleProp) => {
-        Toast.fire({
-            icon: iconProp,
-            title: titleProp,
-            showClass: {
-                popup: 'animated fadeInDown faster'
-            },
-            hideClass: {
-                popup: 'animated fadeOutUp faster'
-            }
-        });
-    }
 
     const getInputValueHandler = (e) => {        
         if(e.target.id === 'register_username') {

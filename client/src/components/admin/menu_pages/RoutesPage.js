@@ -1,8 +1,8 @@
-import React, { forwardRef,useEffect } from 'react'
+import React, { forwardRef, useState, useEffect } from 'react'
 import { useHistory } from 'react-router-dom';
 
 import Swal from 'sweetalert2';
-import { Toast } from '../Toast';
+import { Toast } from './ToastAuth';
 
 import { graphql } from 'react-apollo';
 import { flowRight as compose } from 'lodash';
@@ -72,34 +72,28 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
+const ToastComponent = (iconProp, titleProp) => {
+    Toast.fire({
+        icon: iconProp,
+        title: titleProp,
+        showClass: {
+            popup: 'animated fadeInRight faster'
+        },
+        hideClass: {
+            popup: 'animated fadeOutRight faster'
+        }
+    });
+}
+
 function RoutesPage(props) {
-    const [origins, setOrigins] = React.useState({
-        columns: [
-            { title: 'Name', field: 'name' },
-        ],
+    const [origins, setOrigins] = useState({        
+        data: []
+    });
+    const [destinations, setDestinations] = useState({        
         data: []
     });
 
-    const [destinations, setDestinations] = React.useState({
-        columns: [
-            { title: 'Name', field: 'name' },
-            { title: 'Assigned Origin', field: 'origin' }        
-        ],
-        data: []
-    });
-
-    const ToastComponent = (iconProp, titleProp) => {
-        Toast.fire({
-            icon: iconProp,
-            title: titleProp,
-            showClass: {
-                popup: 'animated fadeInDown faster'
-            },
-            hideClass: {
-                popup: 'animated fadeOutUp faster'
-            }
-        });
-    }
+    const [selectedOrigin, setSelectedOrigin] = useState('');
 
     let history = useHistory();
     const classes = useStyles();
@@ -110,32 +104,42 @@ function RoutesPage(props) {
             let originsArray = dataObject.getOrigins;
             let destinationsArray = dataObject.getDestinations;
             
+            setOrigins({...origins, data: []})
             originsArray.forEach(oArr => {
                 setOrigins(prevState => {
                     const data = [...prevState.data];
                     data.push({
+                        id: oArr.id,
                         name: oArr.name
                     });
                     return { ...prevState, data };
                 });
             });
 
+            setDestinations({...destinations, data: []})
             destinationsArray.forEach(dArr => {
                 setDestinations(prevState => {
                     const data = [...prevState.data];
                     data.push({
+                        id: dArr.id,
                         name: dArr.name,
-                        origin: dArr.origin.name
+                        originId: dArr.origin.name
                     });
                     return { ...prevState, data };
                 });
             })
         }
 
-        if(dataObject.error !== undefined){
-            ToastComponent('error', 'Failed to load data');
+        if(dataObject.error !== undefined){                   
+            Swal.fire({
+                icon: "error",
+                timer: 2200,
+                title: "Failed to load data!"
+            })
         }
     },[dataObject])
+
+    useEffect(() => {},[selectedOrigin])
 
     const handleBreadCrumbClick = (e) => {
         e.preventDefault();
@@ -144,6 +148,25 @@ function RoutesPage(props) {
             history.push('/admin/home');
         }
     }
+
+    const handleOriginSelection = (e) => {        
+        setSelectedOrigin(e.target.value);
+    }    
+
+    const displayOriginsSelection = () => {
+        let originOptions = dataObject.getOrigins.map(oArr => {
+            return(
+                <option value={oArr.id} selected={oArr.id === selectedOrigin ? true:false}>{oArr.name}</option>
+            )
+        })
+        return(
+            <select onChange={handleOriginSelection}>
+                {originOptions}
+            </select>
+        )
+    }
+
+    console.log(props)
 
     return (
         <>
@@ -157,117 +180,214 @@ function RoutesPage(props) {
                 </Typography>
             </Breadcrumbs>
             <div className="container-fluid p-0">
-            <div className="row">
-                <div className="col-6">
-                    <Typography className="mb-2" variant="h6" component="h1">
-                        Origins
-                    </Typography>
-                    <MaterialTable
-                        icons={tableIcons}
-                        title=""
-                        columns={origins.columns}
-                        data={origins.data}
-                        editable={{
-                            onRowAdd: newData =>
-                            new Promise(resolve => {
-                                setTimeout(() => {
+                <div className="row">
+                    <div className="col-6">
+                        <Typography className="mb-2" variant="h6" component="h1">
+                            Origins
+                        </Typography>
+                        <MaterialTable
+                            icons={tableIcons}
+                            title=""
+                            columns={[
+                                { title: 'ID', field: 'id', hidden: true },
+                                { title: 'Name', field: 'name' },
+                            ]}
+                            data={origins.data}
+                            editable={{
+                                onRowAdd: newData =>
+                                new Promise(resolve => {
+                                    setTimeout(() => {
+                                        resolve();                                    
+                                        props.createOrigin({
+                                            variables: newData,
+                                            refetchQueries: [{query: getRoutesQuery}]
+                                        })
+                                        .then((res) => {
+                                            Swal.fire({
+                                                icon: "success",
+                                                timer: 2200,
+                                                title: "Successfully added an origin!"
+                                            })
+
+                                            setOrigins(prevState => {
+                                                const data = [...prevState.data];
+                                                data.push(newData);
+                                                return { ...prevState, data };
+                                            });
+                                        })
+                                        .catch((err) => {
+                                            Swal.fire({
+                                                icon: "error",
+                                                timer: 2200,
+                                                title: "Unable to add origin!"
+                                            })
+                                        })              
+                                    }, 600);
+                                }),
+                                onRowUpdate: (newData, oldData) =>
+                                new Promise(resolve => {
+                                    setTimeout(() => {
+                                        resolve();
+                                        if (oldData) {
+                                            props.updateOrigin({
+                                                variables: newData,
+                                                refetchQueries: [{query: getRoutesQuery}]
+                                            })
+                                            .then((res) => {
+                                                Swal.fire({
+                                                    icon: "success",
+                                                    timer: 2200,
+                                                    title: "Successfully updated origin!"
+                                                })
+
+                                                setOrigins(prevState => {
+                                                    const data = [...prevState.data];
+                                                    data[data.indexOf(oldData)] = newData;
+                                                    return { ...prevState, data };
+                                                });                                            
+                                            })
+                                            .catch((err) => {
+                                                Swal.fire({
+                                                    icon: "error",
+                                                    timer: 2200,
+                                                    title: "Unable to update origin!"
+                                                })
+                                            })
+                                        }
+                                    }, 600);
+                                }),
+                                onRowDelete: oldData =>
+                                new Promise(resolve => {
+                                    setTimeout(() => {
                                     resolve();
-                                    alert('You clicked add')
-                                    // setOrigins(prevState => {
-                                    //     const data = [...prevState.data];
-                                    //     data.push(newData);
-                                    //     return { ...prevState, data };
-                                    // });
-                                }, 600);
-                            }),
-                            onRowUpdate: (newData, oldData) =>
-                            new Promise(resolve => {
-                                setTimeout(() => {
+                                    setOrigins(prevState => {
+                                        const data = [...prevState.data];
+                                        data.splice(data.indexOf(oldData), 1);
+                                        return { ...prevState, data };
+                                    });
+                                    }, 600);
+                                }),
+                            }}
+                        />
+                    </div>
+                    <div className="col-6">
+                        <Typography className="mb-2" variant="h6" component="h1">
+                            Destinations
+                        </Typography>
+                        <MaterialTable
+                            icons={tableIcons}
+                            title=""
+                            columns={[
+                                {title: 'ID', field: 'id', hidden: true},
+                                {title: 'Name', field: 'name'},
+                                {title: 'Assigned Origin', field: 'originId', editComponent: props => displayOriginsSelection()}
+                            ]}
+                            data={destinations.data}
+                            editable={{
+                                onRowAdd: newData =>
+                                new Promise(resolve => {
+                                    setTimeout(() => {
+                                        resolve();
+                                        let createDestinationData = {
+                                            id: newData.id,
+                                            name: newData.name,
+                                            originId: selectedOrigin
+                                        }
+                                        props.createDestination({
+                                            variables: createDestinationData,
+                                            refetchQueries: [{query: getRoutesQuery}]
+                                        })
+                                        .then((res) => {
+                                            Swal.fire({
+                                                icon: "success",
+                                                timer: 2200,
+                                                title: "Successfully added a destination!"
+                                            })
+
+                                            setDestinations(prevState => {
+                                                const data = [...prevState.data];
+                                                data.push(newData);
+                                                return { ...prevState, data };
+                                            });
+                                        })
+                                        .catch((err) => {
+                                            Swal.fire({
+                                                icon: "error",
+                                                timer: 2200,
+                                                title: "Unable to add destination!"
+                                            })
+                                        })                                    
+                                    }, 600);
+                                }),
+                                onRowUpdate: (newData, oldData) =>
+                                new Promise(resolve => {
+                                    setTimeout(() => {
                                     resolve();
                                     if (oldData) {
-                                        setOrigins(prevState => {
-                                            const data = [...prevState.data];
-                                            data[data.indexOf(oldData)] = newData;
-                                            return { ...prevState, data };
-                                        });
+                                        let updateDestinationData = {
+                                            id: newData.id,
+                                            name: newData.name,
+                                            originId: selectedOrigin
+                                        }
+                                        if(selectedOrigin.trim() !== ''){
+                                            props.updateDestination({
+                                                variables: updateDestinationData,
+                                                refetchQueries: [{query: getRoutesQuery}]
+                                            })
+                                            .then((res) => {
+                                                Swal.fire({
+                                                    icon: "success",
+                                                    timer: 2200,
+                                                    title: "Successfully updated destination!"
+                                                })
+
+                                                setDestinations(prevState => {
+                                                    const data = [...prevState.data];
+                                                    data[data.indexOf(oldData)] = newData;
+                                                    return { ...prevState, data };
+                                                });
+                                                
+                                                setSelectedOrigin('');
+                                            })
+                                            .catch((err) => {
+                                                Swal.fire({
+                                                    icon: "error",
+                                                    timer: 2200,
+                                                    title: "Unable to update destination!"
+                                                })
+                                            })                                      
+                                        } else {
+                                            ToastComponent('warning', 'Please select an origin!');                                
+                                        }
                                     }
-                                }, 600);
-                            }),
-                            onRowDelete: oldData =>
-                            new Promise(resolve => {
-                                setTimeout(() => {
-                                resolve();
-                                setOrigins(prevState => {
-                                    const data = [...prevState.data];
-                                    data.splice(data.indexOf(oldData), 1);
-                                    return { ...prevState, data };
-                                });
-                                }, 600);
-                            }),
-                        }}
-                    />
-                </div>
-                <div className="col-6">
-                    <Typography className="mb-2" variant="h6" component="h1">
-                        Destinations
-                    </Typography>
-                    <MaterialTable
-                        icons={tableIcons}
-                        title=""
-                        columns={destinations.columns}
-                        data={destinations.data}
-                        editable={{
-                            onRowAdd: newData =>
-                            new Promise(resolve => {
-                                setTimeout(() => {
+                                    }, 600);
+                                }),
+                                onRowDelete: oldData =>
+                                new Promise(resolve => {
+                                    setTimeout(() => {
                                     resolve();
                                     setDestinations(prevState => {
                                         const data = [...prevState.data];
-                                        data.push(newData);
+                                        data.splice(data.indexOf(oldData), 1);
                                         return { ...prevState, data };
                                     });
-                                }, 600);
-                            }),
-                            onRowUpdate: (newData, oldData) =>
-                            new Promise(resolve => {
-                                setTimeout(() => {
-                                resolve();
-                                if (oldData) {
-                                    setDestinations(prevState => {
-                                    const data = [...prevState.data];
-                                    data[data.indexOf(oldData)] = newData;
-                                    return { ...prevState, data };
-                                    });
-                                }
-                                }, 600);
-                            }),
-                            onRowDelete: oldData =>
-                            new Promise(resolve => {
-                                setTimeout(() => {
-                                resolve();
-                                setDestinations(prevState => {
-                                    const data = [...prevState.data];
-                                    data.splice(data.indexOf(oldData), 1);
-                                    return { ...prevState, data };
-                                });
-                                }, 600);
-                            }),
-                        }}
-                    />
-                </div>
-            </div>                
+                                    }, 600);
+                                }),
+                            }}
+                        />
+                    </div>
+                </div>                
             </div>            
         </>
     );
 }
 
 export default compose(
-    graphql(getRoutesQuery)
-    // graphql(getDestinationsQuery, {name: 'getDestinationsQuery'}),
-    // graphql(createOriginMutation, {name: 'createOrigin'}),
-    // graphql(updateOriginMutation, {name: 'updateOrigin'}),
-    // graphql(deleteOriginMutation, {name: 'deleteOrigin'}),
-    // graphql(createDestinationMutation, {name: 'createDestination'}),
-    // graphql(updateDestinationMutation, {name: 'updateDestination'}),
-    // graphql(deleteDestinationMutation, {name: 'deleteDestination'}),
+    graphql(getRoutesQuery),
+    graphql(createOriginMutation, {name: 'createOrigin'}),     
+    graphql(updateOriginMutation, {name: 'updateOrigin'}),
+    graphql(deleteOriginMutation, {name: 'deleteOrigin'}),
+    graphql(createDestinationMutation, {name: 'createDestination'}),
+    graphql(updateDestinationMutation, {name: 'updateDestination'}),
+    graphql(deleteDestinationMutation, {name: 'deleteDestination'}),
 )(RoutesPage);

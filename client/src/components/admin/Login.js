@@ -17,22 +17,22 @@ import { graphql } from 'react-apollo';
 import { flowRight as compose } from 'lodash';
 import { getAdministratorsQuery } from '../../client-queries/queries';
 
+const ToastComponent = (iconProp, titleProp) => {
+    Toast.fire({
+        icon: iconProp,
+        title: `<h1 style='color: #fff'>${titleProp}</h1>`,
+        showClass: {
+            popup: 'animated fadeInDown faster'
+        },
+        hideClass: {
+            popup: 'animated fadeOutUp faster'
+        }
+    });
+}
+
 const AdminLogin = (props) => {
     let data = props.data;
-    let history = useHistory();
-
-    const ToastComponent = (iconProp, titleProp) => {
-        Toast.fire({
-            icon: iconProp,
-            title: titleProp,
-            showClass: {
-                popup: 'animated fadeInDown faster'
-            },
-            hideClass: {
-                popup: 'animated fadeOutUp faster'
-            }
-        });
-    }
+    let history = useHistory();    
 
     const adminLoginHandler = () => {
         if(data.loading === false && data.error === undefined){
