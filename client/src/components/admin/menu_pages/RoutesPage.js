@@ -179,7 +179,7 @@ function RoutesPage(props) {
             </Breadcrumbs>
             <div className="container-fluid p-0">
                 <div className="row">
-                    <div className="col-6">
+                    <div className="col-md-6">
                         <Typography className="mb-2" variant="h6" component="h1">
                             Origins
                         </Typography>
@@ -290,7 +290,7 @@ function RoutesPage(props) {
                             }}
                         />
                     </div>
-                    <div className="col-6">
+                    <div className="col-md-6">
                         <Typography className="mb-2" variant="h6" component="h1">
                             Destinations
                         </Typography>
