@@ -43,7 +43,7 @@ function runRolesSeeder() {
 	}
 
 	const disconnect = () => {
-		console.log("RoleSeeder finished seeding!")
+		console.log("RolesSeeder finished seeding!")
 		mongoose.disconnect();
 	}
 }

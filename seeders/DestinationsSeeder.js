@@ -52,7 +52,6 @@ function runDestinationsSeeder(){
 	
 	const disconnect = () => {
 		console.log("DestinationsSeeder finished seeding!")
-		mongoose.disconnect();        
-		process.exit();
+		mongoose.disconnect();		
 	}
 }
