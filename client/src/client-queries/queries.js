@@ -179,6 +179,16 @@ const getAccommodationsQuery = gql`
     }
 `;
 
+const getSeatsQuery = gql`
+    {
+        getSeats {
+            id
+            row
+            column
+        }
+    }
+`;
+
 export { 
     getRolesQuery,
     getRoleQuery,
@@ -189,5 +199,6 @@ export {
     getRoutesQuery,
     getOriginQuery,
     getDestinationQuery,
-    getAccommodationsQuery
+    getAccommodationsQuery,
+    getSeatsQuery
 }

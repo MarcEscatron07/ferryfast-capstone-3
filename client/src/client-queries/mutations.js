@@ -160,6 +160,42 @@ const deleteAccommodationMutation = gql`
     }
 `;
 
+const createSeatMutation = gql`
+    mutation(
+        $row: Int!
+        $column: String!
+    ){
+        createSeat(
+            row: $row
+            column: $column
+        ){
+            id
+        }
+    }
+`;
+const updateSeatMutation = gql`
+    mutation(
+        $id: ID!
+        $row: Int!
+        $column: String!
+    ){
+        updateSeat(
+            id: $id
+            row: $row
+            column: $column
+        ){
+            id
+        }
+    }
+`;
+const deleteSeatMutation = gql`
+    mutation($id: ID!){
+        deleteSeat(id: $id){
+            id
+        }
+    }
+`;
+
 export { 
     createAdministratorMutation,
     updateAdministratorMutation,
@@ -172,5 +208,8 @@ export {
     deleteDestinationMutation,
     createAccommodationMutation,
     updateAccommodationMutation,
-    deleteAccommodationMutation
+    deleteAccommodationMutation,
+    createSeatMutation,
+    updateSeatMutation,
+    deleteSeatMutation
 }

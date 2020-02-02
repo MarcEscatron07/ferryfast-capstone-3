@@ -105,25 +105,25 @@ function RoutesPage(props) {
             let destinationsArray = dataObject.getDestinations;
             
             setOrigins({...origins, data: []})
-            originsArray.forEach(oArr => {
+            originsArray.forEach(orArr => {
                 setOrigins(prevState => {
                     const data = [...prevState.data];
                     data.push({
-                        id: oArr.id,
-                        name: oArr.name
+                        id: orArr.id,
+                        name: orArr.name
                     });
                     return { ...prevState, data };
                 });
             });
 
             setDestinations({...destinations, data: []})
-            destinationsArray.forEach(dArr => {
+            destinationsArray.forEach(deArr => {
                 setDestinations(prevState => {
                     const data = [...prevState.data];
                     data.push({
-                        id: dArr.id,
-                        name: dArr.name,
-                        originId: dArr.origin.name
+                        id: deArr.id,
+                        name: deArr.name,
+                        originId: deArr.origin.name
                     });
                     return { ...prevState, data };
                 });
@@ -154,9 +154,9 @@ function RoutesPage(props) {
     }    
 
     const displayOriginsSelection = () => {
-        let originOptions = dataObject.getOrigins.map(oArr => {
+        let originOptions = dataObject.getOrigins.map(orArr => {
             return(
-                <option value={oArr.id} selected={oArr.id === selectedOrigin ? true:false}>{oArr.name}</option>
+                <option value={orArr.id} selected={orArr.id === selectedOrigin ? true:false}>{orArr.name}</option>
             )
         })
         return(

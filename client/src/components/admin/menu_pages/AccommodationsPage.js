@@ -126,8 +126,6 @@ function AccommodationsPage(props) {
         }
     }
 
-    console.log(props)
-
     return (
         <>
             <Breadcrumbs aria-label="breadcrumb" className="mb-3">
@@ -158,8 +156,7 @@ function AccommodationsPage(props) {
                                 onRowAdd: newData =>
                                 new Promise(resolve => {
                                     setTimeout(() => {
-                                        resolve();                 
-                                        console.log(newData.price)  
+                                        resolve();                                        
                                         if(!isNaN(newData.price)){
                                             let newAccommodationData = {
                                                 name: newData.name,
@@ -191,8 +188,7 @@ function AccommodationsPage(props) {
                                             })     
                                         } else {
                                             ToastComponent('error', 'Entered price is invalid!');
-                                        }
-                                                 
+                                        }                                                 
                                     }, 600);
                                 }),
                                 onRowUpdate: (newData, oldData) =>
