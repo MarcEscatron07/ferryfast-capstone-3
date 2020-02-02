@@ -7,11 +7,11 @@ import { Toast } from './ToastAuth';
 import { graphql } from 'react-apollo';
 import { flowRight as compose } from 'lodash';
 
-import { getRoutesQuery, getOriginQuery } from '../../../client-queries/queries';
+import { getRoutesQuery } from '../../../client-queries/queries';
 import { 
     createOriginMutation, 
     updateOriginMutation, 
-    deleteOriginMutation ,
+    deleteOriginMutation,
     createDestinationMutation,
     updateDestinationMutation,
     deleteDestinationMutation
@@ -165,8 +165,6 @@ function RoutesPage(props) {
             </select>
         )
     }
-
-    console.log(props)
 
     return (
         <>
@@ -433,5 +431,5 @@ export default compose(
     graphql(deleteOriginMutation, {name: 'deleteOrigin'}),
     graphql(createDestinationMutation, {name: 'createDestination'}),
     graphql(updateDestinationMutation, {name: 'updateDestination'}),
-    graphql(deleteDestinationMutation, {name: 'deleteDestination'}),
+    graphql(deleteDestinationMutation, {name: 'deleteDestination'})
 )(RoutesPage);

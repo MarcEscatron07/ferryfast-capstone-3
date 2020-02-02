@@ -169,6 +169,16 @@ const getDestinationQuery = gql`
     }
 `;
 
+const getAccommodationsQuery = gql`
+    {
+        getAccommodations {
+            id
+            name
+            price
+        }
+    }
+`;
+
 export { 
     getRolesQuery,
     getRoleQuery,
@@ -178,5 +188,6 @@ export {
     getAdministratorQuery,
     getRoutesQuery,
     getOriginQuery,
-    getDestinationQuery
+    getDestinationQuery,
+    getAccommodationsQuery
 }

@@ -124,6 +124,42 @@ const deleteDestinationMutation = gql`
     }
 `;
 
+const createAccommodationMutation = gql`
+    mutation(
+        $name: String!
+        $price: Float!
+    ){
+        createAccommodation(
+            name: $name
+            price: $price
+        ){
+            id
+        }
+    }
+`;
+const updateAccommodationMutation = gql`
+    mutation(
+        $id: ID!
+        $name: String!
+        $price: Float!
+    ){
+        updateAccommodation(
+            id: $id
+            name: $name
+            price: $price
+        ){
+            id
+        }
+    }
+`;
+const deleteAccommodationMutation = gql`
+    mutation($id: ID!){
+        deleteAccommodation(id: $id){
+            id
+        }
+    }
+`;
+
 export { 
     createAdministratorMutation,
     updateAdministratorMutation,
@@ -133,5 +169,8 @@ export {
     deleteOriginMutation,
     createDestinationMutation,
     updateDestinationMutation,
-    deleteDestinationMutation
+    deleteDestinationMutation,
+    createAccommodationMutation,
+    updateAccommodationMutation,
+    deleteAccommodationMutation
 }
