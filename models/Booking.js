@@ -18,10 +18,6 @@ const bookingSchema = new Schema(
             type: String,
             required: true
         },
-        passengerDetailId: {
-            type: String,
-            required: true
-        },
         statId: {
             type: String,
             required: true

@@ -118,7 +118,6 @@ const typeDefs = gql`
         dateId: String
         timeId: String
         accommodationId: String        
-        passengerId: String
         statId: String
         passengerQuantity: Int
         totalPayment: Float
@@ -126,8 +125,7 @@ const typeDefs = gql`
         destination: DestinationType
         dateSchedule: DateScheduleType
         timeSchedule: TimeScheduleType
-        accommodation: AccommodationType        
-        passengers: [PassengerType]
+        accommodation: AccommodationType
         stat: StatType
     }
 
@@ -338,7 +336,6 @@ const typeDefs = gql`
             dateId: String
             timeId: String
             accommodationId: String            
-            passengerId: String
             statId: String
             passengerQuantity: Int
             totalPayment: Float
@@ -352,7 +349,6 @@ const typeDefs = gql`
             dateId: String
             timeId: String
             accommodationId: String            
-            passengerId: String
             statId: String
             passengerQuantity: Int
             totalPayment: Float
@@ -582,9 +578,6 @@ const resolvers = {
         },
         accommodation: (parent,_) => {
             return Accommodation.findOne({_id:parent.accommodationId});
-        },
-        passengers: (parent,_) => {
-            return Passenger.find({bookingId:parent.id});
         },
         stat: (parent,_) => {
             return Stat.findOne({_id:parent.statId});
@@ -834,7 +827,6 @@ const resolvers = {
                 dateId: args.dateId,
                 timeId: args.timeId,
                 accommodationId: args.accommodationId,                
-                passengerId: args.passengerId,
                 statId: args.statId,
                 passengerQuantity: args.passengerQuantity,
                 totalPayment: args.totalPayment
@@ -851,7 +843,6 @@ const resolvers = {
                 dateId: args.dateId,
                 timeId: args.timeId,
                 accommodationId: args.accommodationId,                
-                passengerId: args.passengerId,
                 statId: args.statId,
                 passengerQuantity: args.passengerQuantity,
                 totalPayment: args.totalPayment

@@ -18,7 +18,6 @@ import { makeStyles } from '@material-ui/core/styles';
 import Breadcrumbs from '@material-ui/core/Breadcrumbs';
 import Link from '@material-ui/core/Link';
 import Typography from '@material-ui/core/Typography';
-
 import HomeIcon from '@material-ui/icons/Home';
 
 import MaterialTable from 'material-table';
@@ -124,9 +123,7 @@ function SeatsPage(props) {
         if(e.target.id === 'home'){
             history.push('/admin/home');
         }
-    }
-
-    console.log(props)
+    }    
 
     return (
         <>

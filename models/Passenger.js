@@ -23,7 +23,7 @@ const passengerSchema = new Schema(
             type: String,
             required: true
         },
-        contactDetailId: {
+        contactId: {
             type: String,
             required: true
         },

@@ -185,6 +185,60 @@ const getSeatsQuery = gql`
             id
             row
             column
+            passenger {
+                id
+                firstname
+                middleinitial
+                lastname
+                age
+                gender
+            }
+        }
+    }
+`;
+
+const getContactsQuery = gql`
+    {
+        getContacts {
+            id
+            fullname
+            phone
+            email
+            address
+            passengers {
+                id
+                firstname
+                middleinitial
+                lastname
+                age
+                gender
+            }
+        }
+    }
+`;
+
+const getPassengersQuery = gql`
+    {
+        getPassengers {
+            firstname
+            middleinitial
+            lastname
+            age
+            gender
+            seatId
+            contactId
+            seat {
+                id
+                row
+                column
+            }
+            contact {
+                id
+                fullname
+                phone
+                email
+                address
+            }
         }
     }
 `;
@@ -200,5 +254,7 @@ export {
     getOriginQuery,
     getDestinationQuery,
     getAccommodationsQuery,
-    getSeatsQuery
+    getSeatsQuery,
+    getContactsQuery,
+    getPassengersQuery
 }
