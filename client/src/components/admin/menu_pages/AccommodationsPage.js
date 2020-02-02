@@ -163,7 +163,7 @@ function AccommodationsPage(props) {
                                         if(!isNaN(newData.price)){
                                             let newAccommodationData = {
                                                 name: newData.name,
-                                                price: parseFloat(newData.price.toFixed(2))
+                                                price: parseFloat(newData.price)
                                             }                                     
                                             props.createAccommodation({
                                                 variables: newAccommodationData,
@@ -200,35 +200,39 @@ function AccommodationsPage(props) {
                                     setTimeout(() => {
                                         resolve();
                                         if (oldData) {
-                                            let updateAccommodationData = {
-                                                id: newData.id,
-                                                name: newData.name,
-                                                price: parseFloat(newData.price.toFixed(2))
-                                            }
-                                            props.updateAccommodation({
-                                                variables: updateAccommodationData,
-                                                refetchQueries: [{query: getAccommodationsQuery}]
-                                            })
-                                            .then((res) => {
-                                                Swal.fire({
-                                                    icon: "success",
-                                                    timer: 2200,
-                                                    title: "Successfully updated accomodation!"
+                                            if(!isNaN(newData.price)){
+                                                let updateAccommodationData = {
+                                                    id: newData.id,
+                                                    name: newData.name,
+                                                    price: parseFloat(newData.price)
+                                                }
+                                                props.updateAccommodation({
+                                                    variables: updateAccommodationData,
+                                                    refetchQueries: [{query: getAccommodationsQuery}]
                                                 })
+                                                .then((res) => {
+                                                    Swal.fire({
+                                                        icon: "success",
+                                                        timer: 2200,
+                                                        title: "Successfully updated accomodation!"
+                                                    })
 
-                                                setAccommodations(prevState => {
-                                                    const data = [...prevState.data];
-                                                    data[data.indexOf(oldData)] = newData;
-                                                    return { ...prevState, data };
-                                                });                                            
-                                            })
-                                            .catch((err) => {
-                                                Swal.fire({
-                                                    icon: "error",
-                                                    timer: 2200,
-                                                    title: "Unable to update origin!"
+                                                    setAccommodations(prevState => {
+                                                        const data = [...prevState.data];
+                                                        data[data.indexOf(oldData)] = newData;
+                                                        return { ...prevState, data };
+                                                    });                                            
                                                 })
-                                            })
+                                                .catch((err) => {
+                                                    Swal.fire({
+                                                        icon: "error",
+                                                        timer: 2200,
+                                                        title: "Unable to update accomodation!"
+                                                    })
+                                                })
+                                            } else {
+                                                ToastComponent('error', 'Entered price is invalid!');
+                                            }
                                         }
                                     }, 600);
                                 }),
