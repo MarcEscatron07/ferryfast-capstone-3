@@ -224,6 +224,7 @@ const getPassengersAndContactsQuery = gql`
             gender
             seatId
             contactId
+            bookingId
             seat {
                 id
                 row
