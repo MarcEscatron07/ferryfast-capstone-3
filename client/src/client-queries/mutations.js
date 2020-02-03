@@ -196,6 +196,110 @@ const deleteSeatMutation = gql`
     }
 `;
 
+const createContactMutation = gql`
+    mutation(
+        $fullname: String!
+        $phone: String!
+        $email: String!
+        $address: String!
+    ){
+        createContact(
+            fullname: $fullname
+            phone: $phone
+            email: $email
+            address: $address
+        ){
+            id
+        }
+    }
+`;
+const updateContactMutation = gql`
+    mutation(
+        $id: ID!
+        $fullname: String!
+        $phone: String!
+        $email: String!
+        $address: String!
+    ){
+        updateContact(
+            id: $id
+            fullname: $fullname
+            phone: $phone
+            email: $email
+            address: $address
+        ){
+            id
+        }
+    }
+`;
+const deleteContactMutation = gql`
+    mutation($id: ID!){
+        deleteContact(id: $id){
+            id
+        }
+    }
+`;
+
+const createPassengerMutation = gql`
+    mutation(
+        $firstname: String!
+        $middleinitial: String!
+        $lastname: String!
+        $age: Int!
+        $gender: String!
+        $seatId: String!
+        $contactId: String!
+        $bookingId: String!
+    ){
+        createPassenger(
+            firstname: $firstname
+            middleinitial: $middleinitial
+            lastname: $lastname
+            age: $age
+            gender: $gender
+            seatId: $seatId
+            contactId: $contactId
+            bookingId: $bookingId
+        ){
+            id
+        }
+    }
+`;
+const updatePassengerMutation = gql`
+    mutation(
+        $id: ID!
+        $firstname: String!
+        $middleinitial: String!
+        $lastname: String!
+        $age: Int!
+        $gender: String!
+        $seatId: String!
+        $contactId: String!
+        $bookingId: String!
+    ){
+        updatePassenger(
+            id: $id
+            firstname: $firstname
+            middleinitial: $middleinitial
+            lastname: $lastname
+            age: $age
+            gender: $gender
+            seatId: $seatId
+            contactId: $contactId
+            bookingId: $bookingId
+        ){
+            id
+        }
+    }
+`;
+const deletePassengerMutation = gql`
+    mutation($id: ID!){
+        deletePassenger(id: $id){
+            id
+        }
+    }
+`;
+
 export { 
     createAdministratorMutation,
     updateAdministratorMutation,
@@ -211,5 +315,11 @@ export {
     deleteAccommodationMutation,
     createSeatMutation,
     updateSeatMutation,
-    deleteSeatMutation
+    deleteSeatMutation,
+    createContactMutation,
+    updateContactMutation,
+    deleteContactMutation,
+    createPassengerMutation,
+    updatePassengerMutation,
+    deletePassengerMutation
 }

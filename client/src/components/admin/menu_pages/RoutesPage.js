@@ -126,7 +126,7 @@ function RoutesPage(props) {
                     });
                     return { ...prevState, data };
                 });
-            })
+            });
         }
 
         if(dataObject.error !== undefined){                   

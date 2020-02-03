@@ -3,7 +3,7 @@ import { Route, useHistory } from 'react-router-dom';
 
 import DashboardPage from './menu_pages/DashboardPage';
 import BookingsPage from './menu_pages/BookingsPage';
-import PassengersPage from './menu_pages/PassengersPage';
+import PassengersAndContacts from './menu_pages/PassengersAndContactsPage';
 import RoutesPage from './menu_pages/RoutesPage';
 import SchedulesPage from './menu_pages/SchedulesPage';
 import SeatsPage from './menu_pages/SeatsPage';
@@ -120,7 +120,7 @@ const AdminDrawer = () => {
   const generalMenus = [
     'Dashboard', 
     'Bookings', 
-    'Passengers', 
+    'Passengers & Contacts', 
     'Routes', 
     'Schedules', 
     'Seats', 
@@ -166,7 +166,7 @@ const AdminDrawer = () => {
     } else if(e.target.id === generalMenus[1]){
       history.push('/admin/home/bookings');
     } else if(e.target.id === generalMenus[2]){
-      history.push('/admin/home/passengers');
+      history.push('/admin/home/passengers&contacts');
     } else if(e.target.id === generalMenus[3]){
       history.push('/admin/home/routes');
     } else if(e.target.id === generalMenus[4]){
@@ -286,7 +286,7 @@ const AdminDrawer = () => {
         {/* insert components to be mounted here */}
         <Route path="/admin/home" exact component={DashboardPage}/>
         <Route path="/admin/home/bookings" component={BookingsPage}/>
-        <Route path="/admin/home/passengers" component={PassengersPage}/>
+        <Route path="/admin/home/passengers&contacts" component={PassengersAndContacts}/>
         <Route path="/admin/home/routes" component={RoutesPage}/>
         <Route path="/admin/home/schedules" component={SchedulesPage}/>
         <Route path="/admin/home/seats" component={SeatsPage}/>

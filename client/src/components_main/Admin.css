@@ -1,3 +1,11 @@
 .Admin {
   text-align: center;
 }
+
+.makeStyles-appBarShift-3 {
+	width: calc(100% - 260px) !important;
+}
+
+.makeStyles-drawerOpen-7 {
+	width: 260px !important;
+}

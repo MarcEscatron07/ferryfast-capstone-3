@@ -197,7 +197,7 @@ const getSeatsQuery = gql`
     }
 `;
 
-const getContactsQuery = gql`
+const getPassengersAndContactsQuery = gql`
     {
         getContacts {
             id
@@ -214,12 +214,9 @@ const getContactsQuery = gql`
                 gender
             }
         }
-    }
-`;
 
-const getPassengersQuery = gql`
-    {
         getPassengers {
+            id
             firstname
             middleinitial
             lastname
@@ -255,6 +252,5 @@ export {
     getDestinationQuery,
     getAccommodationsQuery,
     getSeatsQuery,
-    getContactsQuery,
-    getPassengersQuery
+    getPassengersAndContactsQuery
 }

@@ -42,7 +42,7 @@ function App() {
           <Switch>
             <Route path="/" exact component={Client}/>
 
-            <MuiThemeProvider theme = {theme}>   
+            <MuiThemeProvider theme={theme}>   
               <Route path="/admin" exact component={Admin}/>
               <Route path="/admin/home" component={AdminHome}/>
               <Route path="/admin/register" component={AdminRegister}/>
