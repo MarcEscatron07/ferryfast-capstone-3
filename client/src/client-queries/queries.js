@@ -143,7 +143,7 @@ const getRoutesQuery = gql`
 
 const getOriginQuery = gql`
     query($id: String!){
-        getOriginQuery(id: $id){
+        getOrigin(id: $id){
             id
             name
             destinations {
@@ -188,12 +188,11 @@ const getSchedulesQuery = gql`
         getOrigins {
             id
             name
-        }   
-
-        getDestinations {
-            id
-            name
-        }        
+            destinations {
+                id
+                name
+            }
+        }      
     }
 `;
 

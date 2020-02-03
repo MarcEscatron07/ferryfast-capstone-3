@@ -31,6 +31,8 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
+import Edit from '@material-ui/icons/Edit';
+import DeleteOutline from '@material-ui/icons/DeleteOutline';
 
 import IconButton from '@material-ui/core/IconButton';
 import TextField from '@material-ui/core/TextField';
@@ -38,7 +40,6 @@ import TextField from '@material-ui/core/TextField';
 import AddBoxIcon from '@material-ui/icons/AddBox';
 
 import Select from '@material-ui/core/Select';
-import NativeSelect from '@material-ui/core/NativeSelect';
   
 const useStyles = makeStyles({
     root: {
@@ -66,6 +67,7 @@ const ToastComponent = (iconProp, titleProp) => {
 }
 
 function SchedulesPage(props) {
+    let currentDate = new Date().toISOString().slice(0,10);
     const [datePage, setDatePage] = useState(0);
     const [dateRowsPerPage, setDateRowsPerPage] = useState(10);
     const [dateRows, setDateRows] = useState({
@@ -79,7 +81,7 @@ function SchedulesPage(props) {
     })
 
     const [selectedDate, setSelectedDate] = useState({
-        date: '',
+        date: currentDate,
         originId: '',
         destinationId: ''
     });
@@ -89,18 +91,22 @@ function SchedulesPage(props) {
         dateId: ''
     });
 
+    let [destinationsArray, setDestinationsArray] = useState([]);
+
 	let history = useHistory();
 	const classes = useStyles();
     let dataObject = props.data;
 
-    let originOptions, destinationOptions, dateOptions;
+    let originOptions, destinationOptions, dateOptions;    
 
     const dateColumns = [
+        { id: 'actions', label: 'Actions', minWidth: 50 },
         { id: 'date', label: 'Date', minWidth: 50 },
         { id: 'destinationId', label: 'Assigned Route', minWidth: 110, align: 'center' },
     ];
 
     const timeColumns = [
+        { id: 'actions', label: 'Actions', minWidth: 50 },
         { id: 'departureTime', label: 'Departure Time', minWidth: 110, align: 'center' },
         { id: 'arrivalTime', label: 'Arrival Time', minWidth: 110, align: 'center' },        
         { id: 'dateId', label: 'Assigned Date', minWidth: 110, align: 'center' },
@@ -115,6 +121,20 @@ function SchedulesPage(props) {
 
         }
     },[dataObject])
+
+    useEffect(() => {
+        if(dataObject.loading === false && dataObject.error === undefined){            
+            let originsArray = dataObject.getOrigins.filter(orArr => {
+                if(orArr.id === selectedDate.originId){          
+                    return orArr.destinations;
+                }
+            })
+            
+            setDestinationsArray(originsArray.map(odArr => {
+                return odArr.destinations;
+            }));          
+        }
+    },[selectedDate.originId])
 
 	const handleBreadCrumbClick = (e) => {
         e.preventDefault();
@@ -146,8 +166,32 @@ function SchedulesPage(props) {
         setSelectedDate({...selectedDate, date: e.target.value});
     }
 
+    const handleOriginSelection = (e) => {        
+        setSelectedDate({...selectedDate, originId: e.target.value})
+        if(dataObject.loading === false && dataObject.error === undefined){
+
+        }
+    }
+
+    const handleDestinationSelection = (e) => {
+        setSelectedDate({...selectedDate, destinationId: e.target.value})
+    }
+
     const handleAddDate = (e) => {
-        console.log(e.target.id)
+        let addDateErrorCounter = 0;
+        console.log(selectedDate.date)
+        console.log(selectedDate.originId)
+        console.log(selectedDate.destinationId)
+        if(selectedDate.date === '' || selectedDate.originId === '' 
+        || selectedDate.destinationId === ''){
+            addDateErrorCounter++;            
+        }
+        console.log(addDateErrorCounter)
+        if(addDateErrorCounter === 0){
+            // code for creating Date Schedule
+        } else {
+            ToastComponent('warning', 'Please apply all required inputs');
+        }
     }
 
     const handleDepartureTimeChange= (e) => {
@@ -158,21 +202,23 @@ function SchedulesPage(props) {
         setSelectedTime({...selectedTime, arrivalTime: e.target.value});
     }
 
-    const handleAddTime = (e) => {
-        console.log(e.target.id)
-    }
-
-    const handleOriginSelection = (e) => {        
-        setSelectedDate({...selectedDate, originId: e.target.value})
-    }
-
-    const handleDestinationSelection = (e) => {
-        setSelectedDate({...selectedDate, destinationId: e.target.value})
-    }
-
     const handleDateScheduleSelection = (e) => {
         setSelectedTime({...selectedTime, dateId: e.target.value})
     }
+
+    const handleAddTime = (e) => {
+        let addTimeErrorCounter = 0;
+        if(selectedTime.departureTime === '' || selectedTime.arrivalTime === '' 
+        || selectedTime.dateId === ''){
+            addTimeErrorCounter++;
+        }
+
+        if(addTimeErrorCounter === 0){
+
+        } else {
+            ToastComponent('warning', 'Please apply all required inputs');
+        }
+    }        
 
     if(dataObject.loading === false && dataObject.error === undefined){            
         originOptions = dataObject.getOrigins.map(origin => {
@@ -181,11 +227,15 @@ function SchedulesPage(props) {
             )
         })
 
-        destinationOptions = dataObject.getDestinations.map(destination => {
-            return(
-                <option value={destination.id}>{destination.name}</option>
-            )
-        })
+        if(destinationsArray !== undefined){            
+            destinationOptions = destinationsArray.map(deArr => {
+                return deArr.map(destination => {                    
+                    return(
+                        <option value={destination.id}>{destination.name}</option>
+                    )
+                })
+            });  
+        }
 
         dateOptions = dataObject.getDateSchedules.map(date => {
             return(
@@ -194,7 +244,7 @@ function SchedulesPage(props) {
         })
     }
 
-    console.log(props)
+    // console.log(props)
 
     return (
     	<>	    	
@@ -219,7 +269,7 @@ function SchedulesPage(props) {
                                     id="date"
                                     label="New Date"
                                     type="date"
-                                    defaultValue="2017-05-24"
+                                    defaultValue={currentDate}
                                     className={classes.textField}
                                     InputLabelProps={{
                                       shrink: true,
@@ -381,7 +431,7 @@ function SchedulesPage(props) {
 }
 
 export default compose(
-    graphql(getSchedulesQuery),
+    graphql(getSchedulesQuery),    
     graphql(createDateScheduleMutation, {name: 'createDateSchedule'}),
     graphql(updateDateScheduleMutation, {name: 'updateDateSchedule'}),
     graphql(deleteDateScheduleMutation, {name: 'deleteDateSchedule'}),

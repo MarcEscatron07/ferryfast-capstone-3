@@ -9,3 +9,15 @@
 .makeStyles-drawerOpen-7 {
 	width: 260px !important;
 }
+
+.MuiPaper-root.MuiDrawer-paper.makeStyles-drawerOpen-7.MuiDrawer-paperAnchorLeft.MuiDrawer-paperAnchorDockedLeft.MuiPaper-elevation0 {
+	background-color: #f0f0f0 !important;
+}
+
+.MuiToolbar-root.MuiToolbar-regular.MTableToolbar-root-165.MuiToolbar-gutters {
+	background-color: #c4c2c2 !important;
+}
+
+.MuiTableCell-stickyHeader {
+	background-color: #c4c2c2 !important;
+}
