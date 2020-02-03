@@ -127,10 +127,12 @@ const deleteDestinationMutation = gql`
 const createDateScheduleMutation = gql`
     mutation(
         $date: Date!
+        $originId: String!
         $destinationId: String!
     ){
         createDateSchedule(
             date: $date
+            originId: $originId
             destinationId: $destinationId
         ){
             id
@@ -141,11 +143,13 @@ const updateDateScheduleMutation = gql`
     mutation(
         $id: ID!
         $date: Date!
+        $originId: String!
         $destinationId: String!
     ){
         updateDateSchedule(
             id: $id
             date: $date
+            originId: $originId
             destinationId: $destinationId
         ){
             id

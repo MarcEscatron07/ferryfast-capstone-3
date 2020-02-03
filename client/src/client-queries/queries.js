@@ -174,6 +174,7 @@ const getSchedulesQuery = gql`
         getDateSchedules {
             id
             date
+            originId
             destinationId
         }
 
@@ -182,6 +183,16 @@ const getSchedulesQuery = gql`
             departureTime
             arrivalTime
             dateId
+        }
+
+        getOrigins {
+            id
+            name
+        }   
+
+        getDestinations {
+            id
+            name
         }        
     }
 `;

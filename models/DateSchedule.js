@@ -6,9 +6,13 @@ const dateScheduleSchema = new Schema(
             type: Date,
             required: true
         },
+        originId: {
+            type: String,
+            required: true
+        },
         destinationId: {
             type: String,
-            require: true
+            required: true
         }
     },
     {

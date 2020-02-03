@@ -62,14 +62,16 @@ const typeDefs = gql`
     type DateScheduleType {
         id: ID
         date: Date
+        originId: String
         destinationId: String
+        origin: OriginType
         destination: DestinationType
         timeSchedules: [TimeScheduleType]
         bookings: [BookingType]
     }
     type TimeScheduleType {
         id: ID
-        departureTime: Date
+        departureTime: String
         arrivalTime: String
         dateId: String
         dateSchedule: DateScheduleType
@@ -234,11 +236,13 @@ const typeDefs = gql`
 
         createDateSchedule(
             date: Date
+            originId: String
             destinationId: String
         ): DateScheduleType
         updateDateSchedule(
             id: ID
             date: Date
+            originId: String
             destinationId: String
         ): DateScheduleType
         deleteDateSchedule(
@@ -246,13 +250,13 @@ const typeDefs = gql`
         ): DateScheduleType
 
         createTimeSchedule(
-            departureTime: Date
+            departureTime: String
             arrivalTime: String
             dateId: String
         ): TimeScheduleType
         updateTimeSchedule(
             id: ID
-            departureTime: Date
+            departureTime: String
             arrivalTime: String
             dateId: String
         ): TimeScheduleType
@@ -519,6 +523,9 @@ const resolvers = {
         }
     },
     DateScheduleType: {
+        origin: (parent,_) => {
+            return Origin.findOne({_id:parent.originId});
+        },
         destination: (parent,_) => {
             return Destination.findOne({_id:parent.destinationId});
         },

@@ -3,7 +3,7 @@ const Schema = mongoose.Schema;
 const timeScheduleSchema = new Schema(
     {
         departureTime: {
-            type: Date,
+            type: String,
             required: true
         },
         arrivalTime: {

@@ -36,6 +36,9 @@ import IconButton from '@material-ui/core/IconButton';
 import TextField from '@material-ui/core/TextField';
 
 import AddBoxIcon from '@material-ui/icons/AddBox';
+
+import Select from '@material-ui/core/Select';
+import NativeSelect from '@material-ui/core/NativeSelect';
   
 const useStyles = makeStyles({
     root: {
@@ -75,11 +78,22 @@ function SchedulesPage(props) {
         data: []
     })
 
-    const [selectedDate, setSelectedDate] = useState(new Date());
-    const [selectedTime, setSelectedTime] = useState(new Date());
+    const [selectedDate, setSelectedDate] = useState({
+        date: '',
+        originId: '',
+        destinationId: ''
+    });
+    const [selectedTime, setSelectedTime] = useState({
+        departureTime: '',
+        arrivalTime: '',
+        dateId: ''
+    });
 
 	let history = useHistory();
 	const classes = useStyles();
+    let dataObject = props.data;
+
+    let originOptions, destinationOptions, dateOptions;
 
     const dateColumns = [
         { id: 'date', label: 'Date', minWidth: 50 },
@@ -91,6 +105,16 @@ function SchedulesPage(props) {
         { id: 'arrivalTime', label: 'Arrival Time', minWidth: 110, align: 'center' },        
         { id: 'dateId', label: 'Assigned Date', minWidth: 110, align: 'center' },
     ];
+
+    useEffect(() => {
+        if(dataObject.loading === false && dataObject.error === undefined){            
+            
+        }
+
+        if(dataObject.error !== undefined){
+
+        }
+    },[dataObject])
 
 	const handleBreadCrumbClick = (e) => {
         e.preventDefault();
@@ -119,19 +143,55 @@ function SchedulesPage(props) {
     }
 
     const handleDateChange= (e) => {
-        setSelectedDate(e.target.value);
+        setSelectedDate({...selectedDate, date: e.target.value});
     }
 
     const handleAddDate = (e) => {
         console.log(e.target.id)
     }
 
-    const handleTimeChange= (e) => {
-        setSelectedTime(e.target.value);
+    const handleDepartureTimeChange= (e) => {
+        setSelectedTime({...selectedTime, departureTime: e.target.value});
+    }
+
+    const handleArrivalTimeChange= (e) => {
+        setSelectedTime({...selectedTime, arrivalTime: e.target.value});
     }
 
     const handleAddTime = (e) => {
         console.log(e.target.id)
+    }
+
+    const handleOriginSelection = (e) => {        
+        setSelectedDate({...selectedDate, originId: e.target.value})
+    }
+
+    const handleDestinationSelection = (e) => {
+        setSelectedDate({...selectedDate, destinationId: e.target.value})
+    }
+
+    const handleDateScheduleSelection = (e) => {
+        setSelectedTime({...selectedTime, dateId: e.target.value})
+    }
+
+    if(dataObject.loading === false && dataObject.error === undefined){            
+        originOptions = dataObject.getOrigins.map(origin => {
+            return(
+                <option value={origin.id}>{origin.name}</option>
+            )
+        })
+
+        destinationOptions = dataObject.getDestinations.map(destination => {
+            return(
+                <option value={destination.id}>{destination.name}</option>
+            )
+        })
+
+        dateOptions = dataObject.getDateSchedules.map(date => {
+            return(
+                <option value={date.id}>{date.date}</option>
+            )
+        })
     }
 
     console.log(props)
@@ -153,18 +213,28 @@ function SchedulesPage(props) {
                         <Typography className="mb-3" variant="h6">
                             Date Schedules
                         </Typography>
-                        <div>
-                            <TextField
-                                id="date"
-                                label="New Date Schedule"
-                                type="date"
-                                defaultValue="2017-05-24"
-                                className={classes.textField}
-                                InputLabelProps={{
-                                  shrink: true,
-                                }}
-                                onChange={handleDateChange}
-                            />
+                        <div className="d-flex justify-content-between mb-4">
+                            <div className="d-flex">
+                                <TextField
+                                    id="date"
+                                    label="New Date"
+                                    type="date"
+                                    defaultValue="2017-05-24"
+                                    className={classes.textField}
+                                    InputLabelProps={{
+                                      shrink: true,
+                                    }}
+                                    onChange={handleDateChange}
+                                />
+                                <Select native className="ml-2" onChange={handleOriginSelection}>
+                                    <option value="" style={{color: "gray"}}>Select origin..</option>
+                                    {originOptions}
+                                </Select>
+                                <Select native className="ml-2" onChange={handleDestinationSelection}>
+                                    <option value="" style={{color: "gray"}}>Select destination..</option>
+                                    {destinationOptions}
+                                </Select>
+                            </div>
                             <IconButton id="add_date" onClick={handleAddDate}>
                                 <AddBoxIcon/>
                             </IconButton>
@@ -218,22 +288,42 @@ function SchedulesPage(props) {
                     <div className="col-lg-6">
                         <Typography className="mb-3" variant="h6" component="h1">
                             Time Schedules
-                        </Typography>                        
-                        <div>
-                            <TextField
-                                id="time"
-                                label="New Time Schedule"
-                                type="time"
-                                defaultValue="07:30"
-                                className={classes.textField}
-                                InputLabelProps={{
-                                  shrink: true,
-                                }}
-                                inputProps={{
-                                  step: 300, // 5 min
-                                }}
-                                onChange={handleTimeChange}
-                            />
+                        </Typography>
+                        <div className="d-flex justify-content-between mb-4">                        
+                            <div className="d-flex">
+                                <TextField
+                                    id="arrival_time"
+                                    label="New Departure Time"
+                                    type="time"
+                                    defaultValue="07:30"
+                                    className={classes.textField}
+                                    InputLabelProps={{
+                                      shrink: true,
+                                    }}
+                                    inputProps={{
+                                      step: 300, // 5 min
+                                    }}
+                                    onChange={handleDepartureTimeChange}
+                                />
+                                <TextField
+                                    id="departure_time"
+                                    label="New Arrival Time"
+                                    type="time"
+                                    defaultValue="07:30"
+                                    className={classes.textField}
+                                    InputLabelProps={{
+                                      shrink: true,
+                                    }}
+                                    inputProps={{
+                                      step: 300, // 5 min
+                                    }}
+                                    onChange={handleArrivalTimeChange}
+                                />
+                                <Select native className="ml-2" onChange={handleDateScheduleSelection}>
+                                    <option value="" style={{color: "gray"}}>Select date..</option>
+                                    {dateOptions}
+                                </Select>
+                            </div>
                             <IconButton id="add_time" onClick={handleAddTime}>
                                 <AddBoxIcon/>
                             </IconButton>
