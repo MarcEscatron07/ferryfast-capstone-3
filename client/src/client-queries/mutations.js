@@ -124,6 +124,82 @@ const deleteDestinationMutation = gql`
     }
 `;
 
+const createDateScheduleMutation = gql`
+    mutation(
+        $date: Date!
+        $destinationId: String!
+    ){
+        createDateSchedule(
+            date: $date
+            destinationId: $destinationId
+        ){
+            id
+        }
+    }
+`;
+const updateDateScheduleMutation = gql`
+    mutation(
+        $id: ID!
+        $date: Date!
+        $destinationId: String!
+    ){
+        updateDateSchedule(
+            id: $id
+            date: $date
+            destinationId: $destinationId
+        ){
+            id
+        }
+    }
+`;
+const deleteDateScheduleMutation = gql`
+    mutation($id: ID!){
+        deleteDateSchedule(id: $id){
+            id
+        }
+    }
+`;
+
+const createTimeScheduleMutation = gql`
+    mutation(
+        $departureTime: String!
+        $arrivalTime: String!
+        $dateId: String!
+    ){
+        createTimeSchedule(
+            departureTime: $departureTime
+            arrivalTime: $arrivalTime
+            dateId: $dateId
+        ){
+            id
+        }
+    }
+`;
+const updateTimeScheduleMutation = gql`
+    mutation(
+        $id: ID!
+        $departureTime: String!
+        $arrivalTime: String!
+        $dateId: String!
+    ){
+        updateTimeSchedule(
+            id: $id
+            departureTime: $departureTime
+            arrivalTime: $arrivalTime
+            dateId: $dateId
+        ){
+            id
+        }
+    }
+`;
+const deleteTimeScheduleMutation = gql`
+    mutation($id: ID!){
+        deleteTimeSchedule(id: $id){
+            id
+        }
+    }
+`;
+
 const createAccommodationMutation = gql`
     mutation(
         $name: String!
@@ -321,5 +397,11 @@ export {
     deleteContactMutation,
     createPassengerMutation,
     updatePassengerMutation,
-    deletePassengerMutation
+    deletePassengerMutation,
+    createDateScheduleMutation,
+    updateDateScheduleMutation,
+    deleteDateScheduleMutation,
+    createTimeScheduleMutation,
+    updateTimeScheduleMutation,
+    deleteTimeScheduleMutation
 }

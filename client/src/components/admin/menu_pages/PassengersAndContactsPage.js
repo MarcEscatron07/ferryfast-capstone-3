@@ -162,9 +162,7 @@ function PassengersAndContactsPage(props) {
     const handleContactChangeRowsPerPage = event => {
         setContactRowsPerPage(+event.target.value);
         setContactPage(0);
-    }
-
-    console.log(props)
+    }    
 
     return (
         <>

@@ -7,8 +7,15 @@ import { Toast } from './ToastAuth';
 import { graphql } from 'react-apollo';
 import { flowRight as compose } from 'lodash';
 
-// import {} from '../../../client-queries/queries';
-// import {} from '../../../client-queries/mutations';
+import { getSchedulesQuery } from '../../../client-queries/queries';
+import { 
+    createDateScheduleMutation,
+    updateDateScheduleMutation,
+    deleteDateScheduleMutation,
+    createTimeScheduleMutation,
+    updateTimeScheduleMutation,
+    deleteTimeScheduleMutation,
+} from '../../../client-queries/mutations';
 
 import { makeStyles } from '@material-ui/core/styles';
 import Breadcrumbs from '@material-ui/core/Breadcrumbs';
@@ -55,7 +62,7 @@ const ToastComponent = (iconProp, titleProp) => {
     });
 }
 
-function SchedulesPage() {
+function SchedulesPage(props) {
     const [datePage, setDatePage] = useState(0);
     const [dateRowsPerPage, setDateRowsPerPage] = useState(10);
     const [dateRows, setDateRows] = useState({
@@ -93,9 +100,26 @@ function SchedulesPage() {
         }
     }
 
+    const handleDateChangePage = (event, newPage) => {
+        setDatePage(newPage);
+    }
+
+    const handleDateChangeRowsPerPage = event => {
+        setDateRowsPerPage(+event.target.value);
+        setDatePage(0);
+    }
+
+    const handleTimeChangePage = (event, newPage) => {
+        setTimePage(newPage);
+    }
+
+    const handleTimeChangeRowsPerPage = event => {
+        setTimeRowsPerPage(+event.target.value);
+        setTimePage(0);
+    }
+
     const handleDateChange= (e) => {
-        setSelectedDate(e.target.value)
-        console.log(e.target.value)
+        setSelectedDate(e.target.value);
     }
 
     const handleAddDate = (e) => {
@@ -103,13 +127,14 @@ function SchedulesPage() {
     }
 
     const handleTimeChange= (e) => {
-        setSelectedTime(e.target.value)
-        console.log(e.target.value)
+        setSelectedTime(e.target.value);
     }
 
     const handleAddTime = (e) => {
         console.log(e.target.id)
     }
+
+    console.log(props)
 
     return (
     	<>	    	
@@ -144,6 +169,51 @@ function SchedulesPage() {
                                 <AddBoxIcon/>
                             </IconButton>
                         </div>
+                        <Paper className={classes.root}>
+                            <TableContainer className={classes.container}>
+                                <Table stickyHeader aria-label="sticky table">
+                                    <TableHead>
+                                        <TableRow>
+                                        {dateColumns.map(column => (
+                                            <TableCell
+                                            className="font-weight-bold"
+                                            key={column.id}
+                                            align={column.align}
+                                            style={{ minWidth: column.minWidth }}
+                                            >
+                                            {column.label}
+                                            </TableCell>
+                                        ))}
+                                        </TableRow>
+                                    </TableHead>
+                                    <TableBody>
+                                        {dateRows.data.slice(datePage * dateRowsPerPage, datePage * dateRowsPerPage + dateRowsPerPage).map(row => {
+                                        return (
+                                            <TableRow hover role="checkbox" tabIndex={-1} key={row.id}>
+                                            {dateColumns.map(column => {
+                                                const value = row[column.id];
+                                                return (
+                                                <TableCell key={column.id} align={column.align}>
+                                                    {column.format && typeof value === 'number' ? column.format(value) : value}
+                                                </TableCell>
+                                                );
+                                            })}
+                                            </TableRow>
+                                        );
+                                        })}
+                                    </TableBody>
+                                </Table>
+                            </TableContainer>
+                            <TablePagination
+                                rowsPerPageOptions={[10, 25, 100]}
+                                component="div"
+                                count={dateRows.data.length}
+                                rowsPerPage={dateRowsPerPage}
+                                page={datePage}
+                                onChangePage={handleDateChangePage}
+                                onChangeRowsPerPage={handleDateChangeRowsPerPage}
+                            />
+                        </Paper>
             		</div>
                     <div className="col-lg-6">
                         <Typography className="mb-3" variant="h6" component="h1">
@@ -168,6 +238,51 @@ function SchedulesPage() {
                                 <AddBoxIcon/>
                             </IconButton>
                         </div>
+                        <Paper className={classes.root}>
+                            <TableContainer className={classes.container}>
+                                <Table stickyHeader aria-label="sticky table">
+                                    <TableHead>
+                                        <TableRow>
+                                        {timeColumns.map(column => (
+                                            <TableCell
+                                            className="font-weight-bold"
+                                            key={column.id}
+                                            align={column.align}
+                                            style={{ minWidth: column.minWidth }}
+                                            >
+                                            {column.label}
+                                            </TableCell>
+                                        ))}
+                                        </TableRow>
+                                    </TableHead>
+                                    <TableBody>
+                                        {timeRows.data.slice(timePage * timeRowsPerPage, timePage * timeRowsPerPage + timeRowsPerPage).map(row => {
+                                        return (
+                                            <TableRow hover role="checkbox" tabIndex={-1} key={row.id}>
+                                            {timeColumns.map(column => {
+                                                const value = row[column.id];
+                                                return (
+                                                <TableCell key={column.id} align={column.align}>
+                                                    {column.format && typeof value === 'number' ? column.format(value) : value}
+                                                </TableCell>
+                                                );
+                                            })}
+                                            </TableRow>
+                                        );
+                                        })}
+                                    </TableBody>
+                                </Table>
+                            </TableContainer>
+                            <TablePagination
+                                rowsPerPageOptions={[10, 25, 100]}
+                                component="div"
+                                count={timeRows.data.length}
+                                rowsPerPage={timeRowsPerPage}
+                                page={timePage}
+                                onChangePage={handleTimeChangePage}
+                                onChangeRowsPerPage={handleTimeChangeRowsPerPage}
+                            />
+                        </Paper>
                     </div>
                 </div>             
             </div>
@@ -175,4 +290,12 @@ function SchedulesPage() {
     )
 }
 
-export default SchedulesPage;
+export default compose(
+    graphql(getSchedulesQuery),
+    graphql(createDateScheduleMutation, {name: 'createDateSchedule'}),
+    graphql(updateDateScheduleMutation, {name: 'updateDateSchedule'}),
+    graphql(deleteDateScheduleMutation, {name: 'deleteDateSchedule'}),
+    graphql(createTimeScheduleMutation, {name: 'createTimeSchedule'}),
+    graphql(updateTimeScheduleMutation, {name: 'updateTimeSchedule'}),
+    graphql(deleteTimeScheduleMutation, {name: 'deleteTimeSchedule'})
+)(SchedulesPage);

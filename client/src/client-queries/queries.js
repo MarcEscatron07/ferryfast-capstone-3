@@ -169,6 +169,23 @@ const getDestinationQuery = gql`
     }
 `;
 
+const getSchedulesQuery = gql`
+    {
+        getDateSchedules {
+            id
+            date
+            destinationId
+        }
+
+        getTimeSchedules {
+            id
+            departureTime
+            arrivalTime
+            dateId
+        }        
+    }
+`;
+
 const getAccommodationsQuery = gql`
     {
         getAccommodations {
@@ -251,6 +268,7 @@ export {
     getRoutesQuery,
     getOriginQuery,
     getDestinationQuery,
+    getSchedulesQuery,
     getAccommodationsQuery,
     getSeatsQuery,
     getPassengersAndContactsQuery

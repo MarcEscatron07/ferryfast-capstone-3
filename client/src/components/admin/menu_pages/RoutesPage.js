@@ -40,6 +40,9 @@ import SaveAlt from '@material-ui/icons/SaveAlt';
 import Search from '@material-ui/icons/Search';
 import ViewColumn from '@material-ui/icons/ViewColumn';
 
+import Select from '@material-ui/core/Select';
+import NativeSelect from '@material-ui/core/NativeSelect';
+
 const tableIcons = {
     Add: forwardRef((props, ref) => <AddBox {...props} ref={ref} />),
     Check: forwardRef((props, ref) => <Check {...props} ref={ref} />),
@@ -159,10 +162,10 @@ function RoutesPage(props) {
             )
         })
         return(
-            <select onChange={handleOriginSelection}>
-                <option value="">Select an origin..</option>
+            <Select native onChange={handleOriginSelection}>
+                <option value="" style={{color: "gray"}}>Select an origin..</option>
                 {originOptions}
-            </select>
+            </Select>
         )
     }
 
