@@ -160,6 +160,7 @@ function RoutesPage(props) {
         })
         return(
             <select onChange={handleOriginSelection}>
+                <option value="">Select an origin..</option>
                 {originOptions}
             </select>
         )

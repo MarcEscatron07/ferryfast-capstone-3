@@ -7,7 +7,7 @@ const timeScheduleSchema = new Schema(
             required: true
         },
         arrivalTime: {
-            type: Date,
+            type: String,
             required: true
         },
         dateId: {

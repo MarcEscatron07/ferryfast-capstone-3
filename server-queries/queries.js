@@ -70,7 +70,7 @@ const typeDefs = gql`
     type TimeScheduleType {
         id: ID
         departureTime: Date
-        arrivalTime: Date
+        arrivalTime: String
         dateId: String
         dateSchedule: DateScheduleType
         bookings: [BookingType]
@@ -247,13 +247,13 @@ const typeDefs = gql`
 
         createTimeSchedule(
             departureTime: Date
-            arrivalTime: Date
+            arrivalTime: String
             dateId: String
         ): TimeScheduleType
         updateTimeSchedule(
             id: ID
             departureTime: Date
-            arrivalTime: Date
+            arrivalTime: String
             dateId: String
         ): TimeScheduleType
         deleteTimeSchedule(
