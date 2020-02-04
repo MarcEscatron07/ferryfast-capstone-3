@@ -49,6 +49,7 @@ const typeDefs = gql`
         id: ID
         name: String
         destinations: [DestinationType]
+        dates: [DateScheduleType]
         bookings: [BookingType]
     }
     type DestinationType {
@@ -506,6 +507,9 @@ const resolvers = {
     OriginType: {
         destinations: (parent,_) => {
             return Destination.find({originId:parent.id});
+        },
+        dates: (parent,_) => {
+            return DateSchedule.find({originId:parent.id});
         },
         bookings: (parent,_) => {
             return Booking.find({originId:parent.id});
