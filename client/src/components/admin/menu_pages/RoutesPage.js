@@ -120,13 +120,17 @@ function RoutesPage(props) {
             setDestinations({...destinations, data: []})
             destinationsArray.forEach(deArr => {
                 setDestinations(prevState => {
-                    const data = [...prevState.data];
-                    data.push({
-                        id: deArr.id,
-                        name: deArr.name,
-                        originId: deArr.origin.name
-                    });
-                    return { ...prevState, data };
+                    if(deArr.origin !== null){
+                        const data = [...prevState.data];
+                        data.push({
+                            id: deArr.id,
+                            name: deArr.name,
+                            originId: deArr.origin.name
+                        });
+                        return { ...prevState, data };
+                    } else {
+                        return [];
+                    }
                 });
             });
         }

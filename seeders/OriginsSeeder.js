@@ -26,11 +26,23 @@ function runOriginsSeeder(){
 			name: "Batangas"
 		}),
 		new Origin({
+			name: "Bacolod"
+		}),
+		new Origin({
+			name: "Calapan"
+		}),
+		new Origin({
 			name: "Cebu"
 		}),
 		new Origin({
 			name: "Iloilo"
-		})
+		}),
+		new Origin({
+			name: "Ormoc"
+		}),
+		new Origin({
+			name: "Tagbilaran"
+		}),
 	]
 	
 	var count = 0;

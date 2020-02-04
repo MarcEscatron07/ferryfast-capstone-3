@@ -177,10 +177,10 @@ function SchedulesPage(props) {
     const renderDateScheduleActions = (id) => {
         return(
             <div className="d-flex justify-content-center">
-                <IconButton key={id} value={id} onClick={actionEditDate}>
+                <IconButton key={'edit: '+id} value={id} onClick={actionEditDate}>
                     <Edit style={{color: "black"}}/>
                 </IconButton>
-                <IconButton key={id} value={id} onClick={actionDeleteDate}>
+                <IconButton key={'delete: '+id} value={id} onClick={actionDeleteDate}>
                     <DeleteOutline style={{color: "black"}}/>
                 </IconButton>
             </div>
@@ -196,13 +196,18 @@ function SchedulesPage(props) {
             dateSchedulesArray.forEach(dsArr => {                
                 let convertedDate = moment(dsArr.date).format('MMM D, YYYY (ddd)');
                 setDateRows(prevState => {
-                    const data = [...prevState.data];
-                    data.push({
-                        actions: renderDateScheduleActions(dsArr.id),
-                        date: convertedDate,
-                        route: `${dsArr.origin.name} > ${dsArr.destination.name}`
-                    });
-                    return { ...prevState, data };
+                    if(dsArr.origin !== null){
+                        const data = [...prevState.data];
+                        data.push({
+                            id: dsArr.id,
+                            actions: renderDateScheduleActions(dsArr.id),
+                            date: convertedDate,
+                            route: `${dsArr.origin.name} > ${dsArr.destination.name}`
+                        });
+                        return { ...prevState, data };
+                    } else {
+                        return [];
+                    }
                 })
             })
         }
@@ -324,11 +329,12 @@ function SchedulesPage(props) {
                     title: "Successfully added a date schedule!"
                 })
 
-                setSelectedDate({
-                    date: '',
+                setSelectedDate({...selectedDate,
                     originId: '',
                     destinationId: ''
                 })
+
+                document.querySelector('#form_addDate').reset();
             })
             .catch((err) => {
                 Swal.fire({
@@ -467,7 +473,7 @@ function SchedulesPage(props) {
     if(dataObject.loading === false && dataObject.error === undefined){            
         originOptions = dataObject.getOrigins.map(origin => {
             return(
-                <option value={origin.id}>{origin.name}</option>
+                <option key={origin.id} value={origin.id}>{origin.name}</option>
             )
         })
 
@@ -475,7 +481,7 @@ function SchedulesPage(props) {
             destinationOptions = destinationsArray.map(deArr => {
                 return deArr.map(destination => {                    
                     return(
-                        <option value={destination.id}>{destination.name}</option>
+                        <option key={destination.id} value={destination.id}>{destination.name}</option>
                     )
                 })
             });  
@@ -485,7 +491,7 @@ function SchedulesPage(props) {
             editDestinationOptions = editDestinationsArray.map(deArr => {
                 return deArr.map(destination => {                    
                     return(
-                        <option value={destination.id}>{destination.name}</option>
+                        <option key={destination.id} value={destination.id}>{destination.name}</option>
                     )
                 })
             });  
@@ -494,7 +500,7 @@ function SchedulesPage(props) {
         dateOptions = dataObject.getDateSchedules.map(date => {
             let convertedDate = moment(date.date).format('MMM D, YYYY (ddd)');
             return(
-                <option value={date.id}>{convertedDate}</option>
+                <option key={date.id} value={date.id}>{convertedDate}</option>
             )
         })
     }
@@ -516,7 +522,7 @@ function SchedulesPage(props) {
                         <Typography className="mb-3" variant="h6">
                             Date Schedules
                         </Typography>
-                        <form onSubmit={handleAddDate}>                        
+                        <form id="form_addDate" onSubmit={handleAddDate}>                        
                             <div className="d-flex justify-content-between mb-4">
                                 <div className="d-flex">
                                     <TextField
@@ -529,7 +535,7 @@ function SchedulesPage(props) {
                                         shrink: true,
                                         }}
                                         inputProps={{ min: currentDate }}
-                                        onChange={handleDateChange}                                       
+                                        onChange={handleDateChange}
                                     />
                                     <Select native className="ml-2" 
                                     onChange={handleOriginSelection}
@@ -599,7 +605,7 @@ function SchedulesPage(props) {
                         <Typography className="mb-3" variant="h6" component="h1">
                             Time Schedules
                         </Typography>
-                        <form onSubmit={handleAddTime}>                        
+                        <form id="form_addTime" onSubmit={handleAddTime}>                        
                             <div className="d-flex justify-content-between mb-4">                        
                                 <div className="d-flex">
                                     <TextField
@@ -691,7 +697,7 @@ function SchedulesPage(props) {
                 </div>             
             </div>
             <Dialog onClose={actionCancelEditDate} aria-labelledby="customized-dialog-title" open={editDateModal}>
-                <form onSubmit={handleUpdateDateData}>
+                <form id="form_updateDate" onSubmit={handleUpdateDateData}>
                     <DialogTitle id="customized-dialog-title" onClose={actionCancelEditDate}>
                     Edit Date
                     </DialogTitle>

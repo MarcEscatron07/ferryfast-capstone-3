@@ -99,6 +99,7 @@ function PassengersAndContactsPage(props) {
                 setPassengerRows(prevState => {                    
                     const data = [...prevState.data];
                     data.push({
+                        id: paArr.id,
                         firstname: paArr.firstname,
                         middleinitial: paArr.middleinitial,
                         lastname: paArr.lastname,
@@ -117,6 +118,7 @@ function PassengersAndContactsPage(props) {
                 setContactRows(prevState => {                    
                     const data = [...prevState.data];
                     data.push({
+                        id: coArr.id,
                         fullname: coArr.fullname,
                         phone: coArr.phone,
                         email: coArr.email,
