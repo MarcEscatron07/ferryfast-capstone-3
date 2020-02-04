@@ -100,25 +100,99 @@ function SchedulesPage(props) {
     let originOptions, destinationOptions, dateOptions;    
 
     const dateColumns = [
-        { id: 'actions', label: 'Actions', minWidth: 50 },
-        { id: 'date', label: 'Date', minWidth: 50 },
-        { id: 'destinationId', label: 'Assigned Route', minWidth: 110, align: 'center' },
+        { id: 'actions', label: 'Actions', minWidth: 50, align: 'center' },
+        { id: 'date', label: 'Date', minWidth: 50, align: 'center' },
+        { id: 'route', label: 'Assigned Route', minWidth: 110, align: 'center' },
     ];
 
     const timeColumns = [
-        { id: 'actions', label: 'Actions', minWidth: 50 },
+        { id: 'actions', label: 'Actions', minWidth: 50, align: 'center' },
         { id: 'departureTime', label: 'Departure Time', minWidth: 110, align: 'center' },
         { id: 'arrivalTime', label: 'Arrival Time', minWidth: 110, align: 'center' },        
         { id: 'dateId', label: 'Assigned Date', minWidth: 110, align: 'center' },
     ];
 
+    const renderDateScheduleActions = (id) => {
+        return(
+            <div className="d-flex justify-content-center">
+                <IconButton key={id} value={id} onClick={handleEditDate}>
+                    <Edit style={{color: "black"}}/>
+                </IconButton>
+                <IconButton key={id} value={id} onClick={handleDeleteDate}>
+                    <DeleteOutline style={{color: "black"}}/>
+                </IconButton>
+            </div>
+        )
+    }
+
+    const handleEditDate = (e) => {
+        console.log('Edit: '+e.target.value)
+    }
+
+    const handleDeleteDate = (e) => {              
+        if(e.target.value !== undefined){
+            let dateDataId = e.target.value;
+            Swal.fire({
+                text: 'Are you sure you want to delete this date?',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: 'rgb(221, 51, 51)',
+                cancelButtonColor: 'rgb(84, 84, 84)',
+                confirmButtonText: 'Delete'
+            }).then((result) => {
+                if (result.value) {                    
+                    let deleteDateData = {
+                        id: dateDataId
+                    }
+                    props.deleteDateSchedule({
+                        variables: deleteDateData,
+                        refetchQueries: [{query: getSchedulesQuery}]
+                    })
+                    .then(() => {
+                        Swal.fire({
+                            icon: "info",
+                            timer: 2200,
+                            title: "Date deleted!"
+                        })
+                    })
+                    .catch((err) => {
+                        Swal.fire({
+                            icon: "error",
+                            timer: 2200,
+                            title: "Unable to delete date!"
+                        })
+                    })
+                }
+            })            
+        }
+    }
+
     useEffect(() => {
         if(dataObject.loading === false && dataObject.error === undefined){            
-            
+            let dateSchedulesArray = dataObject.getDateSchedules;
+            let timeSchedulesArray = dataObject.getTimeSchedules;
+
+            setDateRows({...dateRows, data: []});
+            dateSchedulesArray.forEach(dsArr => {
+                let convertedDate = new Date(dsArr.date).toISOString().slice(0,10);
+                setDateRows(prevState => {
+                    const data = [...prevState.data];
+                    data.push({
+                        actions: renderDateScheduleActions(dsArr.id),
+                        date: convertedDate,
+                        route: `${dsArr.origin.name} > ${dsArr.destination.name}`
+                    });
+                    return { ...prevState, data };
+                })
+            })
         }
 
         if(dataObject.error !== undefined){
-
+            Swal.fire({
+                icon: "error",
+                timer: 2200,
+                title: "Failed to load data!"
+            })
         }
     },[dataObject])
 
@@ -179,16 +253,35 @@ function SchedulesPage(props) {
 
     const handleAddDate = (e) => {
         let addDateErrorCounter = 0;
-        console.log(selectedDate.date)
-        console.log(selectedDate.originId)
-        console.log(selectedDate.destinationId)
         if(selectedDate.date === '' || selectedDate.originId === '' 
         || selectedDate.destinationId === ''){
             addDateErrorCounter++;            
         }
-        console.log(addDateErrorCounter)
+
         if(addDateErrorCounter === 0){
-            // code for creating Date Schedule
+            let newDateSchedule = {
+                date: selectedDate.date,
+                originId: selectedDate.originId,
+                destinationId: selectedDate.destinationId
+            }
+            props.createDateSchedule({
+                variables: newDateSchedule,
+                refetchQueries: [{query: getSchedulesQuery}]
+            })
+            .then((res) => {
+                Swal.fire({
+                    icon: "success",
+                    timer: 2200,
+                    title: "Successfully added a date schedule!"
+                })
+            })
+            .catch((err) => {
+                Swal.fire({
+                    icon: "error",
+                    timer: 2200,
+                    title: "Unable to add date schedule!"
+                })
+            })
         } else {
             ToastComponent('warning', 'Please apply all required inputs');
         }
@@ -238,13 +331,14 @@ function SchedulesPage(props) {
         }
 
         dateOptions = dataObject.getDateSchedules.map(date => {
+            let convertedDate = new Date(date.date).toISOString().slice(0,10);
             return(
-                <option value={date.id}>{date.date}</option>
+                <option value={date.id}>{convertedDate}</option>
             )
         })
     }
 
-    // console.log(props)
+    console.log(props)
 
     return (
     	<>	    	
@@ -274,6 +368,7 @@ function SchedulesPage(props) {
                                     InputLabelProps={{
                                       shrink: true,
                                     }}
+                                    inputProps={{ min: currentDate }}
                                     onChange={handleDateChange}
                                 />
                                 <Select native className="ml-2" onChange={handleOriginSelection}>

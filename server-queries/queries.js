@@ -696,6 +696,7 @@ const resolvers = {
         createDateSchedule: (_,args) => {
             let newDateSchedule = DateSchedule({
                 date: args.date,
+                originId: args.originId,
                 destinationId: args.destinationId
             })
             return newDateSchedule.save();
@@ -704,6 +705,7 @@ const resolvers = {
             let updateDateScheduleId = {_id:args.id}
             let updateDateScheduleData = {
                 date: args.date,
+                originId: args.originId,
                 destinationId: args.destinationId
             }
             return DateSchedule.findOneAndUpdate(updateDateScheduleId, updateDateScheduleData);
