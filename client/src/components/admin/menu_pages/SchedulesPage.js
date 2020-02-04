@@ -17,7 +17,7 @@ import {
     deleteTimeScheduleMutation,
 } from '../../../client-queries/mutations';
 
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles, withStyles } from '@material-ui/core/styles';
 import Breadcrumbs from '@material-ui/core/Breadcrumbs';
 import Link from '@material-ui/core/Link';
 import Typography from '@material-ui/core/Typography';
@@ -40,6 +40,13 @@ import TextField from '@material-ui/core/TextField';
 import AddBoxIcon from '@material-ui/icons/AddBox';
 
 import Select from '@material-ui/core/Select';
+
+import Button from '@material-ui/core/Button';
+import Dialog from '@material-ui/core/Dialog';
+import MuiDialogTitle from '@material-ui/core/DialogTitle';
+import MuiDialogContent from '@material-ui/core/DialogContent';
+import MuiDialogActions from '@material-ui/core/DialogActions';
+import CloseIcon from '@material-ui/icons/Close';
   
 const useStyles = makeStyles({
     root: {
@@ -52,6 +59,46 @@ const useStyles = makeStyles({
         minWidth: 150,
     }
 });
+
+const styles = theme => ({
+  root: {
+    margin: 0,
+    padding: theme.spacing(2),
+  },
+  closeButton: {
+    position: 'absolute',
+    right: theme.spacing(1),
+    top: theme.spacing(1),
+    color: theme.palette.grey[500],
+  },
+});
+
+const DialogTitle = withStyles(styles)(props => {
+    const { children, classes, onClose, ...other } = props;
+    return (
+        <MuiDialogTitle disableTypography className={classes.root} {...other}>
+        <Typography variant="h6">{children}</Typography>
+        {onClose ? (
+            <IconButton aria-label="close" className={classes.closeButton} onClick={onClose}>
+            <CloseIcon />
+            </IconButton>
+        ) : null}
+        </MuiDialogTitle>
+    );
+});
+
+const DialogContent = withStyles(theme => ({
+    root: {
+      padding: theme.spacing(2),
+    },
+  }))(MuiDialogContent);
+  
+  const DialogActions = withStyles(theme => ({
+    root: {
+      margin: 0,
+      padding: theme.spacing(1),
+    },
+  }))(MuiDialogActions);
 
 const ToastComponent = (iconProp, titleProp) => {
     Toast.fire({
@@ -66,8 +113,10 @@ const ToastComponent = (iconProp, titleProp) => {
     });
 }
 
+const moment = require('moment');
+
 function SchedulesPage(props) {
-    let currentDate = new Date().toISOString().slice(0,10);
+    let currentDate = moment(new Date).format('YYYY-MM-DD');
     const [datePage, setDatePage] = useState(0);
     const [dateRowsPerPage, setDateRowsPerPage] = useState(10);
     const [dateRows, setDateRows] = useState({
@@ -85,6 +134,12 @@ function SchedulesPage(props) {
         originId: '',
         destinationId: ''
     });
+    const [selectedEditDate, setSelectedEditDate] = useState({
+        updatedDate: '',
+        updatedOriginId: '',
+        updatedDestinationId: ''
+    });
+
     const [selectedTime, setSelectedTime] = useState({
         departureTime: '',
         arrivalTime: '',
@@ -92,44 +147,256 @@ function SchedulesPage(props) {
     });
 
     let [destinationsArray, setDestinationsArray] = useState([]);
+    let [editDestinationsArray, setEditDestinationsArray] = useState([]);
+
+    const [editDateData, setEditDateData] = useState({
+        dateId: '',
+        dateValue: ''
+    });
+    const [editDateModal, setEditDateModal] = useState(false);    
 
 	let history = useHistory();
 	const classes = useStyles();
     let dataObject = props.data;
 
-    let originOptions, destinationOptions, dateOptions;    
+    let originOptions, destinationOptions, editDestinationOptions, dateOptions;   
 
     const dateColumns = [
         { id: 'actions', label: 'Actions', minWidth: 50, align: 'center' },
-        { id: 'date', label: 'Date', minWidth: 50, align: 'center' },
-        { id: 'route', label: 'Assigned Route', minWidth: 110, align: 'center' },
+        { id: 'date', label: 'Date', minWidth: 50, align: 'left' },
+        { id: 'route', label: 'Assigned Route', minWidth: 110, align: 'left' },
     ];
 
     const timeColumns = [
         { id: 'actions', label: 'Actions', minWidth: 50, align: 'center' },
-        { id: 'departureTime', label: 'Departure Time', minWidth: 110, align: 'center' },
-        { id: 'arrivalTime', label: 'Arrival Time', minWidth: 110, align: 'center' },        
-        { id: 'dateId', label: 'Assigned Date', minWidth: 110, align: 'center' },
+        { id: 'departureTime', label: 'Departure Time', minWidth: 110, align: 'left' },
+        { id: 'arrivalTime', label: 'Arrival Time', minWidth: 110, align: 'left' },        
+        { id: 'dateId', label: 'Assigned Date', minWidth: 110, align: 'left' },
     ];
 
     const renderDateScheduleActions = (id) => {
         return(
             <div className="d-flex justify-content-center">
-                <IconButton key={id} value={id} onClick={handleEditDate}>
+                <IconButton key={id} value={id} onClick={actionEditDate}>
                     <Edit style={{color: "black"}}/>
                 </IconButton>
-                <IconButton key={id} value={id} onClick={handleDeleteDate}>
+                <IconButton key={id} value={id} onClick={actionDeleteDate}>
                     <DeleteOutline style={{color: "black"}}/>
                 </IconButton>
             </div>
         )
     }
 
-    const handleEditDate = (e) => {
-        console.log('Edit: '+e.target.value)
+    useEffect(() => {
+        if(dataObject.loading === false && dataObject.error === undefined){            
+            let dateSchedulesArray = dataObject.getDateSchedules;
+            let timeSchedulesArray = dataObject.getTimeSchedules;
+
+            setDateRows({...dateRows, data: []});
+            dateSchedulesArray.forEach(dsArr => {                
+                let convertedDate = moment(dsArr.date).format('MMM D, YYYY (ddd)');
+                setDateRows(prevState => {
+                    const data = [...prevState.data];
+                    data.push({
+                        actions: renderDateScheduleActions(dsArr.id),
+                        date: convertedDate,
+                        route: `${dsArr.origin.name} > ${dsArr.destination.name}`
+                    });
+                    return { ...prevState, data };
+                })
+            })
+        }
+
+        if(dataObject.error !== undefined){
+            Swal.fire({
+                icon: "error",
+                timer: 2200,
+                title: "Failed to load data!"
+            })
+        }
+    },[dataObject])
+
+    useEffect(() => {
+        if(dataObject.loading === false && dataObject.error === undefined){            
+            let originsArray = dataObject.getOrigins.filter(orArr => {
+                if(orArr.id === selectedDate.originId){          
+                    return orArr.destinations;
+                }
+            })
+            
+            setDestinationsArray(originsArray.map(odArr => {
+                return odArr.destinations;
+            }));          
+        }
+    },[selectedDate.originId])
+
+    useEffect(() => {
+        if(dataObject.loading === false && dataObject.error === undefined){            
+            let originsArray = dataObject.getOrigins.filter(orArr => {
+                if(orArr.id === selectedEditDate.updatedOriginId){          
+                    return orArr.destinations;
+                }
+            })
+            
+            setEditDestinationsArray(originsArray.map(odArr => {
+                return odArr.destinations;
+            }));          
+        }
+    },[selectedEditDate.updatedOriginId])
+
+    useEffect(() => {},[editDateData])
+
+	const handleBreadCrumbClick = (e) => {
+        e.preventDefault();
+
+        if(e.target.id === 'home'){
+            history.push('/admin/home');
+        }
     }
 
-    const handleDeleteDate = (e) => {              
+    // DateSchedule and TimeSchedule table functions
+    const handleDateChangePage = (event, newPage) => {
+        setDatePage(newPage);
+    }
+
+    const handleDateChangeRowsPerPage = event => {
+        setDateRowsPerPage(+event.target.value);
+        setDatePage(0);
+    }
+
+    const handleTimeChangePage = (event, newPage) => {
+        setTimePage(newPage);
+    }
+
+    const handleTimeChangeRowsPerPage = event => {
+        setTimeRowsPerPage(+event.target.value);
+        setTimePage(0);
+    }
+    // 
+    
+    // DateSchedule CRUD functionalities
+    const handleDateChange= (e) => {
+        setSelectedDate({...selectedDate, date: e.target.value});
+    }
+
+    const handleOriginSelection = (e) => {        
+        setSelectedDate({...selectedDate, originId: e.target.value})
+    }
+
+    const handleDestinationSelection = (e) => {
+        setSelectedDate({...selectedDate, destinationId: e.target.value})
+    }
+
+    const handleEditDateChange= (e) => {
+        setSelectedEditDate({...selectedEditDate, updatedDate: e.target.value});
+    }
+
+    const handleEditOriginSelection = (e) => {        
+        setSelectedEditDate({...selectedEditDate, updatedOriginId: e.target.value})
+    }
+
+    const handleEditDestinationSelection = (e) => {
+        setSelectedEditDate({...selectedEditDate, updatedDestinationId: e.target.value})
+    }
+
+    const handleAddDate = (e) => {
+        e.preventDefault();
+        let addDateErrorCounter = 0;
+        if(selectedDate.date === '' || selectedDate.originId === '' 
+        || selectedDate.destinationId === ''){
+            addDateErrorCounter++;            
+        }
+
+        if(addDateErrorCounter === 0){
+            let newDateSchedule = {
+                date: selectedDate.date,
+                originId: selectedDate.originId,
+                destinationId: selectedDate.destinationId
+            }
+            props.createDateSchedule({
+                variables: newDateSchedule,
+                refetchQueries: [{query: getSchedulesQuery}]
+            })
+            .then((res) => {
+                Swal.fire({
+                    icon: "success",
+                    timer: 2200,
+                    title: "Successfully added a date schedule!"
+                })
+
+                setSelectedDate({
+                    date: '',
+                    originId: '',
+                    destinationId: ''
+                })
+            })
+            .catch((err) => {
+                Swal.fire({
+                    icon: "error",
+                    timer: 2200,
+                    title: "Unable to add date schedule!"
+                })
+            })
+        } else {
+            ToastComponent('warning', 'Please apply all required inputs');
+        }
+    }
+
+    const actionEditDate = (e) => {
+        if(e.target.value !== undefined){
+            if(dataObject.loading === false && dataObject.error === undefined){
+                let dateSchedulesArray = dataObject.getDateSchedules;
+                dateSchedulesArray.forEach(dsArr => {
+                    if(dsArr.id === e.target.value){               
+                        let convertedDate = moment(dsArr.date).format('YYYY-MM-DD');
+                        setEditDateData({dateId: e.target.value, dateValue: convertedDate});
+                    }
+                })
+            }            
+            setEditDateModal(true);
+        }
+    }
+
+    const actionCancelEditDate = () => {
+        setEditDateModal(false);
+    }
+
+    const handleUpdateDateData = (e) => {
+        e.preventDefault();
+        let updatedDateData = {
+            id: editDateData.dateId,
+            date: selectedEditDate.updatedDate,
+            originId: selectedEditDate.updatedOriginId,
+            destinationId: selectedEditDate.updatedDestinationId
+        }        
+        props.updateDateSchedule({
+            variables: updatedDateData,
+            refetchQueries: [{query: getSchedulesQuery}]
+        })
+        .then((res) => {
+            Swal.fire({
+                icon: "success",
+                timer: 2200,
+                title: "Successfully updated date schedule!"
+            })
+
+            setSelectedEditDate({
+                updatedDate: '',
+                updatedOriginId: '',
+                updatedDestinationId: ''
+            })
+        })
+        .catch((err) => {
+            Swal.fire({
+                icon: "error",
+                timer: 2200,
+                title: "Unable to update date schedule!"
+            })
+        })
+        setEditDateModal(false);
+    };
+
+    const actionDeleteDate = (e) => {              
         if(e.target.value !== undefined){
             let dateDataId = e.target.value;
             Swal.fire({
@@ -166,127 +433,9 @@ function SchedulesPage(props) {
             })            
         }
     }
+    // 
 
-    useEffect(() => {
-        if(dataObject.loading === false && dataObject.error === undefined){            
-            let dateSchedulesArray = dataObject.getDateSchedules;
-            let timeSchedulesArray = dataObject.getTimeSchedules;
-
-            setDateRows({...dateRows, data: []});
-            dateSchedulesArray.forEach(dsArr => {
-                let convertedDate = new Date(dsArr.date).toISOString().slice(0,10);
-                setDateRows(prevState => {
-                    const data = [...prevState.data];
-                    data.push({
-                        actions: renderDateScheduleActions(dsArr.id),
-                        date: convertedDate,
-                        route: `${dsArr.origin.name} > ${dsArr.destination.name}`
-                    });
-                    return { ...prevState, data };
-                })
-            })
-        }
-
-        if(dataObject.error !== undefined){
-            Swal.fire({
-                icon: "error",
-                timer: 2200,
-                title: "Failed to load data!"
-            })
-        }
-    },[dataObject])
-
-    useEffect(() => {
-        if(dataObject.loading === false && dataObject.error === undefined){            
-            let originsArray = dataObject.getOrigins.filter(orArr => {
-                if(orArr.id === selectedDate.originId){          
-                    return orArr.destinations;
-                }
-            })
-            
-            setDestinationsArray(originsArray.map(odArr => {
-                return odArr.destinations;
-            }));          
-        }
-    },[selectedDate.originId])
-
-	const handleBreadCrumbClick = (e) => {
-        e.preventDefault();
-
-        if(e.target.id === 'home'){
-            history.push('/admin/home');
-        }
-    }
-
-    const handleDateChangePage = (event, newPage) => {
-        setDatePage(newPage);
-    }
-
-    const handleDateChangeRowsPerPage = event => {
-        setDateRowsPerPage(+event.target.value);
-        setDatePage(0);
-    }
-
-    const handleTimeChangePage = (event, newPage) => {
-        setTimePage(newPage);
-    }
-
-    const handleTimeChangeRowsPerPage = event => {
-        setTimeRowsPerPage(+event.target.value);
-        setTimePage(0);
-    }
-
-    const handleDateChange= (e) => {
-        setSelectedDate({...selectedDate, date: e.target.value});
-    }
-
-    const handleOriginSelection = (e) => {        
-        setSelectedDate({...selectedDate, originId: e.target.value})
-        if(dataObject.loading === false && dataObject.error === undefined){
-
-        }
-    }
-
-    const handleDestinationSelection = (e) => {
-        setSelectedDate({...selectedDate, destinationId: e.target.value})
-    }
-
-    const handleAddDate = (e) => {
-        let addDateErrorCounter = 0;
-        if(selectedDate.date === '' || selectedDate.originId === '' 
-        || selectedDate.destinationId === ''){
-            addDateErrorCounter++;            
-        }
-
-        if(addDateErrorCounter === 0){
-            let newDateSchedule = {
-                date: selectedDate.date,
-                originId: selectedDate.originId,
-                destinationId: selectedDate.destinationId
-            }
-            props.createDateSchedule({
-                variables: newDateSchedule,
-                refetchQueries: [{query: getSchedulesQuery}]
-            })
-            .then((res) => {
-                Swal.fire({
-                    icon: "success",
-                    timer: 2200,
-                    title: "Successfully added a date schedule!"
-                })
-            })
-            .catch((err) => {
-                Swal.fire({
-                    icon: "error",
-                    timer: 2200,
-                    title: "Unable to add date schedule!"
-                })
-            })
-        } else {
-            ToastComponent('warning', 'Please apply all required inputs');
-        }
-    }
-
+    // TimeSchedule CRUD functionalities
     const handleDepartureTimeChange= (e) => {
         setSelectedTime({...selectedTime, departureTime: e.target.value});
     }
@@ -300,6 +449,7 @@ function SchedulesPage(props) {
     }
 
     const handleAddTime = (e) => {
+        e.preventDefault();
         let addTimeErrorCounter = 0;
         if(selectedTime.departureTime === '' || selectedTime.arrivalTime === '' 
         || selectedTime.dateId === ''){
@@ -311,7 +461,8 @@ function SchedulesPage(props) {
         } else {
             ToastComponent('warning', 'Please apply all required inputs');
         }
-    }        
+    }
+    // 
 
     if(dataObject.loading === false && dataObject.error === undefined){            
         originOptions = dataObject.getOrigins.map(origin => {
@@ -330,16 +481,24 @@ function SchedulesPage(props) {
             });  
         }
 
+        if(editDestinationsArray !== undefined){            
+            editDestinationOptions = editDestinationsArray.map(deArr => {
+                return deArr.map(destination => {                    
+                    return(
+                        <option value={destination.id}>{destination.name}</option>
+                    )
+                })
+            });  
+        }
+
         dateOptions = dataObject.getDateSchedules.map(date => {
-            let convertedDate = new Date(date.date).toISOString().slice(0,10);
+            let convertedDate = moment(date.date).format('MMM D, YYYY (ddd)');
             return(
                 <option value={date.id}>{convertedDate}</option>
             )
         })
     }
-
-    console.log(props)
-
+    
     return (
     	<>	    	
     		<Breadcrumbs aria-label="breadcrumb" className="mb-3">
@@ -357,33 +516,39 @@ function SchedulesPage(props) {
                         <Typography className="mb-3" variant="h6">
                             Date Schedules
                         </Typography>
-                        <div className="d-flex justify-content-between mb-4">
-                            <div className="d-flex">
-                                <TextField
-                                    id="date"
-                                    label="New Date"
-                                    type="date"
-                                    defaultValue={currentDate}
-                                    className={classes.textField}
-                                    InputLabelProps={{
-                                      shrink: true,
-                                    }}
-                                    inputProps={{ min: currentDate }}
-                                    onChange={handleDateChange}
-                                />
-                                <Select native className="ml-2" onChange={handleOriginSelection}>
-                                    <option value="" style={{color: "gray"}}>Select origin..</option>
-                                    {originOptions}
-                                </Select>
-                                <Select native className="ml-2" onChange={handleDestinationSelection}>
-                                    <option value="" style={{color: "gray"}}>Select destination..</option>
-                                    {destinationOptions}
-                                </Select>
+                        <form onSubmit={handleAddDate}>                        
+                            <div className="d-flex justify-content-between mb-4">
+                                <div className="d-flex">
+                                    <TextField
+                                        id="date"
+                                        label="New Date"
+                                        type="date"
+                                        defaultValue={currentDate}
+                                        className={classes.textField}
+                                        InputLabelProps={{
+                                        shrink: true,
+                                        }}
+                                        inputProps={{ min: currentDate }}
+                                        onChange={handleDateChange}                                       
+                                    />
+                                    <Select native className="ml-2" 
+                                    onChange={handleOriginSelection}
+                                    >
+                                        <option value="" style={{color: "gray"}}>Select origin..</option>
+                                        {originOptions}
+                                    </Select>
+                                    <Select native className="ml-2" 
+                                    onChange={handleDestinationSelection}
+                                    >
+                                        <option value="" style={{color: "gray"}}>Select destination..</option>
+                                        {destinationOptions}
+                                    </Select>
+                                </div>
+                                <IconButton type="submit">
+                                    <AddBoxIcon/>
+                                </IconButton>
                             </div>
-                            <IconButton id="add_date" onClick={handleAddDate}>
-                                <AddBoxIcon/>
-                            </IconButton>
-                        </div>
+                        </form>
                         <Paper className={classes.root}>
                             <TableContainer className={classes.container}>
                                 <Table stickyHeader aria-label="sticky table">
@@ -434,45 +599,49 @@ function SchedulesPage(props) {
                         <Typography className="mb-3" variant="h6" component="h1">
                             Time Schedules
                         </Typography>
-                        <div className="d-flex justify-content-between mb-4">                        
-                            <div className="d-flex">
-                                <TextField
-                                    id="arrival_time"
-                                    label="New Departure Time"
-                                    type="time"
-                                    defaultValue="07:30"
-                                    className={classes.textField}
-                                    InputLabelProps={{
-                                      shrink: true,
-                                    }}
-                                    inputProps={{
-                                      step: 300, // 5 min
-                                    }}
-                                    onChange={handleDepartureTimeChange}
-                                />
-                                <TextField
-                                    id="departure_time"
-                                    label="New Arrival Time"
-                                    type="time"
-                                    defaultValue="07:30"
-                                    className={classes.textField}
-                                    InputLabelProps={{
-                                      shrink: true,
-                                    }}
-                                    inputProps={{
-                                      step: 300, // 5 min
-                                    }}
-                                    onChange={handleArrivalTimeChange}
-                                />
-                                <Select native className="ml-2" onChange={handleDateScheduleSelection}>
-                                    <option value="" style={{color: "gray"}}>Select date..</option>
-                                    {dateOptions}
-                                </Select>
+                        <form onSubmit={handleAddTime}>                        
+                            <div className="d-flex justify-content-between mb-4">                        
+                                <div className="d-flex">
+                                    <TextField
+                                        id="arrival_time"
+                                        label="New Departure Time"
+                                        type="time"
+                                        defaultValue="07:30"
+                                        className={classes.textField}
+                                        InputLabelProps={{
+                                        shrink: true,
+                                        }}
+                                        inputProps={{
+                                        step: 300, // 5 min
+                                        }}
+                                        onChange={handleDepartureTimeChange}
+                                    />
+                                    <TextField
+                                        id="departure_time"
+                                        label="New Arrival Time"
+                                        type="time"
+                                        defaultValue="07:30"
+                                        className={classes.textField}
+                                        InputLabelProps={{
+                                        shrink: true,
+                                        }}
+                                        inputProps={{
+                                        step: 300, // 5 min
+                                        }}
+                                        onChange={handleArrivalTimeChange}
+                                    />
+                                    <Select native className="ml-2" 
+                                    onChange={handleDateScheduleSelection}
+                                    >
+                                        <option value="" style={{color: "gray"}}>Select date..</option>
+                                        {dateOptions}
+                                    </Select>
+                                </div>
+                                <IconButton type="submit">
+                                    <AddBoxIcon/>
+                                </IconButton>
                             </div>
-                            <IconButton id="add_time" onClick={handleAddTime}>
-                                <AddBoxIcon/>
-                            </IconButton>
-                        </div>
+                        </form>
                         <Paper className={classes.root}>
                             <TableContainer className={classes.container}>
                                 <Table stickyHeader aria-label="sticky table">
@@ -521,6 +690,43 @@ function SchedulesPage(props) {
                     </div>
                 </div>             
             </div>
+            <Dialog onClose={actionCancelEditDate} aria-labelledby="customized-dialog-title" open={editDateModal}>
+                <form onSubmit={handleUpdateDateData}>
+                    <DialogTitle id="customized-dialog-title" onClose={actionCancelEditDate}>
+                    Edit Date
+                    </DialogTitle>
+                    <DialogContent dividers>
+                    <div className="d-flex">
+                        <TextField
+                            id="date"
+                            label="Date"
+                            type="date"
+                            defaultValue={editDateData.dateValue}
+                            className={classes.textField}
+                            InputLabelProps={{
+                                shrink: true,
+                            }}
+                            inputProps={{ min: currentDate }}
+                            onChange={handleEditDateChange}
+                            required
+                        />
+                        <Select native className="ml-2" onChange={handleEditOriginSelection} required>
+                            <option value="" style={{color: "gray"}}>Select origin..</option>
+                            {originOptions}
+                        </Select>
+                        <Select native className="ml-2" onChange={handleEditDestinationSelection} required>
+                            <option value="" style={{color: "gray"}}>Select destination..</option>
+                            {editDestinationOptions}
+                        </Select>
+                    </div>
+                    </DialogContent>
+                    <DialogActions>
+                        <Button autoFocus type="submit" className="rounded-0" color="secondary" style={{backgroundColor: "rgb(84, 84, 84)"}}>
+                            Save changes
+                        </Button>
+                    </DialogActions>
+                </form>
+            </Dialog>
     	</>        
     )
 }

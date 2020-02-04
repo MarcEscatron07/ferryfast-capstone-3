@@ -200,6 +200,12 @@ const getSchedulesQuery = gql`
                 id
                 name
             }
+            dates {
+                id
+                date
+                originId
+                destinationId
+            }
         }      
     }
 `;

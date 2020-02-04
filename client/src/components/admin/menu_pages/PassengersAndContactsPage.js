@@ -1,4 +1,4 @@
-import React, { forwardRef, useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 
 import Swal from 'sweetalert2';
@@ -99,7 +99,6 @@ function PassengersAndContactsPage(props) {
                 setPassengerRows(prevState => {                    
                     const data = [...prevState.data];
                     data.push({
-                        id: paArr.id,
                         firstname: paArr.firstname,
                         middleinitial: paArr.middleinitial,
                         lastname: paArr.lastname,
@@ -118,7 +117,6 @@ function PassengersAndContactsPage(props) {
                 setContactRows(prevState => {                    
                     const data = [...prevState.data];
                     data.push({
-                        id: coArr.id,
                         fullname: coArr.fullname,
                         phone: coArr.phone,
                         email: coArr.email,
