@@ -47,6 +47,8 @@ import MuiDialogTitle from '@material-ui/core/DialogTitle';
 import MuiDialogContent from '@material-ui/core/DialogContent';
 import MuiDialogActions from '@material-ui/core/DialogActions';
 import CloseIcon from '@material-ui/icons/Close';
+
+const moment = require('moment');
   
 const useStyles = makeStyles({
     root: {
@@ -113,10 +115,10 @@ const ToastComponent = (iconProp, titleProp) => {
     });
 }
 
-const moment = require('moment');
-
 function SchedulesPage(props) {
-    let currentDate = moment(new Date).format('YYYY-MM-DD');
+    let defaultDateValue = moment(new Date).format('YYYY-MM-DD');
+    let defaultDepartureTimeValue = moment(new Date).format('HH:mm');
+    let defaultArrivalTimeValue = moment(new Date).add(3, 'h').format('HH:mm');
     const [datePage, setDatePage] = useState(0);
     const [dateRowsPerPage, setDateRowsPerPage] = useState(10);
     const [dateRows, setDateRows] = useState({
@@ -130,7 +132,7 @@ function SchedulesPage(props) {
     })
 
     const [selectedDate, setSelectedDate] = useState({
-        date: currentDate,
+        date: defaultDateValue,
         originId: '',
         destinationId: ''
     });
@@ -141,8 +143,8 @@ function SchedulesPage(props) {
     });
 
     const [selectedTime, setSelectedTime] = useState({
-        departureTime: '',
-        arrivalTime: '',
+        departureTime: defaultDepartureTimeValue,
+        arrivalTime: defaultArrivalTimeValue,
         dateId: ''
     });
 
@@ -187,6 +189,19 @@ function SchedulesPage(props) {
         )
     }
 
+    const renderTimeScheduleActions = (id) => {
+        return(
+            <div className="d-flex justify-content-center">
+                <IconButton key={'edit: '+id} value={id} onClick={actionEditTime}>
+                    <Edit style={{color: "black"}}/>
+                </IconButton>
+                <IconButton key={'delete: '+id} value={id} onClick={actionDeleteTime}>
+                    <DeleteOutline style={{color: "black"}}/>
+                </IconButton>
+            </div>
+        )
+    }
+
     useEffect(() => {
         if(dataObject.loading === false && dataObject.error === undefined){            
             let dateSchedulesArray = dataObject.getDateSchedules;
@@ -194,9 +209,9 @@ function SchedulesPage(props) {
 
             setDateRows({...dateRows, data: []});
             dateSchedulesArray.forEach(dsArr => {                
-                let convertedDate = moment(dsArr.date).format('MMM D, YYYY (ddd)');
                 setDateRows(prevState => {
                     if(dsArr.origin !== null){
+                        let convertedDate = moment(dsArr.date).format('MMM D, YYYY (ddd)');
                         const data = [...prevState.data];
                         data.push({
                             id: dsArr.id,
@@ -204,6 +219,26 @@ function SchedulesPage(props) {
                             date: convertedDate,
                             route: `${dsArr.origin.name} > ${dsArr.destination.name}`
                         });
+                        return { ...prevState, data };
+                    } else {
+                        return [];
+                    }
+                })
+            })
+
+            setTimeRows({...timeRows, data: []});
+            timeSchedulesArray.forEach(tsArr => {
+                setTimeRows(prevState => {
+                    if(tsArr.dateSchedule !== null){
+                        let convertedDate = moment(tsArr.dateSchedule.date).format('MMM D, YYYY (ddd)');
+                        const data = [...prevState.data];
+                        data.push({
+                            id: tsArr.id,
+                            actions: renderTimeScheduleActions(tsArr.id),
+                            departureTime: convertTimeToMeridiem(tsArr.departureTime),
+                            arrivalTime: convertTimeToMeridiem(tsArr.arrivalTime),
+                            dateId: convertedDate
+                        })
                         return { ...prevState, data };
                     } else {
                         return [];
@@ -250,6 +285,20 @@ function SchedulesPage(props) {
     },[selectedEditDate.updatedOriginId])
 
     useEffect(() => {},[editDateData])
+
+    const convertTimeToMeridiem = (time) => {
+        let hourAsInt = parseInt(time.slice(0,2));
+        let minute = time.slice(3,5);
+        if(hourAsInt > 12 && hourAsInt < 24){
+            return `${hourAsInt%12}:${minute} PM`;
+        } else if(hourAsInt === 0) {
+            return `${12}:${minute} AM`;
+        } else if(hourAsInt === 12) {
+            return `${hourAsInt}:${minute} PM`;
+        } else {
+            return `${hourAsInt}:${minute} AM`;
+        }
+    }
 
 	const handleBreadCrumbClick = (e) => {
         e.preventDefault();
@@ -326,10 +375,11 @@ function SchedulesPage(props) {
                 Swal.fire({
                     icon: "success",
                     timer: 2200,
-                    title: "Successfully added a date schedule!"
+                    title: "Successfully added date schedule!"
                 })
 
-                setSelectedDate({...selectedDate,
+                setSelectedDate({
+                    date: defaultDateValue,
                     originId: '',
                     destinationId: ''
                 })
@@ -406,7 +456,7 @@ function SchedulesPage(props) {
         if(e.target.value !== undefined){
             let dateDataId = e.target.value;
             Swal.fire({
-                text: 'Are you sure you want to delete this date?',
+                text: 'Are you sure you want to delete this date schedule?',
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: 'rgb(221, 51, 51)',
@@ -425,14 +475,14 @@ function SchedulesPage(props) {
                         Swal.fire({
                             icon: "info",
                             timer: 2200,
-                            title: "Date deleted!"
+                            title: "Date schedule deleted!"
                         })
                     })
                     .catch((err) => {
                         Swal.fire({
                             icon: "error",
                             timer: 2200,
-                            title: "Unable to delete date!"
+                            title: "Unable to delete date schedule!"
                         })
                     })
                 }
@@ -444,14 +494,17 @@ function SchedulesPage(props) {
     // TimeSchedule CRUD functionalities
     const handleDepartureTimeChange= (e) => {
         setSelectedTime({...selectedTime, departureTime: e.target.value});
+        console.log(e.target.value)
     }
 
     const handleArrivalTimeChange= (e) => {
         setSelectedTime({...selectedTime, arrivalTime: e.target.value});
+        console.log(e.target.value)
     }
 
     const handleDateScheduleSelection = (e) => {
         setSelectedTime({...selectedTime, dateId: e.target.value})
+        console.log(e.target.value)
     }
 
     const handleAddTime = (e) => {
@@ -463,9 +516,83 @@ function SchedulesPage(props) {
         }
 
         if(addTimeErrorCounter === 0){
+            let newTimeSchedule = {
+                departureTime: selectedTime.departureTime,
+                arrivalTime: selectedTime.arrivalTime,
+                dateId: selectedTime.dateId
+            }
+            props.createTimeSchedule({
+                variables: newTimeSchedule,
+                refetchQueries: [{query: getSchedulesQuery}]
+            })
+            .then((res) => {
+                Swal.fire({
+                    icon: "success",
+                    timer: 2200,
+                    title: "Successfully added time schedule!"
+                })
 
+                setSelectedTime({
+                    departureTime: defaultDepartureTimeValue,
+                    arrivalTime: defaultArrivalTimeValue,
+                    dateId: ''
+                })
+
+                document.querySelector('#form_addTime').reset();
+            })
+            .catch((err) => {
+                Swal.fire({
+                    icon: "error",
+                    timer: 2200,
+                    title: "Unable to add time schedule!"
+                })
+            })
         } else {
             ToastComponent('warning', 'Please apply all required inputs');
+        }
+    }
+
+    const actionEditTime = (e) => {
+        if(e.target.value !== undefined){
+            console.log(e.target.value)
+        }
+    }
+
+    const actionDeleteTime = (e) => {
+        if(e.target.value !== undefined){
+            let timeDataId = e.target.value;
+            Swal.fire({
+                text: 'Are you sure you want to delete this time schedule?',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: 'rgb(221, 51, 51)',
+                cancelButtonColor: 'rgb(84, 84, 84)',
+                confirmButtonText: 'Delete'
+            }).then((result) => {
+                if (result.value) {                    
+                    let deleteTimeData = {
+                        id: timeDataId
+                    }
+                    props.deleteTimeSchedule({
+                        variables: deleteTimeData,
+                        refetchQueries: [{query: getSchedulesQuery}]
+                    })
+                    .then(() => {
+                        Swal.fire({
+                            icon: "info",
+                            timer: 2200,
+                            title: "Time schedule deleted!"
+                        })
+                    })
+                    .catch((err) => {
+                        Swal.fire({
+                            icon: "error",
+                            timer: 2200,
+                            title: "Unable to delete time schedule!"
+                        })
+                    })
+                }
+            })            
         }
     }
     // 
@@ -503,7 +630,7 @@ function SchedulesPage(props) {
                 <option key={date.id} value={date.id}>{convertedDate}</option>
             )
         })
-    }
+    }    
     
     return (
     	<>	    	
@@ -529,12 +656,12 @@ function SchedulesPage(props) {
                                         id="date"
                                         label="New Date"
                                         type="date"
-                                        defaultValue={currentDate}
+                                        defaultValue={defaultDateValue}
                                         className={classes.textField}
                                         InputLabelProps={{
                                         shrink: true,
                                         }}
-                                        inputProps={{ min: currentDate }}
+                                        inputProps={{ min: defaultDateValue }}
                                         onChange={handleDateChange}
                                     />
                                     <Select native className="ml-2" 
@@ -612,7 +739,7 @@ function SchedulesPage(props) {
                                         id="arrival_time"
                                         label="New Departure Time"
                                         type="time"
-                                        defaultValue="07:30"
+                                        defaultValue={defaultDepartureTimeValue}
                                         className={classes.textField}
                                         InputLabelProps={{
                                         shrink: true,
@@ -626,7 +753,7 @@ function SchedulesPage(props) {
                                         id="departure_time"
                                         label="New Arrival Time"
                                         type="time"
-                                        defaultValue="07:30"
+                                        defaultValue={defaultArrivalTimeValue}
                                         className={classes.textField}
                                         InputLabelProps={{
                                         shrink: true,
@@ -712,7 +839,7 @@ function SchedulesPage(props) {
                             InputLabelProps={{
                                 shrink: true,
                             }}
-                            inputProps={{ min: currentDate }}
+                            inputProps={{ min: defaultDateValue }}
                             onChange={handleEditDateChange}
                             required
                         />

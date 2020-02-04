@@ -191,6 +191,10 @@ const getSchedulesQuery = gql`
             departureTime
             arrivalTime
             dateId
+            dateSchedule {
+                id
+                date
+            }
         }
 
         getOrigins {
