@@ -148,6 +148,12 @@ function SchedulesPage(props) {
         dateId: ''
     });
 
+    const [selectedEditTime, setSelectedEditTime] = useState({
+        updatedDepartureTime: defaultDepartureTimeValue,
+        updatedArrivalTime: defaultArrivalTimeValue,
+        updatedDateId: ''
+    });
+
     let [destinationsArray, setDestinationsArray] = useState([]);
     let [editDestinationsArray, setEditDestinationsArray] = useState([]);
 
@@ -155,7 +161,9 @@ function SchedulesPage(props) {
         dateId: '',
         dateValue: ''
     });
-    const [editDateModal, setEditDateModal] = useState(false);    
+    const [editDateModal, setEditDateModal] = useState(false);  
+    
+    const [editTimeModal, setEditTimeModal] = useState(false); 
 
 	let history = useHistory();
 	const classes = useStyles();
@@ -493,18 +501,27 @@ function SchedulesPage(props) {
 
     // TimeSchedule CRUD functionalities
     const handleDepartureTimeChange= (e) => {
-        setSelectedTime({...selectedTime, departureTime: e.target.value});
-        console.log(e.target.value)
+        setSelectedTime({...selectedTime, departureTime: e.target.value});        
     }
 
     const handleArrivalTimeChange= (e) => {
         setSelectedTime({...selectedTime, arrivalTime: e.target.value});
-        console.log(e.target.value)
     }
 
     const handleDateScheduleSelection = (e) => {
         setSelectedTime({...selectedTime, dateId: e.target.value})
-        console.log(e.target.value)
+    }
+
+    const handleEditDepartureTimeChange= (e) => {
+        setSelectedTime({...selectedTime, departureTime: e.target.value});        
+    }
+
+    const handleEditArrivalTimeChange= (e) => {
+        setSelectedTime({...selectedTime, arrivalTime: e.target.value});
+    }
+
+    const handleEditDateScheduleSelection = (e) => {
+        setSelectedTime({...selectedTime, dateId: e.target.value})
     }
 
     const handleAddTime = (e) => {
@@ -556,6 +573,8 @@ function SchedulesPage(props) {
         if(e.target.value !== undefined){
             console.log(e.target.value)
         }
+
+        setEditTimeModal(true);
     }
 
     const actionDeleteTime = (e) => {
@@ -594,6 +613,12 @@ function SchedulesPage(props) {
                 }
             })            
         }
+    }
+    const actionCancelEditTime = () => {
+        setEditTimeModal(false);
+    }
+    const handleUpdateTimeData = (e) => {
+
     }
     // 
 
@@ -826,7 +851,7 @@ function SchedulesPage(props) {
             <Dialog onClose={actionCancelEditDate} aria-labelledby="customized-dialog-title" open={editDateModal}>
                 <form id="form_updateDate" onSubmit={handleUpdateDateData}>
                     <DialogTitle id="customized-dialog-title" onClose={actionCancelEditDate}>
-                    Edit Date
+                    Edit Date Schedule
                     </DialogTitle>
                     <DialogContent dividers>
                     <div className="d-flex">
@@ -850,6 +875,56 @@ function SchedulesPage(props) {
                         <Select native className="ml-2" onChange={handleEditDestinationSelection} required>
                             <option value="" style={{color: "gray"}}>Select destination..</option>
                             {editDestinationOptions}
+                        </Select>
+                    </div>
+                    </DialogContent>
+                    <DialogActions>
+                        <Button autoFocus type="submit" className="rounded-0" color="secondary" style={{backgroundColor: "rgb(84, 84, 84)"}}>
+                            Save changes
+                        </Button>
+                    </DialogActions>
+                </form>
+            </Dialog>
+            <Dialog onClose={actionCancelEditTime} aria-labelledby="customized-dialog-title" open={editTimeModal}>
+                <form id="form_updateDate" onSubmit={handleUpdateTimeData}>
+                    <DialogTitle id="customized-dialog-title" onClose={actionCancelEditTime}>
+                    Edit Time Schedule
+                    </DialogTitle>
+                    <DialogContent dividers>
+                    <div className="d-flex">
+                        <TextField
+                            id="arrival_time"
+                            label="Departure Time"
+                            type="time"
+                            defaultValue={defaultDepartureTimeValue}
+                            className={classes.textField}
+                            InputLabelProps={{
+                            shrink: true,
+                            }}
+                            inputProps={{
+                            step: 300, // 5 min
+                            }}
+                            onChange={handleDepartureTimeChange}
+                        />
+                        <TextField
+                            id="departure_time"
+                            label="Arrival Time"
+                            type="time"
+                            defaultValue={defaultArrivalTimeValue}
+                            className={classes.textField}
+                            InputLabelProps={{
+                            shrink: true,
+                            }}
+                            inputProps={{
+                            step: 300, // 5 min
+                            }}
+                            onChange={handleArrivalTimeChange}
+                        />
+                        <Select native className="ml-2" 
+                        onChange={handleDateScheduleSelection}
+                        >
+                            <option value="" style={{color: "gray"}}>Select date..</option>
+                            {dateOptions}
                         </Select>
                     </div>
                     </DialogContent>
