@@ -2,11 +2,19 @@
   text-align: center;
 }
 
-.makeStyles-appBarShift-3 {
+.makeStyles-appBarShift-3 {		/*local host width*/
 	width: calc(100% - 270px) !important;
 }
 
-.makeStyles-drawerOpen-7 {
+.makeStyles-drawerOpen-7 {		/*local host width*/
+	width: 270px !important;
+}
+
+.jss3 {		/*remote host width*/
+	width: calc(100% - 270px) !important;
+}
+
+.jss7 {		/*remote host width*/
 	width: 270px !important;
 }
 
