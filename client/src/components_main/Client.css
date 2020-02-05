@@ -1,3 +1,25 @@
-.Client {
-  text-align: center;
+@font-face {
+  font-family: "Tauri";
+  src: url(../fonts/Tauri/Tauri-Regular.ttf);
+}
+
+@font-face {
+  font-family: "Lato";
+  src: url(../fonts/Lato/Lato-Regular.ttf);
+}
+
+h1, h2, h3, span {
+  font-family: "Tauri";
+}
+
+body {
+  font-family: "Lato";
+}
+
+.MuiTab-textColorPrimary.Mui-selected {
+  background-color: #bbf3ff !important;
+}
+
+.main-container {
+  background-color: #f5f4f4;
 }

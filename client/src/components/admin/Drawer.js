@@ -205,7 +205,7 @@ const AdminDrawer = () => {
           </IconButton>
           {!open && (
             <Typography variant="h6" noWrap>
-              REMSOFT
+              FerryFast Admin
             </Typography>
           )}
           {auth && (
@@ -256,7 +256,7 @@ const AdminDrawer = () => {
       >
         <div className={classes.toolbar} style={{backgroundColor: "#531a72", color: "#fff"}}>
           <Typography variant="h6" align="center" style={{width: "100%"}} noWrap>
-              REMSOFT
+              FerryFast Admin
             </Typography>
           <IconButton onClick={handleDrawerClose}>
             {theme.direction === 'rtl' ? <ChevronRightIcon color="secondary"/> : <ChevronLeftIcon color="secondary"/>}

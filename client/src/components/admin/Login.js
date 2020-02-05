@@ -74,8 +74,8 @@ const AdminLogin = (props) => {
 
     return(
         <Container className="p-4 rounded shadow" maxWidth="sm" style={{marginTop: "15vh", border: "3px solid #d7d7d7"}}>
-            <Typography align="center" noWrap variant="h3">
-                REMSOFT
+            <Typography align="center" noWrap variant="h4">
+                FerryFast Admin
             </Typography>      
             <hr/>
             <FormControl>

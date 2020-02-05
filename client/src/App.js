@@ -40,9 +40,8 @@ function App() {
       <ApolloProvider client={clientConnection}>
         <Router>
           <Switch>
-            <Route path="/" exact component={Client}/>
-
             <MuiThemeProvider theme={theme}>   
+              <Route path="/" exact component={Client}/>
               <Route path="/admin" exact component={Admin}/>
               <Route path="/admin/home" component={AdminHome}/>
               <Route path="/admin/register" component={AdminRegister}/>
