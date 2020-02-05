@@ -3,11 +3,11 @@
 }
 
 .makeStyles-appBarShift-3 {
-	width: calc(100% - 260px) !important;
+	width: calc(100% - 270px) !important;
 }
 
 .makeStyles-drawerOpen-7 {
-	width: 260px !important;
+	width: 270px !important;
 }
 
 .MuiPaper-root.MuiDrawer-paper.makeStyles-drawerOpen-7.MuiDrawer-paperAnchorLeft.MuiDrawer-paperAnchorDockedLeft.MuiPaper-elevation0 {

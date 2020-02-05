@@ -163,6 +163,11 @@ function SchedulesPage(props) {
     });
     const [editDateModal, setEditDateModal] = useState(false);  
     
+    const [editTimeData, setEditTimeData] = useState({
+        timeId: '',
+        departureTimeValue: '',
+        arrivalTimeValue: ''
+    });
     const [editTimeModal, setEditTimeModal] = useState(false); 
 
 	let history = useHistory();
@@ -513,15 +518,15 @@ function SchedulesPage(props) {
     }
 
     const handleEditDepartureTimeChange= (e) => {
-        setSelectedTime({...selectedTime, departureTime: e.target.value});        
+        setSelectedEditTime({...selectedEditTime, updatedDepartureTime: e.target.value});        
     }
 
     const handleEditArrivalTimeChange= (e) => {
-        setSelectedTime({...selectedTime, arrivalTime: e.target.value});
+        setSelectedEditTime({...selectedEditTime, updatedArrivalTime: e.target.value});        
     }
 
     const handleEditDateScheduleSelection = (e) => {
-        setSelectedTime({...selectedTime, dateId: e.target.value})
+        setSelectedEditTime({...selectedEditTime, updatedDateId: e.target.value})        
     }
 
     const handleAddTime = (e) => {
@@ -571,10 +576,20 @@ function SchedulesPage(props) {
 
     const actionEditTime = (e) => {
         if(e.target.value !== undefined){
-            console.log(e.target.value)
+            if(dataObject.loading === false && dataObject.error === undefined){
+                let timeSchedulesArray = dataObject.getTimeSchedules;
+                timeSchedulesArray.forEach(tsArr => {
+                    if(tsArr.id === e.target.value){               
+                        setEditTimeData({
+                            timeId: e.target.value, 
+                            departureTimeValue: tsArr.departureTime,
+                            arrivalTimeValue: tsArr.arrivalTime
+                        });
+                    }
+                })
+            }
+            setEditTimeModal(true);
         }
-
-        setEditTimeModal(true);
     }
 
     const actionDeleteTime = (e) => {
@@ -618,7 +633,38 @@ function SchedulesPage(props) {
         setEditTimeModal(false);
     }
     const handleUpdateTimeData = (e) => {
+        e.preventDefault();
+        let updatedTimeData = {
+            id: editTimeData.timeId,
+            departureTime: selectedEditTime.updatedDepartureTime,
+            arrivalTime: selectedEditTime.updatedArrivalTime,
+            dateId: selectedEditTime.updatedDateId
+        }        
+        props.updateTimeSchedule({
+            variables: updatedTimeData,
+            refetchQueries: [{query: getSchedulesQuery}]
+        })
+        .then((res) => {
+            Swal.fire({
+                icon: "success",
+                timer: 2200,
+                title: "Successfully updated time schedule!"
+            })
 
+            setSelectedEditTime({
+                updatedDepartureTime: '',
+                updatedArrivalTime: '',
+                updatedDateId: ''
+            })
+        })
+        .catch((err) => {
+            Swal.fire({
+                icon: "error",
+                timer: 2200,
+                title: "Unable to update time schedule!"
+            })
+        })
+        setEditTimeModal(false);
     }
     // 
 
@@ -655,7 +701,7 @@ function SchedulesPage(props) {
                 <option key={date.id} value={date.id}>{convertedDate}</option>
             )
         })
-    }    
+    }
     
     return (
     	<>	    	
@@ -896,7 +942,7 @@ function SchedulesPage(props) {
                             id="arrival_time"
                             label="Departure Time"
                             type="time"
-                            defaultValue={defaultDepartureTimeValue}
+                            defaultValue={editTimeData.departureTimeValue}
                             className={classes.textField}
                             InputLabelProps={{
                             shrink: true,
@@ -904,13 +950,13 @@ function SchedulesPage(props) {
                             inputProps={{
                             step: 300, // 5 min
                             }}
-                            onChange={handleDepartureTimeChange}
+                            onChange={handleEditDepartureTimeChange}
                         />
                         <TextField
                             id="departure_time"
                             label="Arrival Time"
                             type="time"
-                            defaultValue={defaultArrivalTimeValue}
+                            defaultValue={editTimeData.arrivalTimeValue}
                             className={classes.textField}
                             InputLabelProps={{
                             shrink: true,
@@ -918,10 +964,10 @@ function SchedulesPage(props) {
                             inputProps={{
                             step: 300, // 5 min
                             }}
-                            onChange={handleArrivalTimeChange}
+                            onChange={handleEditArrivalTimeChange}
                         />
                         <Select native className="ml-2" 
-                        onChange={handleDateScheduleSelection}
+                        onChange={handleEditDateScheduleSelection}
                         >
                             <option value="" style={{color: "gray"}}>Select date..</option>
                             {dateOptions}
