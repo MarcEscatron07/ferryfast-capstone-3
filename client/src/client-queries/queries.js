@@ -307,6 +307,11 @@ const getFindSchedulesQuery = gql`
                 destinationId
             }
         }
+
+        getAccommodations {
+            id
+            name
+        }
     }
 `;
 

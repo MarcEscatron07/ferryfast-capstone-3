@@ -119,6 +119,7 @@ function SchedulesPage(props) {
     let defaultDateValue = moment(new Date).format('YYYY-MM-DD');
     let defaultDepartureTimeValue = moment(new Date).format('HH:mm');
     let defaultArrivalTimeValue = moment(new Date).add(3, 'h').format('HH:mm');
+
     const [datePage, setDatePage] = useState(0);
     const [dateRowsPerPage, setDateRowsPerPage] = useState(10);
     const [dateRows, setDateRows] = useState({
@@ -702,8 +703,6 @@ function SchedulesPage(props) {
             )
         })
     }
-
-    console.log()
     
     return (
     	<>	    	
