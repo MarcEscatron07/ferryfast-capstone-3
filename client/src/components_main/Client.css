@@ -19,8 +19,8 @@
 .Client {
   background: 
 	linear-gradient(
-		rgba(245, 240, 240, 0.3),
-		rgba(185, 185, 185, 0.45)
+		rgba(245, 240, 240, 0.4),
+		rgba(185, 185, 185, 0.6)
 		),
   url(../images/apo-island.jpg);
 	background-size: cover;

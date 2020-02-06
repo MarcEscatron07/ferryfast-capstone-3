@@ -141,34 +141,6 @@ const getRoutesQuery = gql`
     }
 `;
 
-const getOriginQuery = gql`
-    query($id: String!){
-        getOrigin(id: $id){
-            id
-            name
-            destinations {
-                id
-                name
-                originId
-            }
-        }
-    }
-`;
-
-const getDestinationQuery = gql`
-    query($id: String!){
-        getDestination(id: $id){
-            id
-            name
-            originId
-            origin {
-                id
-                name
-            }
-        }
-    }
-`;
-
 const getSchedulesQuery = gql`
     {
         getDateSchedules {
@@ -286,6 +258,58 @@ const getPassengersAndContactsQuery = gql`
     }
 `;
 
+const getFindSchedulesQuery = gql`
+    {
+        getOrigins {
+            id
+            name
+            destinations {
+                id
+                name
+                originId
+            }
+        }
+
+        getDestinations {
+            id
+            name
+            originId
+            dateSchedules {
+                id
+                date
+                originId
+                destinationId
+            }
+        }
+
+        getDateSchedules {
+            id
+            date
+            originId
+            destinationId
+            timeSchedules {
+                id
+                departureTime
+                arrivalTime
+                dateId
+            }
+        }
+
+        getTimeSchedules {
+            id
+            departureTime
+            arrivalTime
+            dateId
+            dateSchedule {
+                id
+                date
+                originId
+                destinationId
+            }
+        }
+    }
+`;
+
 export { 
     getRolesQuery,
     getRoleQuery,
@@ -294,10 +318,9 @@ export {
     getAdministratorsQuery,
     getAdministratorQuery,
     getRoutesQuery,
-    getOriginQuery,
-    getDestinationQuery,
     getSchedulesQuery,
     getAccommodationsQuery,
     getSeatsQuery,
-    getPassengersAndContactsQuery
+    getPassengersAndContactsQuery,
+    getFindSchedulesQuery
 }
