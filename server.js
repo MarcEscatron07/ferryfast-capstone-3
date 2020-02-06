@@ -26,8 +26,8 @@ if(process.env.NODE_ENV === 'production'){
 }
 
 const ATLAS_URI = require('./config/connection').mongoURI;
-// const uri = ATLAS_URI || 'mongodb://localhost:27017/capstone3_db';
-const uri = 'mongodb://localhost:27017/capstone3_db';
+const uri = ATLAS_URI || 'mongodb://localhost:27017/capstone3_db';
+// const uri = 'mongodb://localhost:27017/capstone3_db';
 mongoose.connect(uri, {
     useNewUrlParser: true,
     useUnifiedTopology: true,

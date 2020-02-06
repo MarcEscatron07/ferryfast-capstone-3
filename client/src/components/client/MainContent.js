@@ -9,6 +9,9 @@ import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 
 import FindSchedulePage from './client_pages/FindSchedulePage';
+import TripDetailsPage from './client_pages/TripDetailsPage';
+import PassengerDetailsPage from './client_pages/PassengerDetailsPage';
+import ConfirmBookingPage from './client_pages/ConfirmBookingPage';
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -75,16 +78,16 @@ function MainContent() {
         onChangeIndex={handleChangeIndex}
       >
         <TabPanel value={value} index={0} dir={theme.direction}>
-            <FindSchedulePage/>
+          <FindSchedulePage/>
         </TabPanel>
         <TabPanel value={value} index={1} dir={theme.direction}>
-          Item Two
+          <TripDetailsPage/>
         </TabPanel>
         <TabPanel value={value} index={2} dir={theme.direction}>
-          Item Three
+          <PassengerDetailsPage/>
         </TabPanel>
         <TabPanel value={value} index={3} dir={theme.direction}>
-          Item Four
+          <ConfirmBookingPage/>
         </TabPanel>
       </SwipeableViews>
     </div>

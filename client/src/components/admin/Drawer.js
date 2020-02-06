@@ -161,6 +161,10 @@ const AdminDrawer = () => {
     setAnchorEl(null);
   };
 
+  const handleLogout = () => {
+    history.push('/admin');
+  }
+
   const drawerMenuHandler = (e) => {    
     if(e.target.id === generalMenus[0]){
       history.push('/admin/home');
@@ -236,7 +240,7 @@ const AdminDrawer = () => {
                 onClose={handleClose}
               >
                 <MenuItem onClick={handleClose}>My Account</MenuItem>
-                <MenuItem onClick={handleClose}>Logout</MenuItem>
+                <MenuItem onClick={handleLogout}>Logout</MenuItem>
               </Menu>
             </div>
           )}

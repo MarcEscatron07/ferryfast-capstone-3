@@ -315,6 +315,22 @@ const getFindSchedulesQuery = gql`
     }
 `;
 
+const getDashboardQuery = gql`
+    {
+        getBookings {
+            id
+        }
+
+        getPassengers {
+            id
+        }
+
+        getAdministrators {
+            id
+        }
+    }
+`;
+
 export { 
     getRolesQuery,
     getRoleQuery,
@@ -327,5 +343,6 @@ export {
     getAccommodationsQuery,
     getSeatsQuery,
     getPassengersAndContactsQuery,
-    getFindSchedulesQuery
+    getFindSchedulesQuery,
+    getDashboardQuery
 }

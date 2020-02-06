@@ -274,151 +274,153 @@ function FindSchedulePage(props) {
     // console.log(props)
 
     return (
-        <Container maxWidth="xs" style={{height: "100vh"}}>
-            <div className="container content-container rounded shadow p-3">
-                <div className="row">
-                    <div className="col text-center">
-                        <form id="form_proceed" onSubmit={handleProceedToTripDetails}> 
-                            <div className="d-flex flex-column justify-content-center">
-                                <FormControl variant="filled" className={classes.formControl}>
-                                    <InputLabel shrink ref={inputLabel} htmlFor="filled-origin-native-simple">
-                                        Origin
-                                    </InputLabel>
-                                    <Select
-                                    native
-                                    onChange={handleOriginSelection}
-                                    labelWidth={labelWidth}
-                                    inputProps={{
-                                        name: 'origin',
-                                        id: 'filled-origin-native-simple',
-                                    }}
-                                    required
-                                    >
-                                    <option value="">Select origin..</option>
-                                    {originOptions}
-                                    </Select>
-                                </FormControl>
-                                <FormControl variant="filled" className={classes.formControl}>
-                                    <InputLabel shrink ref={inputLabel} htmlFor="filled-destination-native-simple">
-                                        Destination
-                                    </InputLabel>
-                                    <Select
-                                    native
-                                    onChange={handleDestinationSelection}
-                                    labelWidth={labelWidth}
-                                    inputProps={{
-                                        name: 'destination',
-                                        id: 'filled-destination-native-simple',
-                                    }}
-                                    required
-                                    >
-                                    <option value="">Select destination..</option>
-                                    {destinationOptions}
-                                    </Select>
-                                </FormControl>                                                
-                                <FormControl variant="filled" className={classes.formControl}>
-                                    <InputLabel shrink ref={inputLabel} htmlFor="filled-departuredate-native-simple">
-                                        Departure Date
-                                    </InputLabel>
-                                    <Select
-                                    native
-                                    onChange={handleDateScheduleSelection}
-                                    labelWidth={labelWidth}
-                                    inputProps={{
-                                        name: 'departureDate',
-                                        id: 'filled-departuredate-native-simple',
-                                    }}
-                                    required
-                                    >
-                                    <option value="">Select date..</option>
-                                    {dateOptions}
-                                    </Select>
-                                </FormControl>                            
-                                <Collapse in={openCollapse} timeout="auto" unmountOnExit>
-                                    <Paper className={classes.root}>                                                            
-                                        <TableContainer className={classes.container}>
-                                            <Table size="small" aria-label="a dense table">
-                                            <TableHead>
-                                                <TableRow>
-                                                {timeColumns.map(column => (
-                                                    <TableCell
-                                                    className="font-weight-bold"
-                                                    key={column.id}
-                                                    align={column.align}
-                                                    style={{ minWidth: column.minWidth }}
-                                                    >
-                                                    {column.label}
-                                                    </TableCell>
-                                                ))}
-                                                </TableRow>
-                                            </TableHead>
-                                            <TableBody>
-                                                {timeRows.data.slice(timePage * timeRowsPerPage, timePage * timeRowsPerPage + timeRowsPerPage).map(row => {
-                                                return (
-                                                    <TableRow hover role="checkbox" tabIndex={-1} key={row.id}>
-                                                    {timeColumns.map(column => {
-                                                        const value = row[column.id];
-                                                        return (
-                                                        <TableCell key={column.id} align={column.align}>
-                                                            {column.format && typeof value === 'number' ? column.format(value) : value}
+        <div style={{height: "100vh"}}>        
+            <Container maxWidth="xs">
+                <div className="container content-container rounded shadow p-3">
+                    <div className="row">
+                        <div className="col text-center">
+                            <form id="form_proceed" onSubmit={handleProceedToTripDetails}> 
+                                <div className="d-flex flex-column justify-content-center">
+                                    <FormControl variant="filled" className={classes.formControl}>
+                                        <InputLabel shrink ref={inputLabel} htmlFor="filled-origin-native-simple">
+                                            Origin
+                                        </InputLabel>
+                                        <Select
+                                        native
+                                        onChange={handleOriginSelection}
+                                        labelWidth={labelWidth}
+                                        inputProps={{
+                                            name: 'origin',
+                                            id: 'filled-origin-native-simple',
+                                        }}
+                                        required
+                                        >
+                                        <option value="">Select origin..</option>
+                                        {originOptions}
+                                        </Select>
+                                    </FormControl>
+                                    <FormControl variant="filled" className={classes.formControl}>
+                                        <InputLabel shrink ref={inputLabel} htmlFor="filled-destination-native-simple">
+                                            Destination
+                                        </InputLabel>
+                                        <Select
+                                        native
+                                        onChange={handleDestinationSelection}
+                                        labelWidth={labelWidth}
+                                        inputProps={{
+                                            name: 'destination',
+                                            id: 'filled-destination-native-simple',
+                                        }}
+                                        required
+                                        >
+                                        <option value="">Select destination..</option>
+                                        {destinationOptions}
+                                        </Select>
+                                    </FormControl>                                                
+                                    <FormControl variant="filled" className={classes.formControl}>
+                                        <InputLabel shrink ref={inputLabel} htmlFor="filled-departuredate-native-simple">
+                                            Departure Date
+                                        </InputLabel>
+                                        <Select
+                                        native
+                                        onChange={handleDateScheduleSelection}
+                                        labelWidth={labelWidth}
+                                        inputProps={{
+                                            name: 'departureDate',
+                                            id: 'filled-departuredate-native-simple',
+                                        }}
+                                        required
+                                        >
+                                        <option value="">Select date..</option>
+                                        {dateOptions}
+                                        </Select>
+                                    </FormControl>                            
+                                    <Collapse in={openCollapse} timeout="auto" unmountOnExit>
+                                        <Paper className={classes.root}>                                                            
+                                            <TableContainer className={classes.container}>
+                                                <Table size="small" aria-label="a dense table">
+                                                <TableHead>
+                                                    <TableRow>
+                                                    {timeColumns.map(column => (
+                                                        <TableCell
+                                                        className="font-weight-bold"
+                                                        key={column.id}
+                                                        align={column.align}
+                                                        style={{ minWidth: column.minWidth }}
+                                                        >
+                                                        {column.label}
                                                         </TableCell>
-                                                        );
-                                                    })}
+                                                    ))}
                                                     </TableRow>
-                                                );
-                                                })}
-                                            </TableBody>
-                                            </Table>
-                                        </TableContainer>
-                                        <TablePagination
-                                            rowsPerPageOptions={[5]}
-                                            component="div"
-                                            count={timeRows.data.length}
-                                            rowsPerPage={timeRowsPerPage}
-                                            page={timePage}
-                                            onChangePage={handleTimeChangePage}                                            
-                                        />
-                                    </Paper>
-                                </Collapse>
-                                <FormControl variant="filled" className={classes.formControl}>
-                                    <InputLabel shrink ref={inputLabel} htmlFor="filled-accommodation-native-simple">
-                                        Accommodation
-                                    </InputLabel>
-                                    <Select
-                                    native
-                                    onChange={handleAccommodationSelection}
-                                    labelWidth={labelWidth}
-                                    inputProps={{
-                                        name: 'date',
-                                        id: 'filled-accommodation-native-simple',
-                                    }}
-                                    required
-                                    >
-                                    <option value="">Select accommodation..</option>
-                                    {accommodationOptions}
-                                    </Select>
-                                    <Button className="mt-3" 
-                                        variant="contained"
-                                        color="primary" 
-                                        type="submit"
-                                        disabled={
-                                            selectedData.originId !== '' 
-                                            && selectedData.destinationId !== ''
-                                            && selectedData.dateId !== '' 
-                                            && selectedData.timeId !== ''
-                                            && selectedData.accommodationId !== '' ?
-                                            false:true
-                                        }
-                                    >
-                                        Proceed
-                                    </Button>
-                                </FormControl>
-                            </div>                       
-                        </form>
-                    </div>                    
+                                                </TableHead>
+                                                <TableBody>
+                                                    {timeRows.data.slice(timePage * timeRowsPerPage, timePage * timeRowsPerPage + timeRowsPerPage).map(row => {
+                                                    return (
+                                                        <TableRow hover role="checkbox" tabIndex={-1} key={row.id}>
+                                                        {timeColumns.map(column => {
+                                                            const value = row[column.id];
+                                                            return (
+                                                            <TableCell key={column.id} align={column.align}>
+                                                                {column.format && typeof value === 'number' ? column.format(value) : value}
+                                                            </TableCell>
+                                                            );
+                                                        })}
+                                                        </TableRow>
+                                                    );
+                                                    })}
+                                                </TableBody>
+                                                </Table>
+                                            </TableContainer>
+                                            <TablePagination
+                                                rowsPerPageOptions={[5]}
+                                                component="div"
+                                                count={timeRows.data.length}
+                                                rowsPerPage={timeRowsPerPage}
+                                                page={timePage}
+                                                onChangePage={handleTimeChangePage}                                            
+                                            />
+                                        </Paper>
+                                    </Collapse>
+                                    <FormControl variant="filled" className={classes.formControl}>
+                                        <InputLabel shrink ref={inputLabel} htmlFor="filled-accommodation-native-simple">
+                                            Accommodation
+                                        </InputLabel>
+                                        <Select
+                                        native
+                                        onChange={handleAccommodationSelection}
+                                        labelWidth={labelWidth}
+                                        inputProps={{
+                                            name: 'date',
+                                            id: 'filled-accommodation-native-simple',
+                                        }}
+                                        required
+                                        >
+                                        <option value="">Select accommodation..</option>
+                                        {accommodationOptions}
+                                        </Select>
+                                        <Button className="mt-3" 
+                                            variant="contained"
+                                            color="primary" 
+                                            type="submit"
+                                            disabled={
+                                                selectedData.originId !== '' 
+                                                && selectedData.destinationId !== ''
+                                                && selectedData.dateId !== '' 
+                                                && selectedData.timeId !== ''
+                                                && selectedData.accommodationId !== '' ?
+                                                false:true
+                                            }
+                                        >
+                                            Proceed
+                                        </Button>
+                                    </FormControl>
+                                </div>                       
+                            </form>
+                        </div>                    
+                    </div>
                 </div>
-            </div>
-        </Container>
+            </Container>
+        </div>
     )
 }
 
