@@ -13,9 +13,6 @@ const useStyles = makeStyles(theme => ({
   root: {
     flexGrow: 1,
   },
-  title: {
-    marginLeft: "5rem",
-  },
 }));
 
 function Navbar() {
@@ -25,9 +22,12 @@ function Navbar() {
         <div className={classes.root}>
             <AppBar position="static">
             <Toolbar>
-                <Typography variant="h6" className={classes.title}>
-                FerryFast
-                </Typography>
+                <div className="d-flex align-items-center py-2">
+                  <img src="images/ferryfast-logo-cropped.png" style={{height: "5rem", width: "10rem"}}/>
+                  <Typography variant="h4" className="d-inline-block">
+                  FerryFast
+                  </Typography>
+                </div>
                 <div className="ml-auto">
                     <IconButton type="submit">
                         <HelpIcon color="secondary"/>

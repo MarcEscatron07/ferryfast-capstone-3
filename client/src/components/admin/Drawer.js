@@ -44,7 +44,7 @@ import AirlineSeatReclineNormalIcon from '@material-ui/icons/AirlineSeatReclineN
 import SupervisorAccountIcon from '@material-ui/icons/SupervisorAccount';
 import MailIcon from '@material-ui/icons/Mail';
 
-const drawerWidth = 240;
+const drawerWidth = 270;
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -95,6 +95,7 @@ const useStyles = makeStyles(theme => ({
     },
   },
   toolbar: {
+    color: "#fff",
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'flex-end',
@@ -254,7 +255,7 @@ const AdminDrawer = () => {
           }),
         }}
       >
-        <div className={classes.toolbar} style={{backgroundColor: "#531a72", color: "#fff"}}>
+        <div className={classes.toolbar} style={{backgroundColor: "#1f78b9"}}>
           <Typography variant="h6" align="center" style={{width: "100%"}} noWrap>
               FerryFast Admin
             </Typography>

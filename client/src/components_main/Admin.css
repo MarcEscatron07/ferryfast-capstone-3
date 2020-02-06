@@ -2,22 +2,6 @@
   text-align: center;
 }
 
-/*local host styles*/
-.makeStyles-appBarShift-3 {
-	width: calc(100% - 270px) !important;
-}
-.makeStyles-drawerOpen-7 {
-	width: 270px !important;
-}
-
-/*remote host styles*/
-.jss3 {
-	width: calc(100% - 270px) !important;
-}
-.jss7 {
-	width: 270px !important;
-}
-
 .MuiPaper-root.MuiDrawer-paper {
 	background-color: #f0f0f0 !important;
 }
@@ -27,5 +11,5 @@
 }
 
 .MuiTableCell-stickyHeader {
-	background-color: #a09f9f !important;
+	background-color: #bdbbbb !important;
 }
