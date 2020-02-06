@@ -13,6 +13,10 @@ const useStyles = makeStyles(theme => ({
   root: {
     flexGrow: 1,
   },
+  navbarBrand: {
+    height: "4rem", 
+    width: "8rem"
+  },
 }));
 
 function Navbar() {
@@ -23,9 +27,9 @@ function Navbar() {
             <AppBar position="static">
             <Toolbar>
                 <div className="d-flex align-items-center py-2">
-                  <img src="images/ferryfast-logo-cropped.png" style={{height: "5rem", width: "10rem"}}/>
+                  <img className={classes.navbarBrand} src="images/ferryfast-logo-cropped.png"/>
                   <Typography variant="h4" className="d-inline-block">
-                  FerryFast
+                  <em>FerryFast</em>
                   </Typography>
                 </div>
                 <div className="ml-auto">
