@@ -17,10 +17,19 @@ import { graphql } from 'react-apollo';
 import { flowRight as compose } from 'lodash';
 import { getAdministratorsQuery } from '../../client-queries/queries';
 
+import { makeStyles } from '@material-ui/core/styles';
+
+const useStyles = makeStyles(theme => ({
+    loginBrand: {
+      height: "7rem", 
+      width: "7rem"
+    },
+  }));
+
 const ToastComponent = (iconProp, titleProp) => {
     Toast.fire({
         icon: iconProp,
-        title: `<h1 style='color: #fff'>${titleProp}</h1>`,
+        title: titleProp,
         showClass: {
             popup: 'animated fadeInDown faster'
         },
@@ -31,6 +40,7 @@ const ToastComponent = (iconProp, titleProp) => {
 }
 
 const AdminLogin = (props) => {
+    const classes = useStyles();
     let data = props.data;
     let history = useHistory();    
 
@@ -73,59 +83,70 @@ const AdminLogin = (props) => {
     }
 
     return(
-        <Container className="p-4 rounded shadow" maxWidth="sm" style={{marginTop: "15vh", border: "3px solid #d7d7d7"}}>
-            <Typography align="center" noWrap variant="h4">
-                FerryFast Admin
-            </Typography>      
-            <hr/>
-            <FormControl>
-                <FormGroup className="my-2">
-                    <TextField
-                        id="login_username"
-                        label="Username"
-                        type="text"
-                        placeholder="Enter username"
-                        variant="standard"
-                        onKeyDown={onEnterKeyHandler}
-                        />
-                </FormGroup>
+        <div className="texture-background d-flex align-items-center" style={{height: "100vh"}}>
+            <Container className="bg-white p-3 rounded-half shadow" maxWidth="xs" style={{border: "2px solid #d7d7d7"}}>
+                <img className={classes.loginBrand} src="images/ferryfast-logo-cropped-square.png"/>
+                <Typography align="center" noWrap variant="h5">
+                    FerryFast Admin
+                </Typography>      
+                <hr/>
+                <FormControl>
+                    <FormGroup className="my-2">
+                        <TextField
+                            id="login_username"
+                            label="Username"
+                            type="text"
+                            placeholder="Enter username"
+                            variant="standard"
+                            onKeyDown={onEnterKeyHandler}
+                            />
+                    </FormGroup>
 
-                <FormGroup className="my-2">
-                    <TextField
-                        id="login_password"
-                        label="Password"
-                        type="password"
-                        placeholder="Enter password"
-                        autoComplete="current-password"
-                        variant="standard"
-                        onKeyDown={onEnterKeyHandler}
-                        />
-                </FormGroup>
-                <div className="py-3">
-                    <Button
-                        className="mx-2"
-                        variant="contained"
-                        color="primary"                        
-                        endIcon={<VpnKeyIcon />}
-                        onClick={adminLoginHandler}
-                    >
-                        Log In
-                    </Button>
-                    <Button
-                        className="mx-2"
-                        variant="contained"
-                        color="secondary"                        
-                        endIcon={<PersonAddIcon />}
-                        onClick={adminRegisterHandler}
-                    >
-                        Register
-                    </Button>
-                </div>
-                <div className="d-block text-center my-3">
-                    <Link to="/"><u>Go to Client Page</u></Link>                    
-                </div>
-            </FormControl>
-        </Container>
+                    <FormGroup className="my-2">
+                        <TextField
+                            id="login_password"
+                            label="Password"
+                            type="password"
+                            placeholder="Enter password"
+                            autoComplete="current-password"
+                            variant="standard"
+                            onKeyDown={onEnterKeyHandler}
+                            />
+                    </FormGroup>
+                    <div className="py-3">
+                        <Button
+                            className="mx-2"
+                            variant="contained"
+                            color="primary"                        
+                            endIcon={<VpnKeyIcon />}
+                            onClick={adminLoginHandler}
+                        >
+                            Log In
+                        </Button>
+                        <Button
+                            className="mx-2"
+                            variant="contained"
+                            color="secondary"                        
+                            endIcon={<PersonAddIcon />}
+                            onClick={adminRegisterHandler}
+                        >
+                            Register
+                        </Button>
+                    </div>
+                    <div className="d-block text-center my-3">
+                        <Link to="/">
+                            <Button
+                                className="rounded-0"
+                                variant="outlined"
+                                color="primary"
+                            >
+                                Go to Client Page
+                            </Button>
+                        </Link>
+                    </div>
+                </FormControl>
+            </Container>
+        </div>
     );
 }
 

@@ -125,7 +125,13 @@ function FindSchedulePage() {
                                 <option value={20}>Twenty</option>
                                 <option value={30}>Thirty</option>
                                 </Select>
-                            <Button className="mt-3" type="submit" color="primary">Proceed</Button>
+                                <Button className="mt-3" 
+                                    variant="contained"
+                                    color="primary" 
+                                    type="submit"
+                                >
+                                    Proceed
+                                </Button>
                             </FormControl>
                         </form>
                     </div>

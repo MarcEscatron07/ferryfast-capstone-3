@@ -133,115 +133,117 @@ const AdminRegister = (props) => {
     }
 
     return(
-        <Container className="p-4 rounded shadow" maxWidth="sm" style={{marginTop: "15vh", border: "3px solid #d7d7d7"}}>
-            <Typography align="left" noWrap variant="h5">
-                CREATE AN ACCOUNT
-            </Typography>
-            <hr/>
-            <form onSubmit={submitRegistrationHandler}>
-                <div className="container">
-                    <div className="row">
-                        <div className="col text-center">
-                            <div className="form-group">
-                                <TextField
-                                    id="register_username"
-                                    className="register-input"
-                                    label="Username"
-                                    type="text"
-                                    placeholder="Enter username"
-                                    variant="standard"
-                                    onChange={getInputValueHandler}
-                                    required
-                                    />
+        <div className="texture-background d-flex align-items-center" style={{height: "100vh"}}>
+            <Container className="bg-white p-3 rounded-half shadow" maxWidth="sm" style={{border: "2px solid #d7d7d7"}}>
+                <Typography align="left" noWrap variant="h5">
+                    CREATE AN ACCOUNT
+                </Typography>
+                <hr/>
+                <form onSubmit={submitRegistrationHandler}>
+                    <div className="container">
+                        <div className="row">
+                            <div className="col text-center">
+                                <div className="form-group">
+                                    <TextField
+                                        id="register_username"
+                                        className="register-input"
+                                        label="Username"
+                                        type="text"
+                                        placeholder="Enter username"
+                                        variant="standard"
+                                        onChange={getInputValueHandler}
+                                        required
+                                        />
+                                </div>
+                                <div className="form-group">
+                                    <TextField
+                                        id="register_firstname"
+                                        className="register-input"
+                                        label="Firstname"
+                                        type="text"
+                                        placeholder="Enter firstname"
+                                        variant="standard"
+                                        onChange={getInputValueHandler}
+                                        required
+                                        />
+                                </div>
+                                <div className="form-group">
+                                    <TextField
+                                        id="register_surname"
+                                        className="register-input"
+                                        label="Surname"
+                                        type="text"
+                                        placeholder="Enter surname"
+                                        variant="standard"
+                                        onChange={getInputValueHandler}     
+                                        required
+                                        />
+                                </div>
                             </div>
-                            <div className="form-group">
-                                <TextField
-                                    id="register_firstname"
-                                    className="register-input"
-                                    label="Firstname"
-                                    type="text"
-                                    placeholder="Enter firstname"
-                                    variant="standard"
-                                    onChange={getInputValueHandler}
-                                    required
-                                    />
-                            </div>
-                            <div className="form-group">
-                                <TextField
-                                    id="register_surname"
-                                    className="register-input"
-                                    label="Surname"
-                                    type="text"
-                                    placeholder="Enter surname"
-                                    variant="standard"
-                                    onChange={getInputValueHandler}     
-                                    required
-                                    />
+                            <div className="col text-center">
+                                <div className="form-group">
+                                    <TextField
+                                        id="register_email"
+                                        className="register-input"
+                                        label="Email"
+                                        type="email"
+                                        placeholder="Enter email"
+                                        variant="standard"
+                                        onChange={getInputValueHandler}      
+                                        required
+                                        />
+                                </div>
+                                <div className="form-group">
+                                    <TextField
+                                        id="register_password"
+                                        className="register-input"
+                                        label="Password"
+                                        type="password"
+                                        placeholder="Enter password"
+                                        variant="standard"
+                                        onChange={getInputValueHandler}      
+                                        required
+                                        />
+                                </div>
+                                <div className="form-group">
+                                    <TextField
+                                        id="register_cfmpassword"
+                                        label="Confirm Password"
+                                        type="password"
+                                        placeholder="Confirm password"
+                                        variant="standard"
+                                        onChange={getInputValueHandler}                    
+                                        required
+                                        />
+                                </div>
                             </div>
                         </div>
-                        <div className="col text-center">
-                            <div className="form-group">
-                                <TextField
-                                    id="register_email"
-                                    className="register-input"
-                                    label="Email"
-                                    type="email"
-                                    placeholder="Enter email"
-                                    variant="standard"
-                                    onChange={getInputValueHandler}      
-                                    required
-                                    />
-                            </div>
-                            <div className="form-group">
-                                <TextField
-                                    id="register_password"
-                                    className="register-input"
-                                    label="Password"
-                                    type="password"
-                                    placeholder="Enter password"
-                                    variant="standard"
-                                    onChange={getInputValueHandler}      
-                                    required
-                                    />
-                            </div>
-                            <div className="form-group">
-                                <TextField
-                                    id="register_cfmpassword"
-                                    label="Confirm Password"
-                                    type="password"
-                                    placeholder="Confirm password"
-                                    variant="standard"
-                                    onChange={getInputValueHandler}                    
-                                    required
-                                    />
+                        <div className="row">
+                            <div className="col text-center py-3">
+                                <Button
+                                    className="mx-2"
+                                    variant="contained"
+                                    color="default"                        
+                                    endIcon={<Cancel />}
+                                    onClick={cancelRegistrationHandler}
+                                >
+                                    Cancel
+                                </Button>
+                                <Button
+                                    className="mx-2"
+                                    type="submit"
+                                    variant="contained"
+                                    color="primary"                        
+                                    endIcon={<Send />}                                
+                                >
+                                    Submit
+                                </Button>                                                        
                             </div>
                         </div>
                     </div>
-                    <div className="row">
-                        <div className="col text-center py-3">
-                            <Button
-                                className="mx-2"
-                                variant="contained"
-                                color="default"                        
-                                endIcon={<Cancel />}
-                                onClick={cancelRegistrationHandler}
-                            >
-                                Cancel
-                            </Button>
-                            <Button
-                                className="mx-2"
-                                type="submit"
-                                variant="contained"
-                                color="primary"                        
-                                endIcon={<Send />}                                
-                            >
-                                Submit
-                            </Button>                                                        
-                        </div>
-                    </div>
-                </div>
-            </form>
-        </Container>
+                </form>
+            </Container>
+        </div>
     );
 }
 
