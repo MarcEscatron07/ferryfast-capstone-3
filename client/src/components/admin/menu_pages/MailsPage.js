@@ -91,22 +91,24 @@ function MailsPage(props) {
     let dataObject = props.data;
 
     useEffect(() => {        
-        if(dataObject.loading === false && dataObject.error === undefined) {   
-            let mailsArray = dataObject.getMails;
-            
-            setMails({...mails, data: []})
-            mailsArray.forEach(maArr => {
-                setMails(prevState => {
-                    const data = [...prevState.data];
-                    data.push({
-                        id: maArr.id,
-                        name: maArr.name,
-                        email: maArr.email,
-                        subject: maArr.subject
+        if(dataObject.loading === false && dataObject.error === undefined) {
+            if(dataObject.getMails !== null){
+                let mailsArray = dataObject.getMails;
+                
+                setMails({...mails, data: []})
+                mailsArray.forEach(maArr => {
+                    setMails(prevState => {
+                        const data = [...prevState.data];
+                        data.push({
+                            id: maArr.id,
+                            name: maArr.name,
+                            email: maArr.email,
+                            subject: maArr.subject
+                        });
+                        return { ...prevState, data };
                     });
-                    return { ...prevState, data };
                 });
-            });            
+            }   
         }
 
         if(dataObject.error !== undefined){                   
@@ -269,4 +271,9 @@ function MailsPage(props) {
     )
 }
 
-export default MailsPage;
+export default compose(
+    graphql(getMailsQuery),
+    graphql(createMailMutation, {name: 'createMail'}),
+    graphql(updateMailMutation, {name: 'updateMail'}),
+    graphql(deleteMailMutation, {name: 'deleteMail'})
+)(MailsPage);

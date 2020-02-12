@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 
 import Swal from 'sweetalert2';
 
@@ -31,10 +31,29 @@ function DashboardPage(props) {
     let bookingCount, passengerCount, administratorCount, mailCount;
 
     if(dataObject.loading === false && dataObject.error === undefined){
-        bookingCount = dataObject.getBookings.length;
-        passengerCount = dataObject.getPassengers.length;
-        administratorCount = dataObject.getAdministrators.length
-        mailCount = 0;
+        if(dataObject.getBookings !== null){
+            bookingCount = dataObject.getBookings.length;
+        } else {
+            bookingCount = 0;
+        }
+
+        if(dataObject.getPassengers !== null){
+            passengerCount = dataObject.getPassengers.length;
+        } else {
+            passengerCount = 0;
+        }
+
+        if(dataObject.getAdministrators !== null){
+            administratorCount = dataObject.getAdministrators.length;
+        } else {
+            administratorCount = 0;
+        }
+
+        if(dataObject.getMails !== null){
+            mailCount = dataObject.getMails.length;
+        } else {
+            mailCount = 0;
+        }
     }
 
     if(dataObject.error !== undefined){                   
@@ -44,8 +63,6 @@ function DashboardPage(props) {
             title: "Failed to load data!"
         })
     }
-
-    console.log(props)
 
     return (
         <div className="container">

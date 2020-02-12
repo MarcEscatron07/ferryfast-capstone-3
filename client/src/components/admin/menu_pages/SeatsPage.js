@@ -91,21 +91,23 @@ function SeatsPage(props) {
     let dataObject = props.data;
 
     useEffect(() => {        
-        if(dataObject.loading === false && dataObject.error === undefined) {   
-            let seatsArray = dataObject.getSeats;
-            
-            setSeats({...seats, data: []})
-            seatsArray.forEach(seArr => {
-                setSeats(prevState => {
-                    const data = [...prevState.data];
-                    data.push({
-                        id: seArr.id,
-                        row: seArr.row,
-                        column: seArr.column
+        if(dataObject.loading === false && dataObject.error === undefined) {
+            if(dataObject.getSeats !== null){
+                let seatsArray = dataObject.getSeats;
+                
+                setSeats({...seats, data: []})
+                seatsArray.forEach(seArr => {
+                    setSeats(prevState => {
+                        const data = [...prevState.data];
+                        data.push({
+                            id: seArr.id,
+                            row: seArr.row,
+                            column: seArr.column
+                        });
+                        return { ...prevState, data };
                     });
-                    return { ...prevState, data };
                 });
-            });            
+            }   
         }
 
         if(dataObject.error !== undefined){                   

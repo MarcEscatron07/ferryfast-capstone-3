@@ -101,38 +101,40 @@ function RoutesPage(props) {
     let dataObject = props.data;
 
     useEffect(() => {        
-        if(dataObject.loading === false && dataObject.error === undefined) {   
-            let originsArray = dataObject.getOrigins;
-            let destinationsArray = dataObject.getDestinations;
-            
-            setOrigins({...origins, data: []})
-            originsArray.forEach(orArr => {
-                setOrigins(prevState => {
-                    const data = [...prevState.data];
-                    data.push({
-                        id: orArr.id,
-                        name: orArr.name
-                    });
-                    return { ...prevState, data };
-                });
-            });
-
-            setDestinations({...destinations, data: []})
-            destinationsArray.forEach(deArr => {
-                setDestinations(prevState => {
-                    if(deArr.origin !== null){
+        if(dataObject.loading === false && dataObject.error === undefined) {
+            if(dataObject.getOrigins !== null && dataObject.getDestinations !== null){
+                let originsArray = dataObject.getOrigins;
+                let destinationsArray = dataObject.getDestinations;
+                
+                setOrigins({...origins, data: []})
+                originsArray.forEach(orArr => {
+                    setOrigins(prevState => {
                         const data = [...prevState.data];
                         data.push({
-                            id: deArr.id,
-                            name: deArr.name,
-                            originId: deArr.origin.name
+                            id: orArr.id,
+                            name: orArr.name
                         });
                         return { ...prevState, data };
-                    } else {
-                        return [];
-                    }
+                    });
                 });
-            });
+    
+                setDestinations({...destinations, data: []})
+                destinationsArray.forEach(deArr => {
+                    setDestinations(prevState => {
+                        if(deArr.origin !== null){
+                            const data = [...prevState.data];
+                            data.push({
+                                id: deArr.id,
+                                name: deArr.name,
+                                originId: deArr.origin.name
+                            });
+                            return { ...prevState, data };
+                        } else {
+                            return [];
+                        }
+                    });
+                });
+            }
         }
 
         if(dataObject.error !== undefined){                   

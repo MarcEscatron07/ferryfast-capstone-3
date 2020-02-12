@@ -328,6 +328,21 @@ const getDashboardQuery = gql`
         getAdministrators {
             id
         }
+
+        getMails {
+            id
+        }
+    }
+`;
+
+const getMailsQuery = gql`
+    {
+        getMails {
+            id
+            name
+            email
+            subject
+        }
     }
 `;
 
@@ -344,5 +359,6 @@ export {
     getSeatsQuery,
     getPassengersAndContactsQuery,
     getFindSchedulesQuery,
-    getDashboardQuery
+    getDashboardQuery,
+    getMailsQuery
 }

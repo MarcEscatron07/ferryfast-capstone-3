@@ -380,6 +380,46 @@ const deletePassengerMutation = gql`
     }
 `;
 
+const createMailMutation = gql`
+    mutation(
+        $name: String!
+        $email: String!
+        $subject: String!
+    ){
+        createMail(
+            name: $name
+            email: $email
+            subject: $subject
+        ){
+            id
+        }
+    }
+`;
+const updateMailMutation = gql`
+    mutation(
+        $id: ID!
+        $name: String!
+        $email: String!
+        $subject: String!
+    ){
+        updateMail(
+            id: $id
+            name: $name
+            email: $email
+            subject: $subject
+        ){
+            id
+        }
+    }
+`;
+const deleteMailMutation = gql`
+    mutation($id: ID!){
+        deleteMail(id: $id){
+            id
+        }
+    }
+`;
+
 export { 
     createAdministratorMutation,
     updateAdministratorMutation,
@@ -407,5 +447,8 @@ export {
     deleteDateScheduleMutation,
     createTimeScheduleMutation,
     updateTimeScheduleMutation,
-    deleteTimeScheduleMutation
+    deleteTimeScheduleMutation,
+    createMailMutation,
+    updateMailMutation,
+    deleteMailMutation
 }

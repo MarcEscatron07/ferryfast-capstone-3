@@ -91,42 +91,44 @@ function PassengersAndContactsPage(props) {
 
     useEffect(() => {
         if(dataObject.loading === false && dataObject.error === undefined){
-            let passengersArray = dataObject.getPassengers;
-            let contactsArray = dataObject.getContacts;
-
-            setPassengerRows({...passengerRows, data: []});
-            passengersArray.forEach(paArr => {
-                setPassengerRows(prevState => {                    
-                    const data = [...prevState.data];
-                    data.push({
-                        id: paArr.id,
-                        firstname: paArr.firstname,
-                        middleinitial: paArr.middleinitial,
-                        lastname: paArr.lastname,
-                        age: paArr.age,
-                        gender: paArr.gender,
-                        seatId: paArr.seat.row+paArr.seat.column,
-                        contactId: paArr.contact.fullname,
-                        bookingId: paArr.bookingId
+            if(dataObject.getPassengers !== null && dataObject.getContacts !== null){
+                let passengersArray = dataObject.getPassengers;
+                let contactsArray = dataObject.getContacts;
+    
+                setPassengerRows({...passengerRows, data: []});
+                passengersArray.forEach(paArr => {
+                    setPassengerRows(prevState => {                    
+                        const data = [...prevState.data];
+                        data.push({
+                            id: paArr.id,
+                            firstname: paArr.firstname,
+                            middleinitial: paArr.middleinitial,
+                            lastname: paArr.lastname,
+                            age: paArr.age,
+                            gender: paArr.gender,
+                            seatId: paArr.seat.row+paArr.seat.column,
+                            contactId: paArr.contact.fullname,
+                            bookingId: paArr.bookingId
+                        });
+                        return { ...prevState, data };
                     });
-                    return { ...prevState, data };
                 });
-            });
-
-            setContactRows({...contactRows, data: []});
-            contactsArray.forEach(coArr => {
-                setContactRows(prevState => {                    
-                    const data = [...prevState.data];
-                    data.push({
-                        id: coArr.id,
-                        fullname: coArr.fullname,
-                        phone: coArr.phone,
-                        email: coArr.email,
-                        address: coArr.address                        
+    
+                setContactRows({...contactRows, data: []});
+                contactsArray.forEach(coArr => {
+                    setContactRows(prevState => {                    
+                        const data = [...prevState.data];
+                        data.push({
+                            id: coArr.id,
+                            fullname: coArr.fullname,
+                            phone: coArr.phone,
+                            email: coArr.email,
+                            address: coArr.address                        
+                        });
+                        return { ...prevState, data };
                     });
-                    return { ...prevState, data };
                 });
-            });
+            }
         }
 
         if(dataObject.error !== undefined){

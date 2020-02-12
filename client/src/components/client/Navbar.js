@@ -7,7 +7,7 @@ import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 
-import HelpIcon from '@material-ui/icons/Help';
+import MailOutlineIcon from '@material-ui/icons/MailOutline';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -34,7 +34,7 @@ function Navbar() {
                 </div>
                 <div className="ml-auto">
                     <IconButton type="submit">
-                        <HelpIcon color="secondary"/>
+                        <MailOutlineIcon style={{color: "#fff"}}/>
                     </IconButton>                    
                 </div>
             </Toolbar>

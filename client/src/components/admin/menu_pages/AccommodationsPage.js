@@ -91,21 +91,23 @@ function AccommodationsPage(props) {
     let dataObject = props.data;
 
     useEffect(() => {        
-        if(dataObject.loading === false && dataObject.error === undefined) {   
-            let accommodationsArray = dataObject.getAccommodations;
-            
-            setAccommodations({...accommodations, data: []})
-            accommodationsArray.forEach(acArr => {
-                setAccommodations(prevState => {
-                    const data = [...prevState.data];
-                    data.push({
-                        id: acArr.id,
-                        name: acArr.name,
-                        price: acArr.price.toFixed(2)
+        if(dataObject.loading === false && dataObject.error === undefined) {
+            if(dataObject.getAccommodations !== null){
+                let accommodationsArray = dataObject.getAccommodations;
+                
+                setAccommodations({...accommodations, data: []})
+                accommodationsArray.forEach(acArr => {
+                    setAccommodations(prevState => {
+                        const data = [...prevState.data];
+                        data.push({
+                            id: acArr.id,
+                            name: acArr.name,
+                            price: acArr.price.toFixed(2)
+                        });
+                        return { ...prevState, data };
                     });
-                    return { ...prevState, data };
                 });
-            });            
+            }   
         }
 
         if(dataObject.error !== undefined){                   

@@ -10,11 +10,7 @@ const mailSchema = new Schema(
             type: String,
             required: true
         },
-        subject: String,
-        message: {
-            type: String,
-            required: true
-        }
+        subject: String
     },
     {
         timestamps: true

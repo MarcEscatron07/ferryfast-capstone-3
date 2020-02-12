@@ -217,48 +217,50 @@ function SchedulesPage(props) {
     }
 
     useEffect(() => {
-        if(dataObject.loading === false && dataObject.error === undefined){            
-            let dateSchedulesArray = dataObject.getDateSchedules;
-            let timeSchedulesArray = dataObject.getTimeSchedules;
-
-            setDateRows({...dateRows, data: []});
-            dateSchedulesArray.forEach(dsArr => {                
-                setDateRows(prevState => {
-                    if(dsArr.origin !== null){
-                        let convertedDate = moment(dsArr.date).format('MMM D, YYYY (ddd)');
-                        const data = [...prevState.data];
-                        data.push({
-                            id: dsArr.id,
-                            actions: renderDateScheduleActions(dsArr.id),
-                            date: convertedDate,
-                            route: `${dsArr.origin.name} > ${dsArr.destination.name}`
-                        });
-                        return { ...prevState, data };
-                    } else {
-                        return [];
-                    }
+        if(dataObject.loading === false && dataObject.error === undefined){
+            if(dataObject.getDateSchedules !== null && dataObject.getTimeSchedules !== null){
+                let dateSchedulesArray = dataObject.getDateSchedules;
+                let timeSchedulesArray = dataObject.getTimeSchedules;
+    
+                setDateRows({...dateRows, data: []});
+                dateSchedulesArray.forEach(dsArr => {                
+                    setDateRows(prevState => {
+                        if(dsArr.origin !== null){
+                            let convertedDate = moment(dsArr.date).format('MMM D, YYYY (ddd)');
+                            const data = [...prevState.data];
+                            data.push({
+                                id: dsArr.id,
+                                actions: renderDateScheduleActions(dsArr.id),
+                                date: convertedDate,
+                                route: `${dsArr.origin.name} > ${dsArr.destination.name}`
+                            });
+                            return { ...prevState, data };
+                        } else {
+                            return [];
+                        }
+                    })
                 })
-            })
-
-            setTimeRows({...timeRows, data: []});
-            timeSchedulesArray.forEach(tsArr => {
-                setTimeRows(prevState => {
-                    if(tsArr.dateSchedule !== null){
-                        let convertedDate = moment(tsArr.dateSchedule.date).format('MMM D, YYYY (ddd)');
-                        const data = [...prevState.data];
-                        data.push({
-                            id: tsArr.id,
-                            actions: renderTimeScheduleActions(tsArr.id),
-                            departureTime: convertTimeToMeridiem(tsArr.departureTime),
-                            arrivalTime: convertTimeToMeridiem(tsArr.arrivalTime),
-                            dateId: convertedDate
-                        })
-                        return { ...prevState, data };
-                    } else {
-                        return [];
-                    }
+    
+                setTimeRows({...timeRows, data: []});
+                timeSchedulesArray.forEach(tsArr => {
+                    setTimeRows(prevState => {
+                        if(tsArr.dateSchedule !== null){
+                            let convertedDate = moment(tsArr.dateSchedule.date).format('MMM D, YYYY (ddd)');
+                            const data = [...prevState.data];
+                            data.push({
+                                id: tsArr.id,
+                                actions: renderTimeScheduleActions(tsArr.id),
+                                departureTime: convertTimeToMeridiem(tsArr.departureTime),
+                                arrivalTime: convertTimeToMeridiem(tsArr.arrivalTime),
+                                dateId: convertedDate
+                            })
+                            return { ...prevState, data };
+                        } else {
+                            return [];
+                        }
+                    })
                 })
-            })
+            }            
         }
 
         if(dataObject.error !== undefined){

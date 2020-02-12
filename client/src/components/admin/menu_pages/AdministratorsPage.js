@@ -75,25 +75,27 @@ function AdministratorsPage(props) {
 
     useEffect(() => {
     	if(dataObject.loading === false && dataObject.error === undefined){
-            let administratorsArray = dataObject.getAdministrators;
-
-            setAdministratorRows({...administratorRows, data: []});
-            administratorsArray.forEach(adArr => {
-                setAdministratorRows(prevState => {                    
-                    const data = [...prevState.data];
-                    data.push({
-                        id: adArr.id,
-                        username: adArr.username,
-                        firstname: adArr.firstname,
-                        surname: adArr.surname,
-                        email: adArr.email,
-                        password: adArr.password,
-                        roleId: adArr.role.name,
-                        statId: adArr.stat.name                        
+            if(dataObject.getAdministrators !== null){
+                let administratorsArray = dataObject.getAdministrators;
+    
+                setAdministratorRows({...administratorRows, data: []});
+                administratorsArray.forEach(adArr => {
+                    setAdministratorRows(prevState => {                    
+                        const data = [...prevState.data];
+                        data.push({
+                            id: adArr.id,
+                            username: adArr.username,
+                            firstname: adArr.firstname,
+                            surname: adArr.surname,
+                            email: adArr.email,
+                            password: adArr.password,
+                            roleId: adArr.role.name,
+                            statId: adArr.stat.name                        
+                        });
+                        return { ...prevState, data };
                     });
-                    return { ...prevState, data };
                 });
-            });
+            }
     	}
 
     	if(dataObject.error !== undefined){

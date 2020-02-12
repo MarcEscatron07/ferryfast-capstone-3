@@ -5,6 +5,7 @@ const { GraphQLScalarType } = require('graphql');
 const Role = require('../models/Role');
 const Stat = require('../models/Stat');
 const Administrator = require('../models/Administrator');
+const Mail = require('../models/Mail');
 
 const Origin = require('../models/Origin');
 const Destination = require('../models/Destination');
@@ -43,6 +44,12 @@ const typeDefs = gql`
         statId: Int
         role: RoleType
         stat: StatType
+    }
+    type MailType {
+        id: ID
+        name: String
+        email: String
+        subject: String
     }
 
     type OriginType {
@@ -139,6 +146,8 @@ const typeDefs = gql`
         getStat(id: String): StatType
         getAdministrators(id: String): [AdministratorType]
         getAdministrator(id: String): AdministratorType
+        getMails(id: String): [MailType]
+        getMail(id: String): MailType
 
         getOrigins(id: String): [OriginType]
         getOrigin(id: String): OriginType
@@ -208,6 +217,21 @@ const typeDefs = gql`
         deleteAdministrator(
             id: ID
         ): AdministratorType
+
+        createMail(
+            name: String
+            email: String
+            subject: String
+        ): MailType
+        updateMail(
+            id: ID
+            name: String
+            email: String
+            subject: String
+        ): MailType
+        deleteMail(
+            id: ID
+        ): MailType
 
         createOrigin(
             name: String
@@ -659,6 +683,26 @@ const resolvers = {
         },
         deleteAdministrator: (_,args) => {
             return Administrator.findOneAndDelete({_id:args.id});
+        },
+        createMail: (_,args) => {
+            let newMail = Mail({
+                name: args.name,
+                email: args.email,
+                subject: args.subject
+            })
+            return newMail.save();
+        },
+        updateMail: (_,args) => {
+            let updateMailId = {_id:args.id}
+            let updateMailData = {
+                name: args.name,
+                email: args.email,
+                subject: args.subject
+            }
+            return Mail.findOneAndUpdate(updateMailId, updateMailData);
+        },
+        deleteMail: (_,args) => {
+            return Mail.findOneAndDelete({_id:args.id});
         },
 
         createOrigin: (_,args) => {
