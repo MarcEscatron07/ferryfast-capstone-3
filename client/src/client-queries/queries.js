@@ -346,6 +346,24 @@ const getMailsQuery = gql`
     }
 `;
 
+const getBookingsQuery = gql`
+    {
+        getBookings {
+            id
+            bookingNumber
+            bookingDate
+            originId
+            destinationId
+            dateId
+            timeId
+            accommodationId          
+            statId
+            passengerQuantity
+            totalPayment
+        }
+    }
+`;
+
 export { 
     getRolesQuery,
     getRoleQuery,
@@ -360,5 +378,6 @@ export {
     getPassengersAndContactsQuery,
     getFindSchedulesQuery,
     getDashboardQuery,
-    getMailsQuery
+    getMailsQuery,
+    getBookingsQuery
 }

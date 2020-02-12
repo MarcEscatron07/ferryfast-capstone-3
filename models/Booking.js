@@ -9,12 +9,24 @@ const bookingSchema = new Schema(
         bookingDate: {
             type: Date,
             required: true
-        },        
-        accommodationId: {
+        },
+        originId: {
             type: String,
             required: true
         },
-        arrivalDateId: {
+        destinationId: {
+            type: String,
+            required: true
+        },
+        dateId: {
+            type: String,
+            required: true
+        },
+        timeId: {
+            type: String,
+            required: true
+        },
+        accommodationId: {
             type: String,
             required: true
         },

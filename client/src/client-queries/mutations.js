@@ -420,6 +420,74 @@ const deleteMailMutation = gql`
     }
 `;
 
+const createBookingMutation = gql`
+    mutation(
+        $bookingNumber: String!
+        $bookingDate: Date!
+        $originId: String!
+        $destinationId: String!
+        $dateId: String!
+        $timeId: String!
+        $accommodationId: String!
+        $statId: String!
+        $passengerQuantity: Int!
+        $totalPayment: Float!
+    ){
+        createBooking(
+            bookingNumber: $bookingNumber
+            bookingDate: $bookingDate
+            originId: $originId
+            destinationId: $destinationId
+            dateId: $dateId
+            timeId: $timeId
+            accommodationId: $accommodationId          
+            statId: $statId
+            passengerQuantity: $passengerQuantity
+            totalPayment: $totalPayment
+        ){
+            id
+        }
+    }
+`;
+const updateBookingMutation = gql`
+    mutation(
+        $id: ID!
+        $bookingNumber: String!
+        $bookingDate: Date!
+        $originId: String!
+        $destinationId: String!
+        $dateId: String!
+        $timeId: String!
+        $accommodationId: String!
+        $statId: String!
+        $passengerQuantity: Int!
+        $totalPayment: Float!
+    ){
+        updateBooking(
+            id: $id
+            bookingNumber: $bookingNumber
+            bookingDate: $bookingDate
+            originId: $originId
+            destinationId: $destinationId
+            dateId: $dateId
+            timeId: $timeId
+            accommodationId: $accommodationId          
+            statId: $statId
+            passengerQuantity: $passengerQuantity
+            totalPayment: $totalPayment
+        ){
+            id
+        }
+    }
+`;
+const deleteBookingMutation = gql`
+    mutation($id: ID!){
+        deleteBooking(id: $id){
+            id
+        }
+    }
+`;
+
 export { 
     createAdministratorMutation,
     updateAdministratorMutation,
@@ -450,5 +518,8 @@ export {
     deleteTimeScheduleMutation,
     createMailMutation,
     updateMailMutation,
-    deleteMailMutation
+    deleteMailMutation,
+    createBookingMutation,
+    updateBookingMutation,
+    deleteBookingMutation
 }

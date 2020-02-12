@@ -10,8 +10,8 @@ import { flowRight as compose } from 'lodash';
 import { getAdministratorsQuery } from '../../../client-queries/queries';
 import {
     createAdministratorMutation, 
-    deleteAdministratorMutation, 
-    updateAdministratorMutation 
+    updateAdministratorMutation,
+    deleteAdministratorMutation 
 } from '../../../client-queries/mutations';
 
 import { makeStyles } from '@material-ui/core/styles';
@@ -63,14 +63,14 @@ function AdministratorsPage(props) {
     let dataObject = props.data;
 
     const administratorColumns = [        
-        { id: 'id', label: 'ID', minWidth: 110, align: 'center', isHidden: true },
-        { id: 'username', label: 'Username', minWidth: 110, align: 'center', isHidden: false },
-        { id: 'firstname', label: 'Firstname', minWidth: 110, align: 'center', isHidden: false },
-        { id: 'surname', label: 'Surname', minWidth: 110, align: 'center', isHidden: false },
-        { id: 'email', label: 'Email', minWidth: 110, align: 'center', isHidden: false },
-        { id: 'password', label: 'Password', minWidth: 110, align: 'center', isHidden: false },
-        { id: 'roleId', label: 'Role', minWidth: 110, align: 'center', isHidden: false },
-        { id: 'statId', label: 'Status', minWidth: 110, align: 'center', isHidden: false },
+        { id: 'id', label: 'ID', minWidth: 110, align: 'center' },
+        { id: 'username', label: 'Username', minWidth: 110, align: 'center' },
+        { id: 'firstname', label: 'Firstname', minWidth: 110, align: 'center' },
+        { id: 'surname', label: 'Surname', minWidth: 110, align: 'center' },
+        { id: 'email', label: 'Email', minWidth: 110, align: 'center' },
+        { id: 'password', label: 'Password', minWidth: 110, align: 'center' },
+        { id: 'roleId', label: 'Role', minWidth: 110, align: 'center' },
+        { id: 'statId', label: 'Status', minWidth: 110, align: 'center' },
     ];
 
     useEffect(() => {
@@ -146,13 +146,13 @@ function AdministratorsPage(props) {
                                 <Table stickyHeader aria-label="sticky table">
                                     <TableHead>
                                         <TableRow>
-                                        {administratorColumns.map(column => (
+                                        {administratorColumns.map((column,index) => (
                                             <TableCell
                                             className="font-weight-bold"
                                             key={column.id}
                                             align={column.align}
                                             style={{ minWidth: column.minWidth }}
-                                            hidden={column.isHidden}
+                                            hidden={index === 0 ? true:false}
                                             >
                                             {column.label}
                                             </TableCell>
