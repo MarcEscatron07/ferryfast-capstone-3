@@ -165,24 +165,25 @@ const AdminDrawer = () => {
     history.push('/admin');
   }
 
-  const drawerMenuHandler = (e) => {    
-    if(e.target.id === generalMenus[0]){
+  const drawerMenuHandler = (item) => {
+    console.log('drawerMenuHandler > item:', item)    
+    if(item === generalMenus[0]){
       history.push('/admin/home');
-    } else if(e.target.id === generalMenus[1]){
+    } else if(item === generalMenus[1]){
       history.push('/admin/home/bookings');
-    } else if(e.target.id === generalMenus[2]){
+    } else if(item === generalMenus[2]){
       history.push('/admin/home/passengers&contacts');
-    } else if(e.target.id === generalMenus[3]){
+    } else if(item === generalMenus[3]){
       history.push('/admin/home/routes');
-    } else if(e.target.id === generalMenus[4]){
+    } else if(item === generalMenus[4]){
       history.push('/admin/home/schedules');
-    } else if(e.target.id === generalMenus[5]){
+    } else if(item === generalMenus[5]){
       history.push('/admin/home/seats');
-    } else if(e.target.id === generalMenus[6]){
+    } else if(item === generalMenus[6]){
       history.push('/admin/home/accommodations');
-    } else if(e.target.id === systemMenus[0]){
+    } else if(item === systemMenus[0]){
       history.push('/admin/home/administrators');
-    } else if(e.target.id === systemMenus[1]){
+    } else if(item === systemMenus[1]){
       history.push('/admin/home/mails');
     }
   }
@@ -270,7 +271,7 @@ const AdminDrawer = () => {
         <Divider />
         <List>
           {generalMenus.map((text, index) => (
-            <ListItem button key={text} id={text} onClick={drawerMenuHandler}>
+            <ListItem button key={text} id={text} onClick={() => {drawerMenuHandler(text)}}>
               <ListItemIcon>{generalIcons[index]}</ListItemIcon>
               <ListItemText primary={text} />
             </ListItem>
@@ -279,7 +280,7 @@ const AdminDrawer = () => {
         <Divider />
         <List>
           {systemMenus.map((text, index) => (
-            <ListItem button key={text} id={text} onClick={drawerMenuHandler}>
+            <ListItem button key={text} id={text} onClick={() => {drawerMenuHandler(text)}}>
               <ListItemIcon>{systemIcons[index]}</ListItemIcon>
               <ListItemText primary={text} />
             </ListItem>
