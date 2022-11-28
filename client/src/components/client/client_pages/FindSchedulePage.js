@@ -190,6 +190,10 @@ function FindSchedulePage(props) {
 
     useEffect(() => {},[openCollapse])
 
+    useEffect(() => {
+        console.log('selectedData val', selectedData)
+    },[selectedData])
+
     const renderTimeScheduleRadioButton = (id) => {    
         return(
             <BlueRadio
@@ -410,6 +414,7 @@ function FindSchedulePage(props) {
                                                 && selectedData.accommodationId !== '' ?
                                                 false:true
                                             }
+                                            onClick={() => { console.log('POST data: ', JSON.stringify(selectedData)) }}
                                         >
                                             Proceed
                                         </Button>
