@@ -2,23 +2,28 @@ exports.module = {
     administratorsSeeder: runAdministratorsSeeder()
 }
 
-function runAdministratorsSeeder(){
+async function runAdministratorsSeeder(){
     const Administrator = require('../models/Administrator')
     const mongoose = require('mongoose');
 
     const ATLAS_URI = require('../config/connection').mongoURI;
 	const uri = ATLAS_URI || 'mongodb://localhost:27017/capstone3_db';
-	// const uri = 'mongodb://localhost:27017/capstone3_db';
-	mongoose.connect(uri, {
+	await mongoose.connect(uri, {
 		useNewUrlParser: true,
 		useUnifiedTopology: true,
 		useCreateIndex: true,
 		useFindAndModify: false
 	})
-	.then(() => {
-        console.log('AdministratorsSeeder connected')
-        mongoose.connection.db.dropCollection('administrators');
-    })
+	.then(async () => {
+		console.log('AdministratorsSeeder connected')
+		const docCount = await Administrator.estimatedDocumentCount();
+		if(docCount > 0) {
+			mongoose.connection.db.dropCollection('administrators');
+			console.log("'administrators' collection successfully dropped")
+		} else {
+			console.log("'administrators' collection is empty")
+		}
+	})
     .catch((err) => console.log(err));
     
     let administrators = [

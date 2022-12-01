@@ -77,6 +77,7 @@ function AdministratorsPage(props) {
     	if(dataObject.loading === false && dataObject.error === undefined){
             if(dataObject.getAdministrators !== null){
                 let administratorsArray = dataObject.getAdministrators;
+                console.log('administratorsArray val', administratorsArray)
     
                 setAdministratorRows({...administratorRows, data: []});
                 administratorsArray.forEach(adArr => {
@@ -89,8 +90,8 @@ function AdministratorsPage(props) {
                             surname: adArr.surname,
                             email: adArr.email,
                             password: adArr.password,
-                            roleId: adArr.role.name,
-                            statId: adArr.stat.name                        
+                            roleId: adArr.role?.name,
+                            statId: adArr.stat?.name                        
                         });
                         return { ...prevState, data };
                     });

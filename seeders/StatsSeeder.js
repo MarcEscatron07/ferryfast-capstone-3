@@ -2,22 +2,27 @@ module.exports = {
 	statsSeeder: runStatsSeeder()
 }
 
-function runStatsSeeder(){
+async function runStatsSeeder(){
 	const Stat = require('../models/Stat');
 	const mongoose = require('mongoose');
 	
 	const ATLAS_URI = require('../config/connection').mongoURI;
 	const uri = ATLAS_URI || 'mongodb://localhost:27017/capstone3_db';
-	// const uri = 'mongodb://localhost:27017/capstone3_db';
-	mongoose.connect(uri, {
+	await mongoose.connect(uri, {
 		useNewUrlParser: true,
 		useUnifiedTopology: true,
 		useCreateIndex: true,
 		useFindAndModify: false
 	})
-	.then(() => {
+	.then(async () => {
 		console.log('StatsSeeder connected')
-		mongoose.connection.db.dropCollection('stats');
+		const docCount = await Stat.estimatedDocumentCount();
+		if(docCount > 0) {
+			mongoose.connection.db.dropCollection('stats');
+			console.log("'stats' collection successfully dropped")
+		} else {
+			console.log("'stats' collection is empty")
+		}
 	})
 	.catch((err) => console.log(err));	
 	

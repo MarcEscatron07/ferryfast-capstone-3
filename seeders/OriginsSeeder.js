@@ -2,22 +2,27 @@ module.exports = {
 	originsSeeder: runOriginsSeeder()
 }
 
-function runOriginsSeeder(){
+async function runOriginsSeeder(){
 	const Origin = require('../models/Origin');
 	const mongoose = require('mongoose');
 	
 	const ATLAS_URI = require('../config/connection').mongoURI;
 	const uri = ATLAS_URI || 'mongodb://localhost:27017/capstone3_db';
-	// const uri = 'mongodb://localhost:27017/capstone3_db';
-	mongoose.connect(uri, {
+	await mongoose.connect(uri, {
 		useNewUrlParser: true,
 		useUnifiedTopology: true,
 		useCreateIndex: true,
 		useFindAndModify: false
 	})
-	.then(() => {
+	.then(async () => {
 		console.log('OriginsSeeder connected')
-		mongoose.connection.db.dropCollection('origins');
+		const docCount = await Origin.estimatedDocumentCount();
+		if(docCount > 0) {
+			mongoose.connection.db.dropCollection('origins');
+			console.log("'origins' collection successfully dropped")
+		} else {
+			console.log("'origins' collection is empty")
+		}
 	})
 	.catch((err) => console.log(err));	
 	

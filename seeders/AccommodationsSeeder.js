@@ -2,22 +2,27 @@ module.exports = {
 	accommodationsSeeder: runAccommodationsSeeder()
 }
 
-function runAccommodationsSeeder() {
+async function runAccommodationsSeeder() {
 	const Accommodation = require('../models/Accommodation');
 	const mongoose = require('mongoose');
 	
 	const ATLAS_URI = require('../config/connection').mongoURI;
 	const uri = ATLAS_URI || 'mongodb://localhost:27017/capstone3_db';
-	// const uri = 'mongodb://localhost:27017/capstone3_db';
-	mongoose.connect(uri, {
+	await mongoose.connect(uri, {
 		useNewUrlParser: true,
 		useUnifiedTopology: true,
 		useCreateIndex: true,
 		useFindAndModify: false
 	})
-	.then(() => {
+	.then(async () => {
 		console.log('AccommodationsSeeder connected')
-		mongoose.connection.db.dropCollection('accommodations');
+		const docCount = await Accommodation.estimatedDocumentCount();
+		if(docCount > 0) {
+			mongoose.connection.db.dropCollection('accommodations');
+			console.log("'accommodations' collection successfully dropped")
+		} else {
+			console.log("'accommodations' collection is empty")
+		}
 	})
 	.catch((err) => console.log(err));
 	
