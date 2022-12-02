@@ -100,7 +100,8 @@ function RoutesPage(props) {
     const classes = useStyles();
     let dataObject = props.data;
 
-    useEffect(() => {        
+    useEffect(() => { 
+        console.log('dataObject value', dataObject)       
         if(dataObject.loading === false && dataObject.error === undefined) {
             if(dataObject.getOrigins !== null && dataObject.getDestinations !== null){
                 let originsArray = dataObject.getOrigins;
