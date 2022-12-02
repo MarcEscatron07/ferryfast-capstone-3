@@ -1,7 +1,7 @@
 import React from 'react';
 import './Admin.css';
 
-import Login from '../components/admin/Login';
+import Login from '../admin/Login';
 
 export default function Admin() {
   return (

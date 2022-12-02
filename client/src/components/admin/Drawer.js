@@ -1,16 +1,16 @@
 import React from 'react';
 import { Route, useHistory } from 'react-router-dom';
 
-import DashboardPage from './menu_pages/DashboardPage';
-import BookingsPage from './menu_pages/BookingsPage';
-import PassengersAndContacts from './menu_pages/PassengersAndContactsPage';
-import RoutesPage from './menu_pages/RoutesPage';
-import SchedulesPage from './menu_pages/SchedulesPage';
-import SeatsPage from './menu_pages/SeatsPage';
-import AccommodationsPage from './menu_pages/AccommodationsPage';
+import DashboardPage from './pages/DashboardPage';
+import BookingsPage from './pages/BookingsPage';
+import PassengersAndContacts from './pages/PassengersAndContactsPage';
+import RoutesPage from './pages/RoutesPage';
+import SchedulesPage from './pages/SchedulesPage';
+import SeatsPage from './pages/SeatsPage';
+import AccommodationsPage from './pages/AccommodationsPage';
 
-import AdministratorsPage from './menu_pages/AdministratorsPage';
-import MailsPage from './menu_pages/MailsPage';
+import AdministratorsPage from './pages/AdministratorsPage';
+import MailsPage from './pages/MailsPage';
 
 import clsx from 'clsx';
 import { makeStyles, useTheme } from '@material-ui/core/styles';

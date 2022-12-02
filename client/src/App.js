@@ -7,11 +7,11 @@ import ApolloClient from 'apollo-boost';
 
 import './App.css';
 
-import Admin from './components_main/Admin';
+import Admin from './components/main/Admin';
 import AdminAuth from './components/admin/Drawer';
 import AdminRegister from './components/admin/Register';
 
-import Client from './components_main/Client';
+import Client from './components/main/Client';
 
 const uriValue = '/graphql';
 const clientConnection = new ApolloClient({

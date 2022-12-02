@@ -8,10 +8,10 @@ import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 
-import FindSchedulePage from './client_pages/FindSchedulePage';
-import TripDetailsPage from './client_pages/TripDetailsPage';
-import PassengerDetailsPage from './client_pages/PassengerDetailsPage';
-import ConfirmBookingPage from './client_pages/ConfirmBookingPage';
+import FindSchedulePage from './pages/FindSchedulePage';
+import TripDetailsPage from './pages/TripDetailsPage';
+import PassengerDetailsPage from './pages/PassengerDetailsPage';
+import ConfirmBookingPage from './pages/ConfirmBookingPage';
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
